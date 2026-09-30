@@ -15,16 +15,16 @@ Phase 0 (Docs) ➔ Phase 1 (Skeleton) ➔ Phase 2 (First Game) ➔ Phase 3 (Matc
 
 ---
 
-## Phase 1 — Skeleton & Realtime Plumbing
+## Phase 1 — Skeleton & Realtime Plumbing *(Completed)*
 **Goal:** Prove two browsers can connect into a single room and see each other.
-- Initialize monorepo / folder structure:
+- [x] Initialize monorepo / folder structure:
   - `apps/web`: React + Vite + TypeScript + Tailwind CSS.
   - `apps/server`: Node.js + Fastify + TypeScript + Socket.IO.
   - `packages/shared`: Shared TypeScript types, Zod schemas, event names.
-- Implement room creation (`POST /api/rooms` → returns 5-char code).
-- Implement room joining (`POST /api/rooms/:code/join`).
-- Implement Socket.IO handshake with ephemeral session tokens.
-- Build Waiting Room UI showing real-time player presence (Player 1 & Player 2 connected).
+- [x] Implement room creation (`POST /api/rooms` → returns 5-char code).
+- [x] Implement room joining (`POST /api/rooms/:code/join`).
+- [x] Implement Socket.IO handshake with ephemeral session tokens.
+- [x] Build Waiting Room UI showing real-time player presence (Player 1 & Player 2 connected).
 
 ---
 

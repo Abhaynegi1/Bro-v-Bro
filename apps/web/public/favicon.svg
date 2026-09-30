@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <rect width="100" height="100" rx="20" fill="#0B0F19"/>
+  <text x="50%" y="55%" text-anchor="middle" dominant-baseline="central" font-family="system-ui, sans-serif" font-weight="900" font-size="44" fill="#F43F5E">B</text>
+  <text x="75%" y="65%" text-anchor="middle" dominant-baseline="central" font-family="system-ui, sans-serif" font-weight="900" font-size="28" fill="#2563EB">v</text>
+</svg>
