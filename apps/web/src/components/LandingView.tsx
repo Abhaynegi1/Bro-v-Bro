@@ -46,7 +46,7 @@ export const LandingView: React.FC<LandingViewProps> = ({
   return (
     <div className="flex-1 flex flex-col items-center justify-center px-4 py-8 sm:py-12 max-w-3xl mx-auto w-full text-center select-none">
       {/* Tiny decorative header marks */}
-      <div className="flex items-center gap-2 mb-3 text-arcadeRed font-bold">
+      <div className="flex items-center gap-2 mb-2 text-arcadeRed font-bold">
         <span>+</span>
         <span className="text-xs tracking-widest font-arcade uppercase text-ink">
           1V1 RETRO GAUNTLET
@@ -54,10 +54,15 @@ export const LandingView: React.FC<LandingViewProps> = ({
         <span>+</span>
       </div>
 
-      {/* Main Pixel Title (High Contrast Ink on Cream) */}
-      <h1 className="text-4xl sm:text-6xl md:text-7xl font-pixel text-ink tracking-wider mb-3">
-        BRO <span className="text-arcadeRed font-black text-3xl sm:text-5xl">[v]</span> BRO
-      </h1>
+      {/* Official Bro v Bro Logo */}
+      <div className="my-2 mb-4 flex justify-center">
+        <img
+          src="/logo-transparent.png"
+          alt="BRO v BRO"
+          className="w-full max-w-[280px] sm:max-w-[350px] md:max-w-[400px] h-auto object-contain select-none"
+          style={{ imageRendering: 'pixelated' }}
+        />
+      </div>
 
       {/* Tagline (Readable, bold, high contrast) */}
       <div className="space-y-1 mb-8 max-w-md mx-auto">

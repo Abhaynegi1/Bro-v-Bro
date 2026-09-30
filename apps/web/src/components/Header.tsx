@@ -10,15 +10,18 @@ export const Header: React.FC<HeaderProps> = ({ roomCode, isConnected, onLeave }
   return (
     <header className="w-full bg-darkNavy text-paper border-b-2 border-ink px-4 py-2.5 select-none shadow-sm">
       <div className="max-w-4xl mx-auto flex items-center justify-between">
-        {/* Typographic Pixel Logo */}
+        {/* Brand with 1:1 Pixel Icon */}
         <div
           onClick={onLeave}
-          className="flex items-center gap-2 cursor-pointer group"
+          className="flex items-center gap-2.5 cursor-pointer group select-none"
           title="Return to title screen"
         >
-          <div className="w-7 h-7 bg-arcadeRed border-2 border-ink flex items-center justify-center font-pixel text-[10px] text-white shadow-pixel-sm group-hover:-translate-y-0.5 transition-transform">
-            B
-          </div>
+          <img
+            src="/favicon.png"
+            alt="Bro v Bro Icon"
+            className="w-8 h-8 object-contain bg-[#11182A] border-2 border-ink shadow-pixel-sm group-hover:-translate-y-0.5 transition-transform"
+            style={{ imageRendering: 'pixelated' }}
+          />
           <div className="flex items-center gap-1.5 font-pixel text-sm sm:text-base text-paper tracking-wider">
             <span>BRO</span>
             <span className="text-arcadeRed font-bold text-xs">[v]</span>
