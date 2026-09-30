@@ -18,8 +18,8 @@ export const Header: React.FC<HeaderProps> = ({ roomCode, isConnected, onLeave }
         >
           <img
             src="/favicon.png"
-            alt="Bro v Bro Icon"
-            className="w-8 h-8 object-contain bg-[#11182A] border-2 border-ink shadow-pixel-sm group-hover:-translate-y-0.5 transition-transform"
+            alt="BvB"
+            className="w-8 h-8 object-contain drop-shadow-sm group-hover:-translate-y-0.5 transition-transform"
             style={{ imageRendering: 'pixelated' }}
           />
           <div className="flex items-center gap-1.5 font-pixel text-sm sm:text-base text-paper tracking-wider">

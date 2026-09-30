@@ -1,13 +1,9 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
   <defs>
     <style>
-      .pixel { shape-rendering: crispEdges; }
+      .pixel { shape-rendering: crispEdges; image-rendering: pixelated; }
     </style>
   </defs>
-  <!-- Background with subtle rounded corners -->
-  <rect width="160" height="160" rx="16" fill="#F4EBD0" />
-  <rect width="160" height="160" rx="16" fill="none" stroke="#171A1F" stroke-width="4" />
-  
-  <!-- Embedded crisp 1x1 favicon artwork -->
-  <image href="/favicon.png" width="160" height="160" preserveAspectRatio="xMidYMid meet" style="image-rendering: pixelated;" />
+  <!-- Transparent background with embedded pixel-perfect 1:1 BvB icon -->
+  <image href="/favicon.png" width="512" height="512" preserveAspectRatio="xMidYMid meet" style="image-rendering: pixelated; shape-rendering: crispEdges;" />
 </svg>
