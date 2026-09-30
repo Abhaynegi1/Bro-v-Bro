@@ -4,98 +4,63 @@
 
 @layer base {
   body {
-    background-color: #111522;
-    color: #F4EFD9;
+    background-color: #F4EBD0;
+    color: #171A1F;
     font-family: 'Space Mono', monospace;
-    image-rendering: pixelated;
+    image-rendering: auto;
   }
 }
 
-/* Subtle CRT Scanline Overlay */
-.crt-overlay {
+/* Local CRT Scanline (Only for active arcade screens, NOT entire page) */
+.arcade-screen-crt {
   background: linear-gradient(
     rgba(18, 16, 16, 0) 50%, 
-    rgba(0, 0, 0, 0.25) 50%
-  ), linear-gradient(
-    90deg,
-    rgba(255, 0, 0, 0.03),
-    rgba(0, 255, 0, 0.01),
-    rgba(0, 0, 255, 0.03)
+    rgba(0, 0, 0, 0.3) 50%
   );
-  background-size: 100% 3px, 6px 100%;
+  background-size: 100% 3px;
   pointer-events: none;
 }
 
-/* Retro Pixel Border */
+/* Retro Ink Borders */
 .pixel-border {
-  border: 2px solid #111522;
-  box-shadow: 3px 3px 0px #111522;
+  border: 2px solid #171A1F;
+  box-shadow: 3px 3px 0px #171A1F;
 }
 
-.pixel-border-cream {
-  border: 2px solid #F4EFD9;
-  box-shadow: 3px 3px 0px #F4EFD9;
+.pixel-border-lg {
+  border: 3px solid #171A1F;
+  box-shadow: 5px 5px 0px #171A1F;
 }
 
-.pixel-border-accent {
-  border: 2px solid #111522;
-  box-shadow: 3px 3px 0px #E84A4A;
-}
-
-/* Interactive Pixel Button */
+/* Interactive Retro Button */
 .btn-retro {
   position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border: 2px solid #111522;
-  box-shadow: 3px 3px 0px #111522;
+  border: 2px solid #171A1F;
+  box-shadow: 3px 3px 0px #171A1F;
   font-family: 'Silkscreen', monospace;
   font-weight: 700;
   text-transform: uppercase;
-  transition: all 0.08s ease;
+  transition: transform 0.08s ease, box-shadow 0.08s ease, background-color 0.1s ease;
   user-select: none;
+  cursor: pointer;
 }
 
 .btn-retro:hover:not(:disabled) {
-  transform: translate(-1px, -1px);
-  box-shadow: 4px 4px 0px #111522;
+  transform: translate(-2px, -2px);
+  box-shadow: 5px 5px 0px #171A1F;
 }
 
 .btn-retro:active:not(:disabled) {
   transform: translate(2px, 2px);
-  box-shadow: 1px 1px 0px #111522;
+  box-shadow: 1px 1px 0px #171A1F;
 }
 
 .btn-retro:disabled {
-  opacity: 0.45;
+  opacity: 0.5;
   cursor: not-allowed;
-  filter: grayscale(0.5);
-}
-
-/* Cream variant for dark container contrast */
-.btn-retro-cream {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border: 2px solid #F4EFD9;
-  box-shadow: 3px 3px 0px #F4EFD9;
-  font-family: 'Silkscreen', monospace;
-  font-weight: 700;
-  text-transform: uppercase;
-  transition: all 0.08s ease;
-  user-select: none;
-}
-
-.btn-retro-cream:hover:not(:disabled) {
-  transform: translate(-1px, -1px);
-  box-shadow: 4px 4px 0px #F4EFD9;
-}
-
-.btn-retro-cream:active:not(:disabled) {
-  transform: translate(2px, 2px);
-  box-shadow: 1px 1px 0px #F4EFD9;
 }
 
 /* Subtle Pixel Animations */
@@ -104,7 +69,7 @@
     transform: translateY(0);
   }
   50% {
-    transform: translateY(-2px);
+    transform: translateY(-3px);
   }
 }
 
@@ -118,20 +83,15 @@
 }
 
 .animate-pixel-idle {
-  animation: pixel-idle 1.6s ease-in-out infinite;
+  animation: pixel-idle 1.8s ease-in-out infinite;
 }
 
 .animate-pixel-blink {
   animation: pixel-blink 3.5s infinite;
 }
 
-/* Retro Dither / Checkerboard Pattern */
-.dither-pattern {
-  background-image: radial-gradient(#111522 1px, transparent 0);
-  background-size: 8px 8px;
-}
-
-.dither-pattern-light {
-  background-image: radial-gradient(rgba(244, 239, 217, 0.15) 1px, transparent 0);
-  background-size: 8px 8px;
+/* Subtle Paper Texture */
+.paper-pattern {
+  background-image: radial-gradient(rgba(23, 26, 31, 0.06) 1px, transparent 0);
+  background-size: 12px 12px;
 }

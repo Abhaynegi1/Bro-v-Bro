@@ -3,100 +3,112 @@ import { PixelCharacter } from './PixelCharacter';
 
 export const PixelArcadeScene: React.FC = () => {
   return (
-    <div className="w-full relative max-w-lg mx-auto my-6 p-4 sm:p-6 bg-[#151C30] border-2 border-paper shadow-pixel-light overflow-hidden select-none">
+    <div className="w-full relative max-w-xl mx-auto my-7 p-5 sm:p-7 bg-darkNavy border-3 border-ink shadow-pixel-lg overflow-hidden select-none">
       {/* Background stars / dust */}
-      <div className="absolute inset-0 dither-pattern-light opacity-30 pointer-events-none" />
+      <div className="absolute inset-0 dither-pattern-light opacity-25 pointer-events-none" />
 
       {/* Floating decorative pixel stars */}
-      <div className="absolute top-3 left-4 text-cartridgeYellow text-xs font-pixel animate-pulse">★</div>
-      <div className="absolute top-6 right-8 text-cartridgeYellow text-[10px] font-pixel animate-pulse" style={{ animationDelay: '0.8s' }}>✦</div>
-      <div className="absolute top-12 left-1/3 text-paper/40 text-[8px] font-pixel">★</div>
-      <div className="absolute top-4 right-1/4 text-pixelPink text-[10px] font-pixel">♥</div>
+      <div className="absolute top-4 left-6 text-cartridgeYellow text-sm font-pixel animate-pulse">★</div>
+      <div className="absolute top-8 right-10 text-cartridgeYellow text-xs font-pixel animate-pulse" style={{ animationDelay: '0.7s' }}>✦</div>
+      <div className="absolute top-14 left-1/4 text-white/50 text-[10px] font-pixel">★</div>
+      <div className="absolute top-6 right-1/3 text-pixelPink text-xs font-pixel animate-pulse" style={{ animationDelay: '1.2s' }}>♥</div>
 
       {/* Scene Content Area */}
-      <div className="relative z-10 flex items-end justify-between px-2 sm:px-6 pt-4 pb-1 min-h-[160px]">
-        {/* Left Side: Bro 01 */}
+      <div className="relative z-10 flex items-end justify-between px-2 sm:px-8 pt-4 pb-2 min-h-[190px]">
+        {/* Left Side: Bro 01 (Red Bandana + Cyan Jersey) */}
         <div className="flex flex-col items-center">
-          <div className="mb-2 bg-ink/90 border border-crtCyan px-2 py-0.5 text-[9px] font-arcade text-crtCyan tracking-wider shadow-pixel-sm">
+          <div className="mb-2.5 bg-ink border-2 border-crtCyan px-2.5 py-0.5 text-[10px] font-arcade text-crtCyan tracking-wider shadow-pixel-sm">
             BRO 01
           </div>
-          <PixelCharacter type="bro1" size={72} pose="ready" />
+          <PixelCharacter type="bro1" size={88} pose="ready" />
         </div>
 
-        {/* Center: Retro Arcade Machine + CRT Monitor */}
-        <div className="flex flex-col items-center mx-2 sm:mx-6">
+        {/* Center: Colorful Retro Arcade Machine + CRT Setup */}
+        <div className="flex flex-col items-center mx-2 sm:mx-4">
           <svg
-            width="120"
-            height="110"
-            viewBox="0 0 48 44"
+            width="150"
+            height="135"
+            viewBox="0 0 54 48"
             style={{ shapeRendering: 'crispEdges' }}
-            className="drop-shadow-md"
+            className="drop-shadow-lg"
           >
-            {/* Arcade Cabinet Outline */}
-            <rect x="8" y="4" width="20" height="36" fill="#111522" stroke="#43566B" strokeWidth="1" />
-            <rect x="10" y="6" width="16" height="4" fill="#E84A4A" />
-            <text x="18" y="9.5" textAnchor="middle" fill="#FFF7DC" fontSize="3" fontFamily="'Press Start 2P', monospace" fontWeight="bold">BvB</text>
+            {/* Floor tile grid */}
+            <rect x="0" y="42" width="54" height="6" fill="#151C30" />
+            <line x1="0" y1="42" x2="54" y2="42" stroke="#43566B" strokeWidth="0.8" />
+            <line x1="9" y1="42" x2="9" y2="48" stroke="#24334E" strokeWidth="0.8" />
+            <line x1="18" y1="42" x2="18" y2="48" stroke="#24334E" strokeWidth="0.8" />
+            <line x1="27" y1="42" x2="27" y2="48" stroke="#24334E" strokeWidth="0.8" />
+            <line x1="36" y1="42" x2="36" y2="48" stroke="#24334E" strokeWidth="0.8" />
+            <line x1="45" y1="42" x2="45" y2="48" stroke="#24334E" strokeWidth="0.8" />
 
-            {/* Arcade Screen */}
-            <rect x="10" y="12" width="16" height="14" fill="#151C30" stroke="#49B8D1" strokeWidth="0.8" />
-            {/* Screen Content: Mini 1v1 Battle */}
-            <rect x="12" y="16" width="3" height="5" fill="#E84A4A" />
-            <rect x="21" y="16" width="3" height="5" fill="#67B85A" />
-            <rect x="16" y="15" width="4" height="1" fill="#F4D35E" />
+            {/* Arcade Cabinet Outline */}
+            <rect x="11" y="4" width="22" height="38" fill="#171A1F" stroke="#111522" strokeWidth="1" />
+            
+            {/* Arcade Marquee Banner */}
+            <rect x="13" y="6" width="18" height="5" fill="#E84B4B" />
+            <text x="22" y="10" textAnchor="middle" fill="#FFF7DC" fontSize="3.5" fontFamily="'Press Start 2P', monospace" fontWeight="bold">BvB</text>
+
+            {/* Glowing Arcade Screen Frame */}
+            <rect x="13" y="13" width="18" height="15" fill="#151C30" stroke="#42B8C7" strokeWidth="1" />
+            {/* Screen Content: Colorful 1v1 Battle */}
+            <rect x="15" y="17" width="4" height="6" fill="#E84B4B" />
+            <rect x="25" y="17" width="4" height="6" fill="#69B85A" />
+            <rect x="20" y="16" width="4" height="1.5" fill="#F4D35E" />
+            <circle cx="22" cy="20" r="1.5" fill="#42B8C7" />
 
             {/* Controls Panel */}
-            <rect x="8" y="27" width="20" height="6" fill="#1E293B" />
-            {/* Joystick */}
-            <rect x="12" y="28" width="1.5" height="3" fill="#FFF7DC" />
-            <circle cx="12.7" cy="27.5" r="1.2" fill="#E84A4A" />
-            {/* Buttons */}
-            <circle cx="18" cy="29" r="1" fill="#49B8D1" />
-            <circle cx="21" cy="30" r="1" fill="#F4D35E" />
-            <circle cx="24" cy="29" r="1" fill="#67B85A" />
+            <rect x="11" y="29" width="22" height="6.5" fill="#24334E" stroke="#171A1F" strokeWidth="0.8" />
+            {/* Red Joystick */}
+            <rect x="15" y="30" width="1.5" height="3.5" fill="#FFF7DC" />
+            <circle cx="15.7" cy="29.5" r="1.5" fill="#E84B4B" />
+            {/* Buttons: Cyan, Yellow, Green */}
+            <circle cx="21" cy="31.5" r="1.2" fill="#42B8C7" />
+            <circle cx="24.5" cy="32.5" r="1.2" fill="#F4D35E" />
+            <circle cx="28" cy="31.5" r="1.2" fill="#69B85A" />
 
-            {/* Cabinet Coin Slot */}
-            <rect x="16" y="35" width="4" height="2" fill="#0B0F19" />
-            <rect x="17.5" y="35.5" width="1" height="1" fill="#F4D35E" />
+            {/* Cabinet Coin Slot & Door */}
+            <rect x="19" y="37" width="6" height="3" fill="#111522" />
+            <rect x="21" y="37.5" width="2" height="1" fill="#F4D35E" />
 
-            {/* Right Mini CRT Monitor on Table */}
-            <rect x="30" y="18" width="14" height="13" fill="#111522" stroke="#43566B" strokeWidth="0.8" />
-            <rect x="32" y="20" width="10" height="8" fill="#49B8D1" opacity="0.85" />
-            <line x1="33" y1="23" x2="41" y2="23" stroke="#111522" strokeWidth="0.5" />
-            <line x1="33" y1="25" x2="38" y2="25" stroke="#111522" strokeWidth="0.5" />
+            {/* Right Mini CRT Monitor on Wooden Desk */}
+            <rect x="35" y="19" width="16" height="14" fill="#171A1F" stroke="#43566B" strokeWidth="0.8" />
+            <rect x="37" y="21" width="12" height="10" fill="#42B8C7" />
+            <line x1="38" y1="24" x2="47" y2="24" stroke="#171A1F" strokeWidth="0.8" />
+            <line x1="38" y1="27" x2="44" y2="27" stroke="#171A1F" strokeWidth="0.8" />
 
-            {/* Table / Stand */}
-            <rect x="29" y="31" width="16" height="9" fill="#2C221E" />
+            {/* Desk / Table */}
+            <rect x="34" y="33" width="18" height="9" fill="#4A3728" />
 
             {/* Game Cartridge on floor */}
-            <rect x="1" y="37" width="6" height="3" fill="#F4D35E" stroke="#111522" strokeWidth="0.5" />
-            <rect x="2" y="38" width="4" height="1" fill="#E84A4A" />
+            <rect x="3" y="39" width="7" height="3.5" fill="#F4D35E" stroke="#171A1F" strokeWidth="0.6" />
+            <rect x="4.5" y="40" width="4" height="1.2" fill="#E84B4B" />
 
-            {/* Potted Pixel Plant / Cactus */}
-            <rect x="42" y="33" width="5" height="4" fill="#E84A4A" />
-            <rect x="43.5" y="28" width="2" height="5" fill="#67B85A" />
-            <rect x="42" y="29.5" width="1.5" height="1.5" fill="#67B85A" />
-            <rect x="45.5" y="30.5" width="1.5" height="1.5" fill="#67B85A" />
+            {/* Potted Pixel Cactus */}
+            <rect x="47" y="35" width="5.5" height="4.5" fill="#E84B4B" stroke="#171A1F" strokeWidth="0.5" />
+            <rect x="48.5" y="29" width="2.5" height="6.5" fill="#69B85A" />
+            <rect x="46.5" y="31" width="2" height="2" fill="#69B85A" />
+            <rect x="51" y="32" width="2" height="2" fill="#69B85A" />
 
-            {/* Cables connecting on floor */}
-            <path d="M 28 33 Q 32 38 35 40" fill="none" stroke="#E84A4A" strokeWidth="0.8" />
-            <path d="M 8 36 Q 4 39 2 40" fill="none" stroke="#49B8D1" strokeWidth="0.8" />
+            {/* Colorful Floor Cables */}
+            <path d="M 33 35 Q 38 41 42 42" fill="none" stroke="#E84B4B" strokeWidth="1" />
+            <path d="M 11 38 Q 6 41 3 42" fill="none" stroke="#42B8C7" strokeWidth="1" />
           </svg>
         </div>
 
-        {/* Right Side: Bro 02 */}
+        {/* Right Side: Bro 02 (Yellow Headband + Green Jersey) */}
         <div className="flex flex-col items-center">
-          <div className="mb-2 bg-ink/90 border border-cartridgeYellow px-2 py-0.5 text-[9px] font-arcade text-cartridgeYellow tracking-wider shadow-pixel-sm">
+          <div className="mb-2.5 bg-ink border-2 border-cartridgeYellow px-2.5 py-0.5 text-[10px] font-arcade text-cartridgeYellow tracking-wider shadow-pixel-sm">
             BRO 02
           </div>
-          <PixelCharacter type="bro2" size={72} pose="waiting" />
+          <PixelCharacter type="bro2" size={88} pose="waiting" />
         </div>
       </div>
 
-      {/* Floor / Ground line */}
-      <div className="w-full border-t-2 border-paper/40 pt-1 flex justify-between items-center text-[8px] font-mono text-paper/60 px-1">
-        <span>INSERT COIN</span>
-        <span className="font-arcade tracking-widest text-cartridgeYellow animate-pulse">1v1 READY</span>
-        <span>STAGE 01</span>
+      {/* Floor Status Strip */}
+      <div className="w-full border-t-2 border-[#24334E] pt-2 flex justify-between items-center text-[10px] font-mono text-paper/70 px-2">
+        <span className="font-arcade tracking-wider text-arcadeRed">● INSERT COIN</span>
+        <span className="font-pixel text-[9px] text-cartridgeYellow tracking-widest animate-pulse">1v1 READY</span>
+        <span className="font-arcade tracking-wider">STAGE 01</span>
       </div>
     </div>
   );

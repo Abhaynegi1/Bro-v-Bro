@@ -44,87 +44,101 @@ export const LandingView: React.FC<LandingViewProps> = ({
   };
 
   return (
-    <div className="flex-1 flex flex-col items-center justify-center px-4 py-8 max-w-2xl mx-auto w-full text-center select-none">
+    <div className="flex-1 flex flex-col items-center justify-center px-4 py-8 sm:py-12 max-w-3xl mx-auto w-full text-center select-none">
       {/* Tiny decorative header marks */}
-      <div className="flex items-center gap-2 mb-3 text-cartridgeYellow text-xs font-pixel">
+      <div className="flex items-center gap-2 mb-3 text-arcadeRed font-bold">
         <span>+</span>
-        <span className="text-[9px] tracking-widest text-paper/70 font-arcade">1v1 RETRO GAUNTLET</span>
+        <span className="text-xs tracking-widest font-arcade uppercase text-ink">
+          1V1 RETRO GAUNTLET
+        </span>
         <span>+</span>
       </div>
 
-      {/* Main Pixel Title */}
-      <h1 className="text-3xl sm:text-5xl md:text-6xl font-pixel text-paper tracking-wider mb-3 drop-shadow-[3px_3px_0px_#111522]">
-        BRO <span className="text-arcadeRed font-bold text-2xl sm:text-4xl">v</span> BRO
+      {/* Main Pixel Title (High Contrast Ink on Cream) */}
+      <h1 className="text-4xl sm:text-6xl md:text-7xl font-pixel text-ink tracking-wider mb-3">
+        BRO <span className="text-arcadeRed font-black text-3xl sm:text-5xl">[v]</span> BRO
       </h1>
 
-      {/* Tagline */}
-      <p className="font-arcade text-xs sm:text-sm text-cartridgeYellow tracking-widest uppercase mb-1">
-        YOUR BRO THINKS HE'S BETTER.
-      </p>
-      <p className="font-pixel text-[11px] sm:text-xs text-arcadeRed tracking-wider uppercase mb-6">
-        PROVE HIM WRONG.
-      </p>
+      {/* Tagline (Readable, bold, high contrast) */}
+      <div className="space-y-1 mb-8 max-w-md mx-auto">
+        <p className="font-mono text-sm sm:text-base font-bold text-ink tracking-wide uppercase">
+          YOUR BRO THINKS HE'S BETTER.
+        </p>
+        <p className="font-arcade text-xs sm:text-sm text-arcadeRed font-bold tracking-widest uppercase">
+          PROVE HIM WRONG.
+        </p>
+      </div>
 
       {/* Error alert banner if any */}
       {errorMessage && (
-        <div className="w-full max-w-md mb-4 p-3 bg-ink border-2 border-arcadeRed text-arcadeRed text-xs font-mono shadow-pixel text-left flex items-center justify-between">
-          <span>! {errorMessage}</span>
-          <button onClick={() => window.location.reload()} className="underline text-[10px] ml-2">RETRY</button>
+        <div className="w-full max-w-md mb-6 p-3.5 bg-[#FFF5F5] border-2 border-arcadeRed text-arcadeRed font-mono font-bold text-xs shadow-pixel text-left flex items-center justify-between">
+          <span>⚠️ {errorMessage}</span>
+          <button
+            onClick={() => window.location.reload()}
+            className="underline text-[11px] font-arcade hover:text-ink ml-2"
+          >
+            RETRY
+          </button>
         </div>
       )}
 
-      {/* Primary CTA Buttons */}
-      <div className="flex flex-wrap items-center justify-center gap-4 mb-6 z-10">
+      {/* Primary Action Buttons (High contrast: Dark Navy vs Cream) */}
+      <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6 mb-4 z-10">
         <PixelButton
-          variant="red"
+          variant="navy"
           size="lg"
           onClick={() => setActiveModal('create')}
+          className="min-w-[190px]"
         >
           CREATE ROOM
         </PixelButton>
 
         <PixelButton
-          variant="navy"
+          variant="cream"
           size="lg"
           onClick={() => setActiveModal('join')}
+          className="min-w-[190px]"
         >
           JOIN ROOM
         </PixelButton>
       </div>
 
-      {/* The Centerpiece Handcrafted Pixel Arcade Scene */}
+      {/* The Centerpiece Handcrafted Pixel Arcade Scene (Dark Navy inside Cream) */}
       <PixelArcadeScene />
 
-      {/* Supporting Retro Text */}
-      <div className="w-full max-w-md mt-4 pt-4 border-t border-paper/20 text-center">
-        <div className="font-arcade text-[10px] sm:text-[11px] text-paper/70 space-y-1 tracking-widest">
+      {/* Supporting Retro Text (70% Readable font, high contrast on cream) */}
+      <div className="w-full max-w-md mt-4 pt-5 border-t-2 border-ink/20 text-center">
+        <div className="font-mono text-xs sm:text-sm font-bold text-ink/80 space-y-1 tracking-wider uppercase">
           <p>MAKE A ROOM.</p>
           <p>CALL YOUR BRO.</p>
           <p>PLAY SOME GAMES.</p>
           <p>KEEP SCORE.</p>
-          <p className="text-cartridgeYellow font-bold pt-1">FIND OUT WHO'S BETTER.</p>
+          <p className="text-arcadeRed font-arcade text-xs pt-1 tracking-widest">
+            FIND OUT WHO'S BETTER.
+          </p>
         </div>
       </div>
 
       {/* ================= MODAL: CREATE ROOM ================= */}
       {activeModal === 'create' && (
-        <div className="fixed inset-0 bg-ink/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="w-full max-w-md bg-paper text-ink border-4 border-ink p-6 shadow-pixel-lg relative animate-pixel-idle">
+        <div className="fixed inset-0 bg-[#0A0F19]/65 z-50 flex items-center justify-center p-4">
+          <div className="w-full max-w-md bg-[#FFFDF5] text-ink border-3 border-ink p-6 sm:p-7 shadow-pixel-lg relative text-left">
             {/* Modal Header */}
-            <div className="flex items-center justify-between border-b-2 border-ink pb-2 mb-4">
-              <span className="font-pixel text-xs text-arcadeRed tracking-wider">CREATE ROOM</span>
+            <div className="flex items-center justify-between border-b-2 border-ink pb-3 mb-5">
+              <span className="font-pixel text-sm text-darkNavy tracking-wider">CREATE ROOM</span>
               <button
                 type="button"
                 onClick={() => setActiveModal(null)}
-                className="font-pixel text-xs text-ink hover:text-arcadeRed"
+                className="font-pixel text-xs text-ink hover:text-arcadeRed p-1 transition-colors"
+                title="Close"
               >
                 [X]
               </button>
             </div>
 
-            <form onSubmit={handleCreateSubmit} className="space-y-4 text-left">
+            <form onSubmit={handleCreateSubmit} className="space-y-5">
               <div>
-                <label className="block font-arcade text-xs uppercase mb-1 text-ink">
+                <label className="block font-mono text-xs font-bold uppercase mb-1.5 text-ink">
                   YOUR BRO NAME:
                 </label>
                 <input
@@ -135,27 +149,31 @@ export const LandingView: React.FC<LandingViewProps> = ({
                   placeholder="LUDWIG"
                   value={hostName}
                   onChange={(e) => setHostName(e.target.value)}
-                  className="w-full bg-[#FFF7DC] border-2 border-ink px-3 py-2 text-ink font-mono font-bold focus:outline-none focus:border-arcadeRed"
+                  className="w-full bg-white border-2 border-ink px-4 py-2.5 text-ink font-mono font-bold text-base focus:outline-none focus:border-arcadeRed shadow-pixel-sm"
                 />
               </div>
 
               <div>
-                <label className="block font-arcade text-xs uppercase mb-2 text-ink">
+                <label className="block font-mono text-xs font-bold uppercase mb-2 text-ink">
                   HOW MANY ROUNDS?
                 </label>
-                <div className="grid grid-cols-3 gap-2">
-                  {[1, 3, 5].map((wins) => (
+                <div className="grid grid-cols-3 gap-2.5">
+                  {[
+                    { wins: 1, label: '1 WIN' },
+                    { wins: 3, label: 'FIRST TO 3' },
+                    { wins: 5, label: 'FIRST TO 5' },
+                  ].map((opt) => (
                     <button
-                      key={wins}
+                      key={opt.wins}
                       type="button"
-                      onClick={() => setTargetWins(wins)}
-                      className={`py-2 px-2 border-2 border-ink font-pixel text-xs transition-all ${
-                        targetWins === wins
-                          ? 'bg-arcadeRed text-cream shadow-pixel-sm -translate-y-0.5'
-                          : 'bg-[#FFF7DC] text-ink hover:bg-cream'
+                      onClick={() => setTargetWins(opt.wins)}
+                      className={`py-3 px-2 border-2 font-mono font-bold text-xs sm:text-sm transition-all select-none ${
+                        targetWins === opt.wins
+                          ? 'bg-darkNavy text-paper border-arcadeRed shadow-pixel-sm -translate-y-0.5'
+                          : 'bg-white text-ink border-ink hover:bg-cream'
                       }`}
                     >
-                      {wins === 1 ? '1 WIN' : `FIRST TO ${wins}`}
+                      {opt.label}
                     </button>
                   ))}
                 </div>
@@ -164,10 +182,10 @@ export const LandingView: React.FC<LandingViewProps> = ({
               <div className="pt-2">
                 <PixelButton
                   type="submit"
-                  variant="red"
+                  variant="navy"
                   size="md"
                   disabled={isLoading || !hostName.trim()}
-                  className="w-full justify-center"
+                  className="w-full justify-center py-3.5"
                 >
                   {isLoading ? 'STARTING...' : 'START ROOM'}
                 </PixelButton>
@@ -179,23 +197,24 @@ export const LandingView: React.FC<LandingViewProps> = ({
 
       {/* ================= MODAL: JOIN ROOM ================= */}
       {activeModal === 'join' && (
-        <div className="fixed inset-0 bg-ink/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="w-full max-w-md bg-paper text-ink border-4 border-ink p-6 shadow-pixel-lg relative animate-pixel-idle">
+        <div className="fixed inset-0 bg-[#0A0F19]/65 z-50 flex items-center justify-center p-4">
+          <div className="w-full max-w-md bg-[#FFFDF5] text-ink border-3 border-ink p-6 sm:p-7 shadow-pixel-lg relative text-left">
             {/* Modal Header */}
-            <div className="flex items-center justify-between border-b-2 border-ink pb-2 mb-4">
-              <span className="font-pixel text-xs text-crtCyan tracking-wider">JOIN ROOM</span>
+            <div className="flex items-center justify-between border-b-2 border-ink pb-3 mb-5">
+              <span className="font-pixel text-sm text-darkNavy tracking-wider">JOIN ROOM</span>
               <button
                 type="button"
                 onClick={() => setActiveModal(null)}
-                className="font-pixel text-xs text-ink hover:text-arcadeRed"
+                className="font-pixel text-xs text-ink hover:text-arcadeRed p-1 transition-colors"
+                title="Close"
               >
                 [X]
               </button>
             </div>
 
-            <form onSubmit={handleJoinSubmit} className="space-y-4 text-left">
+            <form onSubmit={handleJoinSubmit} className="space-y-5">
               <div>
-                <label className="block font-arcade text-xs uppercase mb-1 text-ink">
+                <label className="block font-mono text-xs font-bold uppercase mb-1.5 text-ink">
                   ENTER BRO CODE:
                 </label>
                 <input
@@ -206,12 +225,12 @@ export const LandingView: React.FC<LandingViewProps> = ({
                   placeholder="K7X9P"
                   value={joinCode}
                   onChange={(e) => setJoinCode(e.target.value.toUpperCase())}
-                  className="w-full bg-[#FFF7DC] border-2 border-ink px-3 py-2 text-ink font-pixel tracking-widest text-center text-lg uppercase focus:outline-none focus:border-crtCyan"
+                  className="w-full bg-white border-2 border-ink px-4 py-2.5 text-ink font-pixel tracking-widest text-center text-xl uppercase focus:outline-none focus:border-arcadeRed shadow-pixel-sm"
                 />
               </div>
 
               <div>
-                <label className="block font-arcade text-xs uppercase mb-1 text-ink">
+                <label className="block font-mono text-xs font-bold uppercase mb-1.5 text-ink">
                   YOUR BRO NAME:
                 </label>
                 <input
@@ -221,17 +240,17 @@ export const LandingView: React.FC<LandingViewProps> = ({
                   placeholder="CONNOR"
                   value={guestName}
                   onChange={(e) => setGuestName(e.target.value)}
-                  className="w-full bg-[#FFF7DC] border-2 border-ink px-3 py-2 text-ink font-mono font-bold focus:outline-none focus:border-crtCyan"
+                  className="w-full bg-white border-2 border-ink px-4 py-2.5 text-ink font-mono font-bold text-base focus:outline-none focus:border-arcadeRed shadow-pixel-sm"
                 />
               </div>
 
               <div className="pt-2">
                 <PixelButton
                   type="submit"
-                  variant="cyan"
+                  variant="navy"
                   size="md"
                   disabled={isLoading || !joinCode.trim() || !guestName.trim()}
-                  className="w-full justify-center"
+                  className="w-full justify-center py-3.5"
                 >
                   {isLoading ? 'JOINING...' : 'JOIN BATTLE'}
                 </PixelButton>

@@ -12,28 +12,27 @@ Bro v Bro is not a generic modern esports dashboard with a pixel font slapped on
 
 ---
 
-## 2. Color System: Aged Paper & Deep Ink
+## 2. Color System: Warm Cream Foundation & High Contrast
 
-Avoid default dark-mode gaming colors and purple gradients. The visual foundation is warm, nostalgic, and disciplined:
+Move away from full dark-mode palettes. The primary foundation is a warm, crisp paper surface with high-contrast dark ink and intentional dark navy visual blocks:
 
 ```text
-PAPER / CREAM:
-  Primary Paper:   #F4EFD9
-  Light Parchment: #FFF7DC
+PRIMARY BACKGROUND:
+  Warm Paper Cream: #F4EBD0 / #FFF7DC (Main page canvas)
 
-INK / NAVY:
-  Deep Ink Black:  #111522
-  Cabinet Dark:    #161616
-  Night Navy:      #11182A
-  Dark Slate Navy: #151C30
-  Muted Slate:     #43566B
+PRIMARY INK & BORDERS:
+  Deep Ink Black:   #171A1F (Text, borders, crisp hard shadows)
 
-ACCENT PALETTE (Used sparingly — 1 primary + 1 secondary per screen):
-  Arcade Red:      #E84A4A
-  Pixel Pink:      #F04D8A
-  CRT Cyan:        #49B8D1
-  Cartridge Yellow:#F4D35E
-  GameBoy Green:   #67B85A
+DARK NAVY (Intentional blocks only):
+  Cabinet Navy:     #18243A (Header bar, arcade scene interior, match view)
+  Muted Slate:      #24334E (Floors, controls, tile grids)
+
+ACCENT PALETTE (1–2 per section):
+  Arcade Red:       #E84B4B
+  Cartridge Yellow: #F4D35E
+  CRT Cyan:         #42B8C7
+  GameBoy Green:    #69B85A
+  Pixel Pink:       #E95A8A
 ```
 
 ---

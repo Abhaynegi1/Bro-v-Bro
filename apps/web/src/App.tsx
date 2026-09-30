@@ -21,7 +21,7 @@ export const App: React.FC = () => {
   const [notification, setNotification] = useState<string | null>(null);
 
   const handlePlayerJoined = useCallback((data: { name: string; playerId: string }) => {
-    setNotification(`🔥 ${data.name} entered the room!`);
+    setNotification(`🔥 ${data.name.toUpperCase()} ENTERED THE ROOM!`);
     setTimeout(() => setNotification(null), 4000);
   }, []);
 
@@ -114,10 +114,7 @@ export const App: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-ink text-paper font-mono relative selection:bg-arcadeRed selection:text-white">
-      {/* Delicate CRT scanline texture */}
-      <div className="fixed inset-0 crt-overlay pointer-events-none z-40 opacity-40" />
-
+    <div className="min-h-screen flex flex-col bg-paper text-ink font-mono relative selection:bg-arcadeRed selection:text-white">
       <Header
         roomCode={roomCode}
         isConnected={roomCode ? isConnected : undefined}
@@ -126,7 +123,7 @@ export const App: React.FC = () => {
 
       {/* Floating Retro Notification Banner */}
       {notification && (
-        <div className="fixed top-14 left-1/2 -translate-x-1/2 z-50 px-4 py-2 bg-paper text-ink border-2 border-ink shadow-pixel font-arcade text-xs tracking-wider animate-pixel-idle">
+        <div className="fixed top-14 left-1/2 -translate-x-1/2 z-50 px-5 py-2.5 bg-darkNavy text-paper border-2 border-ink shadow-pixel font-arcade text-xs tracking-wider animate-pixel-idle">
           {notification}
         </div>
       )}
