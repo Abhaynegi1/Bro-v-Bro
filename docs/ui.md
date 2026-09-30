@@ -1,91 +1,96 @@
-# UI & Design System Guidelines — Bro v Bro
+# UI & Design System Direction — Bro v Bro
 
-## 1. Aesthetic Direction: "Casual Game Night"
+## 1. Visual Target & Core Personality
 
-The design of Bro v Bro must feel like two friends yelling at each other on a couch while battling across quick games.
+> **“A forgotten pixel-art game from the late 90s / early 2000s that somehow became a modern multiplayer website.”**
 
-```text
-The UI should communicate:
-"You are playing your friend."
+Bro v Bro is not a generic modern esports dashboard with a pixel font slapped on top, nor is it a neon purple cyberpunk UI. It is designed to feel like a small, weird, handcrafted game world—combining old Flash gaming websites, Game Boy / SNES / arcade title screens, and early internet personal web experiments.
 
-NOT:
-"Welcome to our enterprise SaaS mini-game engagement portal."
-```
-
-### Visual Pillars:
-1. **Minimal & Punchy:** Zero unnecessary clutter. If an element doesn't help players start a game, make a move, or see the score, remove it.
-2. **Playful & Scrappy:** Chunky borders, high-contrast arcade buttons, crisp typography, and snappy sound cues.
-3. **Competitive Rivalry:** Prominent player scores and head-to-head framing.
-4. **Hero the Game:** 80% of the screen real estate belongs to the active game board. Surrounding chrome is strictly a scoreboard and round counter.
-
-### Anti-Patterns (STRICTLY FORBIDDEN):
-- ❌ **No Corporate / SaaS Dashboards:** No collapsible sidebars, stat metrics cards, dropdown account menus, or breadcrumbs.
-- ❌ **No "AI Product" Aesthetics:** No generic purple-to-pink gradient blobs, shiny floating stars, or glassmorphic blur overdoses.
-- ❌ **No Sluggish Transitions:** No 600ms page fade-outs. Screen transitions must feel instantaneous and snappy (<150ms).
-- ❌ **No Generic System Fonts:** Use expressive, punchy modern sans-serif typography (e.g. Outfit, Space Grotesk, or Archivo Black for headers).
+### The Golden Ratio:
+- **70% Clean, readable modern web layout** (usable spacing, responsive structure, clear buttons)
+- **30% Handcrafted pixel-art & retro game personality** (hero illustrations, characters, decorative cables/cartridges, arcade scoreboards, CRT textures)
 
 ---
 
-## 2. Universal Match Header
+## 2. Color System: Aged Paper & Deep Ink
 
-During gameplay and round transitions, a persistent, minimalist header keeps players locked into the rivalry:
+Avoid default dark-mode gaming colors and purple gradients. The visual foundation is warm, nostalgic, and disciplined:
 
 ```text
-┌─────────────────────────────────────────────────────────────┐
-│  ABHAY                                             RAHUL    │
-│    [ 3 ]                                           [ 2 ]    │
-│                                                             │
-│                      ROUND 6 — WORDLE                       │
-│                      [ Timer: 00:14 ]                       │
-└─────────────────────────────────────────────────────────────┘
-```
+PAPER / CREAM:
+  Primary Paper:   #F4EFD9
+  Light Parchment: #FFF7DC
 
-- **Player Names:** Bold uppercase, distinct player color accents (e.g., Electric Blue vs Hot Coral).
-- **Scores:** Large, prominent digits that pulse when updated.
-- **Center:** Game title and active countdown timer / turn indicator.
+INK / NAVY:
+  Deep Ink Black:  #111522
+  Cabinet Dark:    #161616
+  Night Navy:      #11182A
+  Dark Slate Navy: #151C30
+  Muted Slate:     #43566B
+
+ACCENT PALETTE (Used sparingly — 1 primary + 1 secondary per screen):
+  Arcade Red:      #E84A4A
+  Pixel Pink:      #F04D8A
+  CRT Cyan:        #49B8D1
+  Cartridge Yellow:#F4D35E
+  GameBoy Green:   #67B85A
+```
 
 ---
 
-## 3. Core Screens Wireframe Specifications
+## 3. Typography Architecture
 
-### 3.1 Landing Screen
-- **Hero:** Punchy logo (`BRO v BRO`).
-- **Tagline:** *"1v1 browser game night with your bro."*
-- **Two Big Action Buttons:**
-  - `[ CREATE ROOM ]` (Large, primary accent)
-  - `[ ENTER ROOM CODE ]` (Secondary outline with quick input)
+### Headings & Arcade Scores
+- **Fonts:** `'Press Start 2P'`, `'Silkscreen'`
+- **Role:** Major titles (`BRO V BRO`), round counters, victory declarations, big score numbers (`04 — 02`), game titles.
+- **Traits:** Chunky, blocky, square, strong silhouette, authentic bitmap feel.
 
-### 3.2 Waiting Room / Lobby
-- **Room Code Display:** Huge, high-contrast code box (`BRO42`) with one-click **"Copy Invite Link"**.
-- **The Two Slots:**
-  - Player 1 Card: *"Abhay (Host) - Ready"*
-  - Player 2 Card: Pulsing dashed card: *"Waiting for your bro to join..."*
-- **Settings (Host only):** Series length selector: `[ First to 3 ]` `[ First to 5 ]`.
+### Body Text & Interactive UI
+- **Fonts:** `'Space Mono'`, `'JetBrains Mono'`, clean monospace / grotesk
+- **Role:** Button labels, descriptions, room codes, player names, instructions, system messages.
+- **Rule:** Never use pixel bitmap fonts for long paragraphs. Legibility is paramount.
 
-### 3.3 Game Selection Screen
-- Displayed between rounds.
-- Banner: *"Rahul is choosing the next game..."* (or *"Your pick!"*).
-- Grid of game cards with clear icons, titles, and average duration:
-  - `[ Tic Tac Toe ]` `~1m`
-  - `[ Reaction Test ]` `~30s`
-  - `[ Wordle ]` `~2m`
-  - `[ Connect Four ]` `~2m`
-  - `[ Minesweeper ]` `~2m`
-  - `[ Chess ]` `~5m`
+---
 
-### 3.4 Active Game Screen
-- Universal Match Header at top.
-- Centered, distraction-free Game Viewport (responsive square/rectangle container).
-- In-game interaction prompts (e.g., *"Your Turn"*, *"Opponent Thinking..."*).
+## 4. Texture & Retro Atmosphere
 
-### 3.5 Round Result Screen
-- Immediate impact overlay:
-  - *"Abhay wins Round 4!"*
-  - Scoreboard flip animation (`2` ➔ `3`).
-  - Next round countdown: *"Next game starting in 3... 2... 1..."*.
+- **Subtle Scanlines:** Delicate CRT scanlines on active game containers and mini-screens (`background-size: 100% 4px`).
+- **Dithered Pixel Patterns:** Subtle 2x2 checkerboard pixel shading on cards and headers.
+- **Offset Block Shadows:** Chunky `3px 3px 0px #111522` and `4px 4px 0px #111522` drop shadows instead of fuzzy modern blur filters.
+- **Handcrafted Separators:** Custom dashed or dithered pixel dividers (`+ - + - +`).
 
-### 3.6 Match Champion Screen
-- Bold celebration for series winner:
-  - *"ABHAY WINS THE BRO V BRO!"*
-  - Complete series round recap list.
-  - Action buttons: `[ REMATCH ]` and `[ LEAVE ROOM ]`.
+---
+
+## 5. Pixel Art World & Characters
+
+The universe features two signature pixel characters:
+- **Bro 01:** Red / Cyan accented pixel character (idle bobbing, competitive pose).
+- **Bro 02:** Yellow / Green accented pixel challenger (blinking, ready pose).
+
+### Environmental Props:
+- Mini desktop CRT monitors with flickering screen pixels
+- Floor cables connecting game cartridges to arcade cabinets
+- Floating pixel stars (`★`), plus marks (`+`), and tiny hearts
+- Potted pixel desktop plants / cacti
+
+---
+
+## 6. Component Specs
+
+### 6.1 Pixel Button
+- Rectangular with crisp 2px solid border (`#111522` or `#F4EFD9`).
+- Deep offset shadow (`3px 3px 0 #111522`).
+- Hover state: Slight translate (`translate(-1px, -1px)`) with pixel cursor arrow (`> `) appearing before the label.
+- Active state: Pressed translate (`translate(2px, 2px)` with shadow collapsing to `1px 1px 0`).
+
+### 6.2 Scoreboard
+- Prominent arcade score numbers (`04` vs `03`).
+- Win indicator stars (`★ ★ ★ ★` vs `★ ★ ★`).
+- Clean separation between active round indicator and game canvas.
+
+### 6.3 Microcopy
+- Playful, personal, peer-to-peer banter:
+  - *"ROOM READY."* (not "Session created")
+  - *"WAITING FOR YOUR BRO..."* (not "Waiting for second player to connect")
+  - *"YOUR BRO GOT COOKED."* (not "Opponent defeated")
+  - *"HE RAN AWAY."* (not "Connection timeout")

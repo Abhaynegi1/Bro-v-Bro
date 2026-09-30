@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import type { RoomState } from '@bvb/shared';
-import { Crown, Copy, Check, Users, Swords, Play, LogOut, CheckCircle2, Circle } from 'lucide-react';
+import { PixelCharacter } from './pixel/PixelCharacter';
+import { PixelButton } from './pixel/PixelButton';
 import confetti from 'canvas-confetti';
 
 interface WaitingRoomViewProps {
@@ -40,204 +41,202 @@ export const WaitingRoomView: React.FC<WaitingRoomViewProps> = ({
     setTimeout(() => setCopiedLink(false), 2000);
   };
 
-  const triggerCelebration = () => {
+  const handleStart = () => {
     confetti({
-      particleCount: 50,
-      spread: 60,
-      origin: { y: 0.7 },
+      particleCount: 60,
+      spread: 70,
+      origin: { y: 0.65 },
+      colors: ['#E84A4A', '#49B8D1', '#F4D35E', '#67B85A'],
     });
+    onStartMatch();
   };
 
   return (
-    <div className="flex-1 flex flex-col items-center justify-center px-4 py-8 max-w-2xl mx-auto w-full">
-      {/* Top Banner: Room Code & Sharing */}
-      <div className="w-full bg-[#121826] border border-slate-800 rounded-2xl p-6 sm:p-7 shadow-xl mb-6 flex flex-col items-center text-center relative overflow-hidden">
-        <div className="text-xs font-semibold text-slate-400 uppercase tracking-widest mb-1.5 flex items-center gap-1.5">
-          <Users className="w-3.5 h-3.5 text-blue-400" />
-          <span>Match Lobby</span>
-        </div>
-
-        <div className="flex items-center gap-3 my-2">
-          <span className="font-mono font-black text-4xl sm:text-5xl text-white tracking-widest drop-shadow-md">
-            {roomState.code}
+    <div className="flex-1 flex flex-col items-center justify-center px-4 py-8 max-w-2xl mx-auto w-full text-center select-none">
+      {/* Lobby Header & Room Cartridge */}
+      <div className="w-full bg-[#151C30] border-2 border-paper p-5 shadow-pixel-light mb-6 relative">
+        <div className="flex items-center justify-between border-b border-paper/30 pb-2 mb-3">
+          <span className="font-arcade text-[10px] text-cartridgeYellow tracking-widest uppercase">
+            ARCADE LOBBY
           </span>
-          <button
-            onClick={handleCopyCode}
-            title="Copy Room Code"
-            className="p-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 transition-all border border-slate-700/60"
-          >
-            {copiedCode ? <Check className="w-5 h-5 text-emerald-400" /> : <Copy className="w-5 h-5" />}
-          </button>
+          <span className="font-arcade text-[10px] text-paper/70 tracking-wider">
+            {roomState.currentMatch?.seriesCondition.type === 'FIRST_TO_N'
+              ? `SERIES: FIRST TO ${roomState.currentMatch.seriesCondition.targetPoints}`
+              : 'SERIES: MATCH PLAY'}
+          </span>
         </div>
 
-        <p className="text-xs text-slate-400 max-w-sm mb-4">
-          Share this code or direct invite link with your bro to start the battle.
-        </p>
+        {/* Large Retro Room Code */}
+        <div className="my-2">
+          <div className="font-arcade text-[9px] text-paper/60 uppercase mb-1">
+            BRO ROOM CODE
+          </div>
+          <div className="font-pixel text-3xl sm:text-5xl text-paper tracking-widest py-1 drop-shadow-[2px_2px_0px_#111522]">
+            {roomState.code}
+          </div>
+        </div>
 
-        <button
-          onClick={handleCopyLink}
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-900 border border-slate-700/80 text-xs font-bold text-slate-200 hover:bg-slate-850 hover:border-slate-600 transition-all"
-        >
-          {copiedLink ? (
-            <>
-              <Check className="w-3.5 h-3.5 text-emerald-400" />
-              <span className="text-emerald-400">Invite Link Copied!</span>
-            </>
-          ) : (
-            <>
-              <Copy className="w-3.5 h-3.5 text-slate-400" />
-              <span>Copy Direct Invite Link</span>
-            </>
-          )}
-        </button>
+        {/* Quick Action Buttons for Code / Link */}
+        <div className="flex flex-wrap items-center justify-center gap-3 mt-3">
+          <PixelButton
+            variant="paper"
+            size="sm"
+            onClick={handleCopyCode}
+          >
+            {copiedCode ? '✓ CODE COPIED!' : 'COPY CODE'}
+          </PixelButton>
+
+          <PixelButton
+            variant="navy"
+            size="sm"
+            onClick={handleCopyLink}
+          >
+            {copiedLink ? '✓ LINK COPIED!' : 'COPY INVITE LINK'}
+          </PixelButton>
+        </div>
       </div>
 
-      {/* Versus Head-to-Head Slots */}
+      {/* Head-to-Head Retro Stage */}
       <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-4 mb-6 relative">
-        {/* VS Badge in center (for md screens) */}
-        <div className="hidden md:flex absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-slate-900 border-2 border-slate-800 items-center justify-center font-display font-black text-xs text-rose-500 z-10 shadow-lg">
+        {/* VS Pixel Badge in Center */}
+        <div className="hidden md:flex absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 w-10 h-10 bg-ink border-2 border-arcadeRed items-center justify-center font-pixel text-xs text-arcadeRed shadow-pixel">
           VS
         </div>
 
-        {/* Player 1 Card (Host) */}
-        <div className={`p-5 rounded-2xl border transition-all ${
-          playerA
-            ? 'bg-[#121826] border-blue-500/40 shadow-lg shadow-blue-500/5'
-            : 'bg-slate-900/40 border-dashed border-slate-800'
-        }`}>
-          <div className="flex items-center justify-between mb-4">
-            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-blue-500/10 border border-blue-500/20 text-xs font-bold text-blue-400">
-              <Crown className="w-3.5 h-3.5 text-yellow-400" />
-              <span>Host</span>
+        {/* ================= STAGE 1: BRO 01 (HOST) ================= */}
+        <div className="bg-[#151C30] border-2 border-crtCyan p-5 shadow-pixel flex flex-col items-center justify-between min-h-[220px]">
+          <div className="w-full flex items-center justify-between border-b border-paper/20 pb-1 mb-2">
+            <span className="font-arcade text-[9px] text-crtCyan tracking-wider">
+              {playerA?.id === myPlayerId ? '★ YOU (HOST)' : 'HOST'}
             </span>
+            <span className={`font-pixel text-[9px] px-1.5 py-0.5 border ${
+              playerA?.isReady
+                ? 'bg-gameboyGreen text-ink border-ink font-bold'
+                : 'bg-ink text-paper/50 border-paper/30'
+            }`}>
+              {playerA?.isReady ? 'READY' : 'WAITING'}
+            </span>
+          </div>
 
-            {playerA && (
-              <span className={`text-xs font-semibold px-2 py-0.5 rounded-full flex items-center gap-1 ${
-                playerA.isReady ? 'text-emerald-400 bg-emerald-500/10' : 'text-slate-400 bg-slate-800'
+          <div className="my-2 flex flex-col items-center">
+            <PixelCharacter
+              type="bro1"
+              size={80}
+              pose={playerA?.isReady ? 'ready' : 'idle'}
+            />
+            <div className="font-pixel text-sm text-paper mt-3 uppercase tracking-wide">
+              {playerA?.name || 'BRO 01'}
+            </div>
+            <div className="text-[10px] font-mono text-paper/60 mt-0.5">
+              {playerA?.isConnected ? '● CONNECTED' : '○ OFFLINE'}
+            </div>
+          </div>
+
+          <div className="w-full text-center text-[9px] font-arcade text-paper/40 border-t border-paper/10 pt-1">
+            PLAYER 01
+          </div>
+        </div>
+
+        {/* ================= STAGE 2: BRO 02 (GUEST) ================= */}
+        <div className="bg-[#151C30] border-2 border-arcadeRed p-5 shadow-pixel flex flex-col items-center justify-between min-h-[220px]">
+          <div className="w-full flex items-center justify-between border-b border-paper/20 pb-1 mb-2">
+            <span className="font-arcade text-[9px] text-arcadeRed tracking-wider">
+              {playerB?.id === myPlayerId ? '★ YOU (CHALLENGER)' : 'CHALLENGER'}
+            </span>
+            {playerB && (
+              <span className={`font-pixel text-[9px] px-1.5 py-0.5 border ${
+                playerB.isReady
+                  ? 'bg-gameboyGreen text-ink border-ink font-bold'
+                  : 'bg-ink text-paper/50 border-paper/30'
               }`}>
-                {playerA.isReady ? <CheckCircle2 className="w-3 h-3" /> : <Circle className="w-3 h-3" />}
-                {playerA.isReady ? 'Ready' : 'Not Ready'}
+                {playerB.isReady ? 'READY' : 'WAITING'}
               </span>
             )}
           </div>
 
-          <div className="mb-2">
-            <h3 className="font-display font-bold text-xl text-white truncate flex items-center gap-2">
-              {playerA?.name || 'Empty'}
-              {playerA?.id === myPlayerId && (
-                <span className="text-[11px] font-sans font-semibold bg-slate-800 text-slate-300 px-2 py-0.5 rounded-md">
-                  You
-                </span>
-              )}
-            </h3>
-            <p className="text-xs text-slate-400 flex items-center gap-1.5 mt-1">
-              <span className={`w-2 h-2 rounded-full ${playerA?.isConnected ? 'bg-emerald-500' : 'bg-slate-600'}`} />
-              <span>{playerA?.isConnected ? 'Online' : 'Offline'}</span>
-            </p>
-          </div>
-        </div>
-
-        {/* Player 2 Card (Guest) */}
-        <div className={`p-5 rounded-2xl border transition-all ${
-          playerB
-            ? 'bg-[#121826] border-rose-500/40 shadow-lg shadow-rose-500/5'
-            : 'bg-slate-900/40 border-2 border-dashed border-slate-800 flex flex-col items-center justify-center py-8 text-center'
-        }`}>
           {playerB ? (
-            <>
-              <div className="flex items-center justify-between mb-4">
-                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-rose-500/10 border border-rose-500/20 text-xs font-bold text-rose-400">
-                  <Swords className="w-3.5 h-3.5 text-rose-400" />
-                  <span>Challenger</span>
-                </span>
-
-                <span className={`text-xs font-semibold px-2 py-0.5 rounded-full flex items-center gap-1 ${
-                  playerB.isReady ? 'text-emerald-400 bg-emerald-500/10' : 'text-slate-400 bg-slate-800'
-                }`}>
-                  {playerB.isReady ? <CheckCircle2 className="w-3 h-3" /> : <Circle className="w-3 h-3" />}
-                  {playerB.isReady ? 'Ready' : 'Not Ready'}
-                </span>
+            <div className="my-2 flex flex-col items-center">
+              <PixelCharacter
+                type="bro2"
+                size={80}
+                pose={playerB.isReady ? 'ready' : 'idle'}
+              />
+              <div className="font-pixel text-sm text-paper mt-3 uppercase tracking-wide">
+                {playerB.name}
               </div>
-
-              <div className="mb-2">
-                <h3 className="font-display font-bold text-xl text-white truncate flex items-center gap-2">
-                  {playerB.name}
-                  {playerB.id === myPlayerId && (
-                    <span className="text-[11px] font-sans font-semibold bg-slate-800 text-slate-300 px-2 py-0.5 rounded-md">
-                      You
-                    </span>
-                  )}
-                </h3>
-                <p className="text-xs text-slate-400 flex items-center gap-1.5 mt-1">
-                  <span className={`w-2 h-2 rounded-full ${playerB.isConnected ? 'bg-emerald-500' : 'bg-slate-600'}`} />
-                  <span>{playerB.isConnected ? 'Online' : 'Offline'}</span>
-                </p>
+              <div className="text-[10px] font-mono text-paper/60 mt-0.5">
+                {playerB.isConnected ? '● CONNECTED' : '○ OFFLINE'}
               </div>
-            </>
+            </div>
           ) : (
-            <div className="flex flex-col items-center">
-              <div className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center text-slate-400 mb-3 animate-pulse">
-                <Users className="w-5 h-5" />
+            /* Missing Bro State */
+            <div className="my-4 flex flex-col items-center justify-center flex-1">
+              <div className="w-12 h-16 border-2 border-dashed border-paper/40 flex items-center justify-center font-pixel text-xl text-paper/30 animate-pulse mb-3">
+                ?
               </div>
-              <h4 className="font-display font-bold text-sm text-slate-300 mb-1">Waiting for opponent...</h4>
-              <p className="text-xs text-slate-500 max-w-[200px]">Send the room code to invite a bro</p>
+              <div className="font-arcade text-xs text-cartridgeYellow tracking-wider">
+                YOUR BRO IS MISSING.
+              </div>
+              <div className="font-mono text-[10px] text-paper/60 mt-1 max-w-[180px]">
+                SHARE CODE {roomState.code} TO SUMMON HIM.
+              </div>
             </div>
           )}
+
+          <div className="w-full text-center text-[9px] font-arcade text-paper/40 border-t border-paper/10 pt-1">
+            PLAYER 02
+          </div>
         </div>
       </div>
 
-      {/* Series Settings Badge */}
-      <div className="w-full bg-slate-900/60 border border-slate-800/80 rounded-xl px-4 py-2.5 flex items-center justify-between text-xs text-slate-400 mb-6">
-        <span>Format:</span>
-        <span className="font-bold text-slate-200">
-          {roomState.currentMatch?.seriesCondition.type === 'FIRST_TO_N'
-            ? `First to ${roomState.currentMatch.seriesCondition.targetPoints} Points`
-            : 'Best of Series'}
+      {/* Retro Status Announcement Banner */}
+      <div className="w-full bg-ink border-2 border-paper/30 px-4 py-2.5 mb-6 text-center">
+        <span className="font-arcade text-xs tracking-wider text-paper">
+          {!playerB
+            ? 'WAITING FOR YOUR BRO...'
+            : !bothReady
+            ? 'WAITING FOR BOTH BROS TO READY UP...'
+            : 'BOTH BROS READY. INSERT MATCH.'}
         </span>
       </div>
 
-      {/* Action Buttons */}
-      <div className="w-full flex flex-col sm:flex-row items-center gap-3">
+      {/* Action Controls */}
+      <div className="w-full flex flex-col sm:flex-row items-center justify-center gap-4">
         {/* Ready Toggle */}
-        <button
+        <PixelButton
+          variant={myPlayer?.isReady ? 'yellow' : 'paper'}
+          size="lg"
           onClick={onToggleReady}
-          className={`w-full sm:w-1/2 py-3 px-4 rounded-xl font-display font-bold text-sm border flex items-center justify-center gap-2 transition-all ${
-            myPlayer?.isReady
-              ? 'bg-emerald-600/10 border-emerald-500/50 text-emerald-400 hover:bg-emerald-600/20'
-              : 'bg-slate-800 border-slate-700 text-slate-200 hover:bg-slate-750'
-          }`}
+          className="w-full sm:w-auto min-w-[200px]"
         >
-          <CheckCircle2 className="w-4 h-4" />
-          <span>{myPlayer?.isReady ? 'You Are Ready!' : 'Click to Ready Up'}</span>
-        </button>
+          {myPlayer?.isReady ? '✓ READY!' : 'READY UP'}
+        </PixelButton>
 
-        {/* Start Game / Launch (Host Only) */}
+        {/* Start Game (Host only) */}
         {isHost ? (
-          <button
-            onClick={() => {
-              triggerCelebration();
-              onStartMatch();
-            }}
+          <PixelButton
+            variant="red"
+            size="lg"
             disabled={!bothConnected || !bothReady}
-            className="w-full sm:w-1/2 arcade-button py-3 px-4 rounded-xl font-display font-bold text-sm bg-gradient-to-r from-blue-600 to-rose-600 hover:from-blue-500 hover:to-rose-500 text-white flex items-center justify-center gap-2 shadow-lg shadow-rose-600/20 disabled:opacity-40 disabled:cursor-not-allowed disabled:transform-none"
+            onClick={handleStart}
+            className="w-full sm:w-auto min-w-[200px]"
           >
-            <Play className="w-4 h-4 fill-white" />
-            <span>START MATCH</span>
-          </button>
+            START MATCH
+          </PixelButton>
         ) : (
-          <div className="w-full sm:w-1/2 py-3 px-4 rounded-xl font-display font-medium text-xs bg-slate-900 border border-slate-800 text-slate-400 flex items-center justify-center gap-2 text-center">
-            <span>Waiting for Host to start match...</span>
+          <div className="font-arcade text-xs text-paper/60 border border-paper/30 px-4 py-3 bg-[#151C30]">
+            WAITING FOR HOST TO START...
           </div>
         )}
       </div>
 
       {/* Leave Room Action */}
       <button
+        type="button"
         onClick={onLeaveRoom}
-        className="mt-6 inline-flex items-center gap-1.5 text-xs text-slate-500 hover:text-rose-400 transition-colors"
+        className="mt-8 font-arcade text-[10px] text-paper/40 hover:text-arcadeRed transition-colors tracking-widest uppercase"
       >
-        <LogOut className="w-3.5 h-3.5" />
-        <span>Leave Room</span>
+        [ LEAVE ROOM ]
       </button>
     </div>
   );

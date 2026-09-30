@@ -1,5 +1,4 @@
 import React from 'react';
-import { Wifi, WifiOff, Swords } from 'lucide-react';
 
 interface HeaderProps {
   roomCode?: string | null;
@@ -9,44 +8,44 @@ interface HeaderProps {
 
 export const Header: React.FC<HeaderProps> = ({ roomCode, isConnected, onLeave }) => {
   return (
-    <header className="w-full border-b border-slate-800 bg-[#0B0F19]/80 backdrop-blur-md sticky top-0 z-50 px-4 py-3">
-      <div className="max-w-5xl mx-auto flex items-center justify-between">
-        {/* Brand */}
-        <div className="flex items-center gap-2.5 cursor-pointer select-none" onClick={onLeave}>
-          <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-rose-500 to-blue-600 flex items-center justify-center shadow-lg shadow-rose-500/20">
-            <Swords className="w-5 h-5 text-white" />
+    <header className="w-full border-b-2 border-paper/20 bg-ink px-4 py-3 select-none">
+      <div className="max-w-4xl mx-auto flex items-center justify-between">
+        {/* Typographic Pixel Logo */}
+        <div
+          onClick={onLeave}
+          className="flex items-center gap-2 cursor-pointer group"
+          title="Return to title screen"
+        >
+          <div className="w-6 h-6 bg-arcadeRed border border-paper flex items-center justify-center font-pixel text-[9px] text-cream shadow-pixel-sm group-hover:-translate-y-0.5 transition-transform">
+            B
           </div>
-          <div>
-            <span className="font-display font-black text-xl tracking-tight text-white">
-              BRO <span className="text-rose-500 font-extrabold italic text-sm px-1">v</span> BRO
-            </span>
+          <div className="flex items-center gap-1.5 font-pixel text-xs sm:text-sm text-paper tracking-wider">
+            <span>BRO</span>
+            <span className="text-arcadeRed font-bold text-[10px]">v</span>
+            <span>BRO</span>
           </div>
         </div>
 
-        {/* Right side status / info */}
+        {/* Center / Right arcade stats */}
         <div className="flex items-center gap-3">
           {roomCode && (
-            <div className="flex items-center gap-2 bg-slate-900 border border-slate-800 px-3 py-1 rounded-lg">
-              <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Room:</span>
-              <span className="font-mono font-bold text-sm text-cyan-400 tracking-widest">{roomCode}</span>
+            <div className="flex items-center gap-1.5 bg-[#151C30] border border-paper px-2.5 py-1 shadow-pixel-sm">
+              <span className="font-arcade text-[9px] text-paper/70">ROOM:</span>
+              <span className="font-pixel text-[11px] text-cartridgeYellow tracking-widest">{roomCode}</span>
             </div>
           )}
 
           {isConnected !== undefined && (
-            <div className="flex items-center gap-1.5 bg-slate-900/80 border border-slate-800 px-2.5 py-1 rounded-lg text-xs font-medium">
-              {isConnected ? (
-                <>
-                  <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                  <span className="text-emerald-400 hidden sm:inline">Connected</span>
-                  <Wifi className="w-3.5 h-3.5 text-emerald-400 sm:hidden" />
-                </>
-              ) : (
-                <>
-                  <span className="w-2 h-2 rounded-full bg-rose-500" />
-                  <span className="text-rose-400 hidden sm:inline">Connecting...</span>
-                  <WifiOff className="w-3.5 h-3.5 text-rose-400 sm:hidden" />
-                </>
-              )}
+            <div className="flex items-center gap-1.5 border border-paper/40 bg-ink px-2 py-1 text-[9px] font-mono">
+              <span
+                className={`w-2 h-2 ${
+                  isConnected ? 'bg-gameboyGreen animate-pulse' : 'bg-arcadeRed'
+                }`}
+                style={{ imageRendering: 'pixelated' }}
+              />
+              <span className="hidden sm:inline text-paper/80 font-arcade">
+                {isConnected ? 'NET OK' : 'LINKING...'}
+              </span>
             </div>
           )}
         </div>
