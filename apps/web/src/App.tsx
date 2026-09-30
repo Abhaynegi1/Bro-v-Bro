@@ -3,6 +3,7 @@ import type { RoomState } from '@bvb/shared';
 import { useSocket } from './hooks/useSocket';
 import { Header } from './components/Header';
 import { LandingView } from './components/LandingView';
+import { HowToPlayView } from './components/HowToPlayView';
 import { WaitingRoomView } from './components/WaitingRoomView';
 
 const STORAGE_KEYS = {
@@ -16,9 +17,21 @@ export const App: React.FC = () => {
   const [playerId, setPlayerId] = useState<string | null>(() => sessionStorage.getItem(STORAGE_KEYS.PLAYER_ID));
   const [sessionToken, setSessionToken] = useState<string | null>(() => sessionStorage.getItem(STORAGE_KEYS.SESSION_TOKEN));
 
+  const [theme, setTheme] = useState<'day' | 'night'>(() => (localStorage.getItem('bvb_theme') as 'day' | 'night') || 'day');
+  const [currentView, setCurrentView] = useState<'landing' | 'how-to-play'>('landing');
+  const [initialModal, setInitialModal] = useState<'create' | 'join' | null>(null);
+
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [notification, setNotification] = useState<string | null>(null);
+
+  const toggleTheme = () => {
+    setTheme((prev) => {
+      const next = prev === 'day' ? 'night' : 'day';
+      localStorage.setItem('bvb_theme', next);
+      return next;
+    });
+  };
 
   const handlePlayerJoined = useCallback((data: { name: string; playerId: string }) => {
     setNotification(`🔥 ${data.name.toUpperCase()} ENTERED THE ROOM!`);
@@ -106,6 +119,8 @@ export const App: React.FC = () => {
     setSessionToken(null);
     setRoomState(null);
     setErrorMessage(null);
+    setCurrentView('landing');
+    setInitialModal(null);
     sessionStorage.clear();
   };
 
@@ -113,13 +128,42 @@ export const App: React.FC = () => {
     alert("🎉 Phase 1 Verified! In Phase 2, this launches the Tic Tac Toe multiplayer round.");
   };
 
+  const handleOpenHowToPlay = () => {
+    setCurrentView('how-to-play');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleBackToLanding = () => {
+    setCurrentView('landing');
+    setInitialModal(null);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleOpenCreateFromHowToPlay = () => {
+    setCurrentView('landing');
+    setInitialModal('create');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleOpenJoinFromHowToPlay = () => {
+    setCurrentView('landing');
+    setInitialModal('join');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   return (
-    <div className="min-h-screen flex flex-col bg-paper text-ink font-mono relative selection:bg-arcadeRed selection:text-white">
-      <Header
-        roomCode={roomCode}
-        isConnected={roomCode ? isConnected : undefined}
-        onLeave={roomCode ? handleLeaveRoom : undefined}
-      />
+    <div className="h-screen w-full flex flex-col overflow-hidden bg-[#0A0F1D] text-ink font-mono relative selection:bg-arcadeRed selection:text-white">
+      {/* Show top Header only inside active room */}
+      {roomCode && (
+        <Header
+          roomCode={roomCode}
+          isConnected={isConnected}
+          onLeave={handleLeaveRoom}
+          currentView={currentView}
+          onNavigateHowToPlay={handleOpenHowToPlay}
+          onNavigateHome={handleBackToLanding}
+        />
+      )}
 
       {/* Floating Retro Notification Banner */}
       {notification && (
@@ -128,14 +172,29 @@ export const App: React.FC = () => {
         </div>
       )}
 
-      <main className="flex-1 flex flex-col relative z-10">
+      <main className="flex-1 flex flex-col relative z-10 w-full h-full overflow-hidden">
+
         {!roomCode || !roomState ? (
-          <LandingView
-            onCreateRoom={handleCreateRoom}
-            onJoinRoom={handleJoinRoom}
-            isLoading={isLoading}
-            errorMessage={errorMessage}
-          />
+          currentView === 'how-to-play' ? (
+            <div className="w-full max-w-4xl bg-paper my-6 border-3 border-ink shadow-2xl">
+              <HowToPlayView
+                onBack={handleBackToLanding}
+                onOpenCreate={handleOpenCreateFromHowToPlay}
+                onOpenJoin={handleOpenJoinFromHowToPlay}
+              />
+            </div>
+          ) : (
+            <LandingView
+              onCreateRoom={handleCreateRoom}
+              onJoinRoom={handleJoinRoom}
+              isLoading={isLoading}
+              errorMessage={errorMessage}
+              onOpenHowToPlay={handleOpenHowToPlay}
+              initialModal={initialModal}
+              theme={theme}
+              onToggleTheme={toggleTheme}
+            />
+          )
         ) : (
           <WaitingRoomView
             roomState={roomState}
@@ -151,3 +210,5 @@ export const App: React.FC = () => {
 };
 
 export default App;
+
+

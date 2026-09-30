@@ -90,8 +90,82 @@
   animation: pixel-blink 3.5s infinite;
 }
 
-/* Subtle Paper Texture */
+/* Subtle Paper Texture & Retro Grid */
 .paper-pattern {
   background-image: radial-gradient(rgba(23, 26, 31, 0.06) 1px, transparent 0);
   background-size: 12px 12px;
 }
+
+.retro-grid-bg {
+  background-color: #F4EBD0;
+  background-image: 
+    linear-gradient(to right, rgba(23, 26, 31, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(23, 26, 31, 0.04) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+
+/* Ticker Marquee */
+@keyframes ticker {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.ticker-track {
+  display: flex;
+  align-items: center;
+  width: max-content;
+  white-space: nowrap;
+  flex-shrink: 0;
+  animation: ticker 40s linear infinite;
+}
+
+.ticker-track:hover {
+  animation-play-state: paused;
+}
+
+
+/* Subtle pulse glow */
+@keyframes arcade-glow {
+  0%, 100% {
+    box-shadow: 3px 3px 0px #171A1F, 0 0 12px rgba(232, 75, 75, 0.25);
+  }
+  50% {
+    box-shadow: 3px 3px 0px #171A1F, 0 0 20px rgba(66, 184, 199, 0.35);
+  }
+}
+
+.glow-box {
+  animation: arcade-glow 3s ease-in-out infinite;
+}
+
+/* Cloud Floating Animation */
+@keyframes cloud-float {
+  0% {
+    transform: translateX(-200px);
+  }
+  100% {
+    transform: translateX(1200px);
+  }
+}
+
+/* 3D Retro Pixel Text Shadows */
+.pixel-text-3d-gold {
+  color: #FCD34D;
+  text-shadow: 
+    2px 2px 0 #D97706,
+    3px 3px 0 #78350F,
+    4px 4px 0 #000000;
+}
+
+.pixel-text-3d-red {
+  color: #EF4444;
+  text-shadow: 
+    2px 2px 0 #B91C1C,
+    3px 3px 0 #450A0A,
+    4px 4px 0 #000000;
+}
+
