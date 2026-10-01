@@ -104,6 +104,25 @@ export interface ReactionTestMove {
   action: 'CLICK';
 }
 
+export type ConnectFourCell = 'RED' | 'YELLOW' | null;
+
+export interface ConnectFourState {
+  board: ConnectFourCell[][]; // 6 rows (0=top, 5=bottom) x 7 cols (0..6)
+  currentTurnPlayerId: string;
+  playerRedId: string;
+  playerYellowId: string;
+  winningLine: [number, number][] | null; // list of [row, col] winning cells
+  status: 'IN_PROGRESS' | 'WIN' | 'DRAW';
+  winnerPlayerId: string | null;
+  loserPlayerId: string | null;
+  moveCount: number;
+  lastMove?: { row: number; col: number; player: 'RED' | 'YELLOW' } | null;
+}
+
+export interface ConnectFourMove {
+  column: number; // 0..6
+}
+
 export interface ActiveGameData {
   gameId: string;
   state: any;

@@ -9,6 +9,7 @@ import { WaitingRoomView } from './components/WaitingRoomView';
 import { GameSelectionView } from './components/GameSelectionView';
 import { TicTacToeGame } from './components/games/TicTacToeGame';
 import { ReactionTestGame } from './components/games/ReactionTestGame';
+import { ConnectFourGame } from './components/games/ConnectFourGame';
 import { RoundResultModal } from './components/RoundResultModal';
 import { MatchCompleteView } from './components/MatchCompleteView';
 
@@ -268,6 +269,14 @@ export const App: React.FC = () => {
           <div className="flex-1 flex flex-col w-full relative">
             {activeGame.gameId === 'reaction-test' ? (
               <ReactionTestGame
+                roomState={roomState}
+                gameState={activeGame.state}
+                myPlayerId={playerId || ''}
+                onSendMove={sendMove}
+                theme={theme}
+              />
+            ) : activeGame.gameId === 'connect-four' ? (
+              <ConnectFourGame
                 roomState={roomState}
                 gameState={activeGame.state}
                 myPlayerId={playerId || ''}

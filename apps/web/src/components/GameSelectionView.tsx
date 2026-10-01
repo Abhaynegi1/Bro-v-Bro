@@ -48,7 +48,7 @@ const GAMES_CATALOG: GameCard[] = [
     description: 'Drop colored tokens into a 7x6 vertical grid to align four in a row.',
     duration: '~2 MIN',
     icon: '🔴🟡',
-    isAvailable: false,
+    isAvailable: true,
     accentColor: 'border-crtCyan text-crtCyan',
   },
   {

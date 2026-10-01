@@ -56,3 +56,9 @@ export const ReactionTestMoveSchema = z.object({
 });
 
 export type ReactionTestMoveInput = z.infer<typeof ReactionTestMoveSchema>;
+
+export const ConnectFourMoveSchema = z.object({
+  column: z.number().int().min(0).max(6),
+});
+
+export type ConnectFourMoveInput = z.infer<typeof ConnectFourMoveSchema>;
