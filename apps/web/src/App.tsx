@@ -152,7 +152,17 @@ export const App: React.FC = () => {
   };
 
   return (
-    <div className="h-screen w-full flex flex-col overflow-hidden bg-[#0A0F1D] text-ink font-mono relative selection:bg-arcadeRed selection:text-white">
+    <div
+      className={`w-full text-ink font-mono relative selection:bg-arcadeRed selection:text-white ${
+        currentView === 'how-to-play'
+          ? 'min-h-screen overflow-y-auto'
+          : 'h-screen overflow-hidden bg-[#0A0F1D] flex flex-col'
+      }`}
+      style={{
+        backgroundColor: currentView === 'how-to-play' ? (theme === 'night' ? '#0D193A' : '#72B6F4') : '#0A0F1D',
+      }}
+    >
+
       {/* Show top Header only inside active room */}
       {roomCode && (
         <Header
@@ -172,17 +182,22 @@ export const App: React.FC = () => {
         </div>
       )}
 
-      <main className="flex-1 flex flex-col relative z-10 w-full h-full overflow-hidden">
-
+      <main
+        className={`w-full relative z-10 ${
+          currentView === 'how-to-play'
+            ? 'min-h-screen flex flex-col w-full'
+            : 'flex-1 flex flex-col w-full h-full overflow-hidden'
+        }`}
+      >
         {!roomCode || !roomState ? (
           currentView === 'how-to-play' ? (
-            <div className="w-full max-w-4xl bg-paper my-6 border-3 border-ink shadow-2xl">
-              <HowToPlayView
-                onBack={handleBackToLanding}
-                onOpenCreate={handleOpenCreateFromHowToPlay}
-                onOpenJoin={handleOpenJoinFromHowToPlay}
-              />
-            </div>
+            <HowToPlayView
+              onBack={handleBackToLanding}
+              onOpenCreate={handleOpenCreateFromHowToPlay}
+              onOpenJoin={handleOpenJoinFromHowToPlay}
+              theme={theme}
+              onToggleTheme={toggleTheme}
+            />
           ) : (
             <LandingView
               onCreateRoom={handleCreateRoom}
@@ -196,6 +211,7 @@ export const App: React.FC = () => {
             />
           )
         ) : (
+
           <WaitingRoomView
             roomState={roomState}
             myPlayerId={playerId || ''}

@@ -67,21 +67,21 @@ export const LandingView: React.FC<LandingViewProps> = ({
   return (
     <div className="w-full h-full flex-1 flex flex-col justify-between relative overflow-hidden select-none">
       {/* ================= FULL-WIDTH TOP HEADER BAR ================= */}
-      <header className="w-full bg-[#0A0F1D] text-white px-4 sm:px-8 py-2.5 flex items-center justify-between border-b-2 border-black z-30 flex-shrink-0">
+      <header className="w-full bg-[#0A0F1D] text-white px-5 sm:px-10 py-3 flex items-center justify-between border-b-2 border-black z-30 flex-shrink-0">
         {/* Left: Pixel Logo */}
-        <div className="flex items-center gap-1 font-pixel text-xs sm:text-sm tracking-wider">
+        <div className="flex items-center gap-1.5 font-pixel text-sm sm:text-base tracking-wider">
           <span>BRO</span>
-          <span className="text-arcadeRed font-bold text-xs">[v]</span>
+          <span className="text-arcadeRed font-bold text-xs sm:text-sm">[v]</span>
           <span>BRO</span>
         </div>
 
         {/* Right: HOW TO PLAY link & NIGHT/DAY button */}
-        <div className="flex items-center gap-4 sm:gap-6">
+        <div className="flex items-center gap-5 sm:gap-7">
           {onOpenHowToPlay && (
             <button
               type="button"
               onClick={onOpenHowToPlay}
-              className="font-pixel text-[11px] sm:text-xs text-white/90 hover:text-white uppercase tracking-wider hover:underline transition-all"
+              className="font-pixel text-xs sm:text-sm text-white/90 hover:text-white uppercase tracking-wider hover:underline transition-all"
             >
               HOW TO PLAY
             </button>
@@ -91,7 +91,7 @@ export const LandingView: React.FC<LandingViewProps> = ({
           <button
             type="button"
             onClick={onToggleTheme}
-            className="bg-white hover:bg-cream text-black font-pixel text-[10px] sm:text-xs px-3.5 py-1 border-2 border-white rounded shadow-sm hover:scale-105 active:scale-95 transition-transform uppercase tracking-wider font-bold"
+            className="bg-white hover:bg-cream text-black font-pixel text-xs sm:text-sm px-4 py-1.5 border-2 border-white rounded shadow-sm hover:scale-105 active:scale-95 transition-transform uppercase tracking-wider font-bold"
           >
             {isNight ? 'DAY' : 'NIGHT'}
           </button>
@@ -105,37 +105,65 @@ export const LandingView: React.FC<LandingViewProps> = ({
           backgroundColor: isNight ? '#0D193A' : '#72B6F4',
         }}
       >
+        {/* Upper Sky Floating Clouds (Day Light Mode) */}
+        {!isNight && (
+          <div className="absolute inset-0 pointer-events-none overflow-hidden z-0">
+            <div
+              className="absolute top-[3%] left-[-5%] opacity-85"
+              style={{ animation: 'cloud-float 60s linear infinite' }}
+            >
+              <svg width="180" height="70" viewBox="0 0 28 11" style={{ shapeRendering: 'crispEdges' }}>
+                <path
+                  d="M 6 4 h 16 v 1 h 4 v 1 h 2 v 4 h -26 v -4 h 2 v -1 h 2 v -1 z M 10 2 h 8 v 2 h -8 z M 14 0 h 4 v 2 h -4 z"
+                  fill="#FFFFFF"
+                />
+              </svg>
+            </div>
+            <div
+              className="absolute top-[8%] right-[2%] opacity-80"
+              style={{ animation: 'cloud-float 75s linear infinite', animationDelay: '-22s' }}
+            >
+              <svg width="150" height="58" viewBox="0 0 28 11" style={{ shapeRendering: 'crispEdges' }}>
+                <path
+                  d="M 6 4 h 16 v 1 h 4 v 1 h 2 v 4 h -26 v -4 h 2 v -1 h 2 v -1 z M 10 2 h 8 v 2 h -8 z"
+                  fill="#FFFFFF"
+                />
+              </svg>
+            </div>
+          </div>
+        )}
+
         {/* Upper Stage: HUD, Title, and Action Controls */}
-        <div className="w-full flex flex-col items-center z-20">
+        <div className="w-full flex flex-col items-center z-20 pt-2 sm:pt-4">
           
           {/* Top HUD: P1 (Hearts) - GAUNTLET PILL - (Hearts) P2 */}
-          <div className="w-full max-w-5xl px-4 sm:px-8 pt-3 sm:pt-5 flex items-center justify-between">
+          <div className="w-full max-w-6xl px-6 sm:px-12 flex items-center justify-between">
             {/* P1 Hearts */}
             <div className="flex flex-col items-start">
-              <div className="flex items-center gap-1.5 font-pixel text-[11px] sm:text-xs text-white drop-shadow">
+              <div className="flex items-center gap-2 font-pixel text-sm sm:text-base text-white drop-shadow">
                 <span className="font-bold">P1</span>
-                <div className="flex items-center gap-1">
+                <div className="flex items-center gap-1.5">
                   {[1, 2, 3].map((h) => (
-                    <svg key={h} width="16" height="14" viewBox="0 0 9 8" style={{ shapeRendering: 'crispEdges' }}>
+                    <svg key={h} width="20" height="18" viewBox="0 0 9 8" style={{ shapeRendering: 'crispEdges' }}>
                       <path d="M1 0 h3 v1 h1 v-1 h3 v2 h-1 v1 h-1 v1 h-1 v1 h-1 v1 h-1 v-1 h-1 v-1 h-1 v-1 h-1 v-2 h1 z" fill="#EF4444" />
                       <rect x="2" y="1" width="1" height="1" fill="#FFFFFF" />
                     </svg>
                   ))}
                 </div>
               </div>
-              <span className="text-[10px] text-white/90 font-pixel ml-6 leading-none">˘</span>
+              <span className="text-xs text-white/90 font-pixel ml-8 leading-none">˘</span>
             </div>
 
             {/* Center Gauntlet Capsule */}
-            <div className="bg-white text-ink border-2 border-black px-3.5 py-1 rounded-full shadow-pixel-sm font-pixel text-[9px] sm:text-[10px] font-bold tracking-wider uppercase">
-              + 1V1 RETRO GAUNTLET +
+            <div className="bg-white text-ink border-3 border-black px-5 py-1.5 sm:px-7 sm:py-2 rounded-full shadow-pixel font-pixel text-[10px] sm:text-xs md:text-sm font-bold tracking-wider uppercase">
+              + 1V1 ULTIMATE GAMER GAUNTLET +
             </div>
 
             {/* P2 Hearts */}
-            <div className="flex items-center gap-1.5 font-pixel text-[11px] sm:text-xs text-white drop-shadow">
-              <div className="flex items-center gap-1">
+            <div className="flex items-center gap-2 font-pixel text-sm sm:text-base text-white drop-shadow">
+              <div className="flex items-center gap-1.5">
                 {[1, 2, 3].map((h) => (
-                  <svg key={h} width="16" height="14" viewBox="0 0 9 8" style={{ shapeRendering: 'crispEdges' }}>
+                  <svg key={h} width="20" height="18" viewBox="0 0 9 8" style={{ shapeRendering: 'crispEdges' }}>
                     <path d="M1 0 h3 v1 h1 v-1 h3 v2 h-1 v1 h-1 v1 h-1 v1 h-1 v1 h-1 v-1 h-1 v-1 h-1 v-1 h-1 v-2 h1 z" fill="#EF4444" />
                     <rect x="2" y="1" width="1" height="1" fill="#FFFFFF" />
                   </svg>
@@ -145,23 +173,23 @@ export const LandingView: React.FC<LandingViewProps> = ({
             </div>
           </div>
 
-          {/* Center Stage: Title + Sun/Moon + Tagline + Action Controls */}
-          <div className="w-full max-w-xl mx-auto flex flex-col items-center text-center mt-2 sm:mt-4 px-4">
+          {/* Center Stage: Title + Sun/Moon + Tagline + Action Controls (Larger & Bolder) */}
+          <div className="w-full max-w-3xl mx-auto flex flex-col items-center text-center mt-3 sm:mt-6 px-4">
             
             {/* 3D BRO v BRO Pixel Title with Cute Sun/Moon */}
-            <div className="relative inline-flex items-center justify-center my-1">
-              <div className="flex items-center font-pixel text-3xl sm:text-4xl md:text-5xl tracking-normal">
+            <div className="relative inline-flex items-center justify-center my-2">
+              <div className="flex items-center font-pixel text-5xl sm:text-6xl md:text-7xl lg:text-8xl tracking-normal">
                 {/* BRO (Orange 3D) */}
                 <span className="pixel-text-3d-gold">BRO</span>
 
                 {/* Pixel Heart with V cutout */}
-                <div className="mx-2 sm:mx-3 flex items-center">
+                <div className="mx-3 sm:mx-5 flex items-center">
                   <svg
-                    width="36"
-                    height="32"
+                    width="48"
+                    height="42"
                     viewBox="0 0 12 11"
                     style={{ shapeRendering: 'crispEdges' }}
-                    className="drop-shadow-md sm:w-[42px] sm:h-[38px]"
+                    className="drop-shadow-lg sm:w-[60px] sm:h-[54px] md:w-[68px] md:h-[60px]"
                   >
                     <path
                       d="M 2 1 h 3 v 2 h 2 v -2 h 3 v 3 h -1 v 2 h -2 v 2 h -2 v 2 h -2 v -2 h -2 v -2 h -1 v -3 h 3 z"
@@ -180,10 +208,10 @@ export const LandingView: React.FC<LandingViewProps> = ({
               </div>
 
               {/* Sun (Day) or Moon (Night) positioned at top right of Title */}
-              <div className="absolute -top-3 -right-10 sm:-right-12 animate-pixel-idle">
+              <div className="absolute -top-4 -right-12 sm:-right-16 md:-right-20 animate-pixel-idle">
                 {!isNight ? (
                   /* Cute Pixel Sun with smiling face */
-                  <svg width="38" height="38" viewBox="0 0 14 14" style={{ shapeRendering: 'crispEdges' }}>
+                  <svg width="48" height="48" viewBox="0 0 14 14" style={{ shapeRendering: 'crispEdges' }} className="sm:w-[60px] sm:h-[60px]">
                     <rect x="6" y="0" width="2" height="2" fill="#FCD34D" />
                     <rect x="6" y="12" width="2" height="2" fill="#FCD34D" />
                     <rect x="0" y="6" width="2" height="2" fill="#FCD34D" />
@@ -202,7 +230,7 @@ export const LandingView: React.FC<LandingViewProps> = ({
                   </svg>
                 ) : (
                   /* Cute Pixel Moon with smiling face */
-                  <svg width="38" height="38" viewBox="0 0 14 14" style={{ shapeRendering: 'crispEdges' }}>
+                  <svg width="48" height="48" viewBox="0 0 14 14" style={{ shapeRendering: 'crispEdges' }} className="sm:w-[60px] sm:h-[60px]">
                     <rect x="3" y="2" width="8" height="10" fill="#FEF08A" />
                     <rect x="2" y="3" width="10" height="8" fill="#FEF08A" />
                     <rect x="5" y="5" width="1" height="2" fill="#1E293B" />
@@ -218,40 +246,41 @@ export const LandingView: React.FC<LandingViewProps> = ({
             </div>
 
             {/* Tagline */}
-            <div className="space-y-1 mb-3">
+            <div className="space-y-1.5 mb-4 sm:mb-6">
               <p
-                className={`font-pixel text-[11px] sm:text-xs tracking-wider transition-colors duration-500 ${
-                  isNight ? 'text-white/90' : 'text-[#171A1F]'
+                className={`font-pixel text-xs sm:text-sm md:text-base tracking-wider transition-colors duration-500 ${
+                  isNight ? 'text-[#F1F5F9] font-bold' : 'text-[#171A1F]'
                 }`}
               >
-                YOUR BRO THINKS HE'S BETTER.
+                FIND OUT WHO'S THE REAL GAMER AMONG YOU.
               </p>
-              <p className="font-pixel text-xs sm:text-sm tracking-widest pixel-text-3d-red">
-                PROVE HIM WRONG.
+              <p className="font-pixel text-base sm:text-lg md:text-2xl tracking-widest pixel-text-3d-red mt-1">
+                SETTLE THE SCORE.
               </p>
             </div>
 
+
             {/* Error banner if any */}
             {errorMessage && (
-              <div className="w-full max-w-sm mb-3 p-2 bg-[#FFF5F5] border-2 border-arcadeRed text-arcadeRed font-mono font-bold text-xs shadow-pixel text-center">
+              <div className="w-full max-w-md mb-4 p-3 bg-[#FFF5F5] border-2 border-arcadeRed text-arcadeRed font-mono font-bold text-xs sm:text-sm shadow-pixel text-center">
                 <span>⚠️ {errorMessage}</span>
               </div>
             )}
 
-            {/* Primary Action Controls: [CREATE ROOM] OR [CODE] [JOIN] */}
-            <div className="flex items-center justify-center gap-3 sm:gap-4 my-2 z-20 flex-wrap">
+            {/* Primary Action Controls: [CREATE ROOM] OR [CODE] [JOIN] (Enlarged) */}
+            <div className="flex items-center justify-center gap-4 sm:gap-6 my-2 z-20 flex-wrap">
               {/* Green Create Room Button */}
               <button
                 type="button"
                 onClick={() => setActiveModal('create')}
-                className="px-5 py-2.5 bg-[#5BA538] hover:bg-[#4E932E] text-white border-2 border-black font-pixel text-xs sm:text-sm tracking-wider uppercase shadow-pixel transition-all hover:-translate-y-0.5 active:translate-y-0.5 active:shadow-none"
+                className="px-7 py-3.5 sm:px-9 sm:py-4 md:px-11 md:py-4.5 bg-[#5BA538] hover:bg-[#4E932E] text-white border-3 border-black font-pixel text-sm sm:text-base md:text-lg tracking-wider uppercase shadow-pixel-lg transition-all hover:-translate-y-1 active:translate-y-0.5 active:shadow-sm"
               >
                 CREATE ROOM
               </button>
 
               {/* OR Text */}
               <span
-                className={`font-pixel text-xs font-bold transition-colors duration-500 ${
+                className={`font-pixel text-sm sm:text-base font-bold transition-colors duration-500 mx-1 ${
                   isNight ? 'text-white' : 'text-[#171A1F]'
                 }`}
               >
@@ -259,7 +288,7 @@ export const LandingView: React.FC<LandingViewProps> = ({
               </span>
 
               {/* Joined CODE input + JOIN button */}
-              <div className="flex items-center border-2 border-black shadow-pixel bg-white">
+              <div className="flex items-center border-3 border-black shadow-pixel-lg bg-white">
                 <input
                   type="text"
                   maxLength={6}
@@ -269,12 +298,12 @@ export const LandingView: React.FC<LandingViewProps> = ({
                   onKeyDown={(e) => {
                     if (e.key === 'Enter') handleQuickJoinClick();
                   }}
-                  className="w-24 sm:w-28 py-2 px-3 font-pixel text-xs sm:text-sm text-center uppercase text-ink outline-none bg-transparent placeholder:text-ink/30"
+                  className="w-28 sm:w-36 md:w-44 py-3.5 sm:py-4 md:py-4.5 px-4 font-pixel text-sm sm:text-base md:text-lg text-center uppercase text-ink outline-none bg-transparent placeholder:text-ink/30"
                 />
                 <button
                   type="button"
                   onClick={handleQuickJoinClick}
-                  className="px-4 py-2 bg-[#3E80ED] hover:bg-[#2563EB] text-white border-l-2 border-black font-pixel text-xs sm:text-sm tracking-wider uppercase transition-colors"
+                  className="px-6 py-3.5 sm:px-8 sm:py-4 md:px-10 md:py-4.5 bg-[#3E80ED] hover:bg-[#2563EB] text-white border-l-3 border-black font-pixel text-sm sm:text-base md:text-lg tracking-wider uppercase transition-colors"
                 >
                   JOIN
                 </button>
@@ -283,48 +312,9 @@ export const LandingView: React.FC<LandingViewProps> = ({
           </div>
         </div>
 
-        {/* Lower Stage: 2D Pixel Platformer Landscape Spanning Full Width */}
+        {/* Lower Stage: 2D Pixel Platformer Landscape Spanning Full Width & Reaching Bottom */}
         <PixelRetroWorld theme={theme} />
       </div>
-
-      {/* ================= FULL-WIDTH BOTTOM LIVE TICKER ================= */}
-      <footer className="w-full bg-[#0D1322] border-t-2 border-[#FCD34D] py-2 px-4 flex items-center gap-3 select-none overflow-hidden flex-shrink-0 z-30">
-        <div className="bg-[#E84040] text-white font-pixel text-[10px] px-2.5 py-0.5 uppercase tracking-wider flex-shrink-0 shadow-sm">
-          LIVE
-        </div>
-        <div className="overflow-hidden flex-1 relative">
-          <div className="ticker-track text-[10px] sm:text-[11px] font-pixel text-white tracking-widest uppercase flex items-center whitespace-nowrap">
-            <span className="mx-3 text-[#FCD34D]">◆</span>
-            <span>14 ROOMS PLAYING</span>
-            <span className="mx-3 text-[#FCD34D]">◆</span>
-            <span>BRO_AJ 7 - 5 KUNAL</span>
-            <span className="mx-3 text-[#FCD34D]">◆</span>
-            <span>RAHUL 3 - 3 DEV</span>
-            <span className="mx-3 text-[#FCD34D]">◆</span>
-            <span>SHRUTI 9 - 2 MANU</span>
-            <span className="mx-3 text-[#FCD34D]">◆</span>
-            <span>ARJUN 4 - 2 KABIR</span>
-            <span className="mx-3 text-[#FCD34D]">◆</span>
-            <span>VIKRAM 5 - 4 ROHAN</span>
-            <span className="mx-3 text-[#FCD34D]">◆</span>
-            <span>SAM 3 - 1 ALEX</span>
-            <span className="mx-3 text-[#FCD34D]">◆</span>
-            <span>14 ROOMS PLAYING</span>
-            <span className="mx-3 text-[#FCD34D]">◆</span>
-            <span>BRO_AJ 7 - 5 KUNAL</span>
-            <span className="mx-3 text-[#FCD34D]">◆</span>
-            <span>RAHUL 3 - 3 DEV</span>
-            <span className="mx-3 text-[#FCD34D]">◆</span>
-            <span>SHRUTI 9 - 2 MANU</span>
-            <span className="mx-3 text-[#FCD34D]">◆</span>
-            <span>ARJUN 4 - 2 KABIR</span>
-            <span className="mx-3 text-[#FCD34D]">◆</span>
-            <span>VIKRAM 5 - 4 ROHAN</span>
-            <span className="mx-3 text-[#FCD34D]">◆</span>
-            <span>SAM 3 - 1 ALEX</span>
-          </div>
-        </div>
-      </footer>
 
       {/* ================= MODAL: CREATE ROOM ================= */}
       {activeModal === 'create' && (
