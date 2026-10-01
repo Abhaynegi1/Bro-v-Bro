@@ -11,6 +11,7 @@ import { TicTacToeGame } from './components/games/TicTacToeGame';
 import { ReactionTestGame } from './components/games/ReactionTestGame';
 import { ConnectFourGame } from './components/games/ConnectFourGame';
 import { WordleGame } from './components/games/WordleGame';
+import { MinesweeperGame } from './components/games/MinesweeperGame';
 import { RoundResultModal } from './components/RoundResultModal';
 import { MatchCompleteView } from './components/MatchCompleteView';
 
@@ -286,6 +287,14 @@ export const App: React.FC = () => {
               />
             ) : activeGame.gameId === 'wordle' ? (
               <WordleGame
+                roomState={roomState}
+                gameState={activeGame.state}
+                myPlayerId={playerId || ''}
+                onSendMove={sendMove}
+                theme={theme}
+              />
+            ) : activeGame.gameId === 'minesweeper' ? (
+              <MinesweeperGame
                 roomState={roomState}
                 gameState={activeGame.state}
                 myPlayerId={playerId || ''}

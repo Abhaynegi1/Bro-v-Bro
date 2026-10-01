@@ -52,6 +52,8 @@ export const MatchCompleteView: React.FC<MatchCompleteViewProps> = ({
         return 'Connect Four';
       case 'wordle':
         return 'Wordle Race';
+      case 'minesweeper':
+        return 'Minefield Battle';
       default:
         return gameId;
     }

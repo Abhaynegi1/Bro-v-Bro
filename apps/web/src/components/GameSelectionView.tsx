@@ -65,10 +65,10 @@ const GAMES_CATALOG: GameCard[] = [
     id: 'minesweeper',
     title: 'MINEFIELD BATTLE',
     category: 'HAZARD RACE',
-    description: 'Sweep the shared minefield or race to clear safe tiles without detonating.',
-    duration: '~3 MIN',
+    description: 'Race to clear identical 9x9 minefields without detonating. First click guaranteed safe!',
+    duration: '~2 MIN',
     icon: '💣🚩',
-    isAvailable: false,
+    isAvailable: true,
     accentColor: 'border-pixelPink text-pixelPink',
   },
   {

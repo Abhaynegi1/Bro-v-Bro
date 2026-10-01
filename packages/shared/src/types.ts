@@ -155,6 +155,45 @@ export interface WordleMove {
   guess: string; // 5-letter uppercase string
 }
 
+export type MinesweeperCellStatus = 'HIDDEN' | 'FLAGGED' | 'REVEALED' | 'EXPLODED';
+
+export interface MinesweeperCell {
+  status: MinesweeperCellStatus;
+  adjacentMines: number; // 0..8
+  hasMine?: boolean; // Revealed on FINISHED
+}
+
+export interface MinesweeperPlayerState {
+  board: MinesweeperCell[][];
+  flagCount: number;
+  revealedCount: number;
+  isDead: boolean;
+  hasWon: boolean;
+  isCompleted: boolean;
+}
+
+export interface MinesweeperState {
+  playerIds: [string, string];
+  rows: number; // 9
+  cols: number; // 9
+  totalMines: number; // 10
+  totalSafeCells: number; // 71
+  mineLocations: [number, number][]; // Masked when sanitized
+  playerStates: {
+    [playerId: string]: MinesweeperPlayerState;
+  };
+  status: 'IN_PROGRESS' | 'FINISHED';
+  winnerPlayerId: string | null;
+  loserPlayerId: string | null;
+  summary?: string;
+}
+
+export interface MinesweeperMove {
+  action: 'REVEAL' | 'FLAG';
+  row: number;
+  col: number;
+}
+
 export interface ActiveGameData {
   gameId: string;
   state: any;

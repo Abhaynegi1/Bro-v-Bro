@@ -74,3 +74,11 @@ export const WordleMoveSchema = z.object({
 });
 
 export type WordleMoveInput = z.infer<typeof WordleMoveSchema>;
+
+export const MinesweeperMoveSchema = z.object({
+  action: z.enum(['REVEAL', 'FLAG']),
+  row: z.number().int().min(0).max(8),
+  col: z.number().int().min(0).max(8),
+});
+
+export type MinesweeperMoveInput = z.infer<typeof MinesweeperMoveSchema>;
