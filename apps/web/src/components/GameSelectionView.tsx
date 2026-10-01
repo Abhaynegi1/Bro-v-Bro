@@ -58,7 +58,7 @@ const GAMES_CATALOG: GameCard[] = [
     description: 'Guess the hidden 5-letter word first using server-sanitized clues.',
     duration: '~2 MIN',
     icon: '🟩🟨',
-    isAvailable: false,
+    isAvailable: true,
     accentColor: 'border-cartridgeYellow text-cartridgeYellow',
   },
   {

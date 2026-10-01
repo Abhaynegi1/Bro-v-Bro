@@ -32,17 +32,58 @@ export function setupSocketServer(io: SocketIOServer) {
     // Join Socket.IO room channel
     socket.join(roomChannel);
 
-    // Broadcast updated room state immediately to all clients in the room
-    const currentRoom = roomManager.getRoom(roomCode);
-    if (currentRoom) {
-      io.to(roomChannel).emit(SOCKET_EVENTS.ROOM_STATE, currentRoom);
-    }
+    const broadcastRoomAndGame = (code: string) => {
+      const room = roomManager.getInternalRoom(code);
+      if (!room) return;
+
+      const playerA = room.players.playerA;
+      const playerB = room.players.playerB;
+
+      if (playerA?.socketId) {
+        const roomA = roomManager.sanitizeRoom(room, playerA.id);
+        io.to(playerA.socketId).emit(SOCKET_EVENTS.ROOM_STATE, roomA);
+        if (roomA.activeGame) {
+          io.to(playerA.socketId).emit(SOCKET_EVENTS.GAME_STATE, roomA.activeGame);
+        }
+      }
+
+      if (playerB?.socketId) {
+        const roomB = roomManager.sanitizeRoom(room, playerB.id);
+        io.to(playerB.socketId).emit(SOCKET_EVENTS.ROOM_STATE, roomB);
+        if (roomB.activeGame) {
+          io.to(playerB.socketId).emit(SOCKET_EVENTS.GAME_STATE, roomB.activeGame);
+        }
+      }
+    };
+
+    const broadcastGameStart = (code: string) => {
+      const room = roomManager.getInternalRoom(code);
+      if (!room || !room.activeGame) return;
+
+      const playerA = room.players.playerA;
+      const playerB = room.players.playerB;
+
+      if (playerA?.socketId) {
+        const roomA = roomManager.sanitizeRoom(room, playerA.id);
+        io.to(playerA.socketId).emit(SOCKET_EVENTS.GAME_START, roomA.activeGame);
+        io.to(playerA.socketId).emit(SOCKET_EVENTS.ROOM_STATE, roomA);
+      }
+
+      if (playerB?.socketId) {
+        const roomB = roomManager.sanitizeRoom(room, playerB.id);
+        io.to(playerB.socketId).emit(SOCKET_EVENTS.GAME_START, roomB.activeGame);
+        io.to(playerB.socketId).emit(SOCKET_EVENTS.ROOM_STATE, roomB);
+      }
+    };
+
+    // Broadcast updated room state immediately on connect
+    broadcastRoomAndGame(roomCode);
 
     // Handle Ready toggle
     socket.on(SOCKET_EVENTS.ROOM_READY_TOGGLE, () => {
       const updated = roomManager.toggleReady(roomCode, playerId);
       if (updated) {
-        io.to(roomChannel).emit(SOCKET_EVENTS.ROOM_STATE, updated);
+        broadcastRoomAndGame(roomCode);
       }
     });
 
@@ -50,7 +91,7 @@ export function setupSocketServer(io: SocketIOServer) {
     socket.on(SOCKET_EVENTS.ROOM_START_MATCH, () => {
       const updated = roomManager.startMatch(roomCode, playerId);
       if (updated) {
-        io.to(roomChannel).emit(SOCKET_EVENTS.ROOM_STATE, updated);
+        broadcastRoomAndGame(roomCode);
       }
     });
 
@@ -58,11 +99,7 @@ export function setupSocketServer(io: SocketIOServer) {
     socket.on(SOCKET_EVENTS.GAME_SELECT, (payload: { gameId: string }) => {
       const result = roomManager.selectGame(roomCode, playerId, payload.gameId);
       if (result) {
-        io.to(roomChannel).emit(SOCKET_EVENTS.GAME_START, {
-          gameId: result.activeGame.gameId,
-          state: result.activeGame.state,
-        });
-        io.to(roomChannel).emit(SOCKET_EVENTS.ROOM_STATE, result.room);
+        broadcastGameStart(roomCode);
       } else {
         socket.emit(SOCKET_EVENTS.ERROR, {
           code: 'INVALID_GAME_SELECTION',
@@ -75,14 +112,7 @@ export function setupSocketServer(io: SocketIOServer) {
     socket.on(SOCKET_EVENTS.GAME_MOVE, (movePayload: any) => {
       const result = roomManager.handleMove(roomCode, playerId, movePayload);
       if (result.success && result.room && result.activeGame) {
-        // Broadcast updated game state
-        io.to(roomChannel).emit(SOCKET_EVENTS.GAME_STATE, {
-          gameId: result.activeGame.gameId,
-          state: result.activeGame.state,
-        });
-
-        // Broadcast updated room state
-        io.to(roomChannel).emit(SOCKET_EVENTS.ROOM_STATE, result.room);
+        broadcastRoomAndGame(roomCode);
 
         // If game reached terminal condition, broadcast completion
         if (result.isFinished && result.result) {
@@ -110,9 +140,10 @@ export function setupSocketServer(io: SocketIOServer) {
     socket.on(SOCKET_EVENTS.ROUND_NEXT, () => {
       const updatedRoom = roomManager.nextRound(roomCode, playerId);
       if (updatedRoom) {
-        io.to(roomChannel).emit(SOCKET_EVENTS.ROOM_STATE, updatedRoom);
         if (updatedRoom.activeGame) {
-          io.to(roomChannel).emit(SOCKET_EVENTS.GAME_START, updatedRoom.activeGame);
+          broadcastGameStart(roomCode);
+        } else {
+          broadcastRoomAndGame(roomCode);
         }
       }
     });
@@ -121,7 +152,7 @@ export function setupSocketServer(io: SocketIOServer) {
     socket.on(SOCKET_EVENTS.REMATCH_REQUEST, () => {
       const updatedRoom = roomManager.rematch(roomCode, playerId);
       if (updatedRoom) {
-        io.to(roomChannel).emit(SOCKET_EVENTS.ROOM_STATE, updatedRoom);
+        broadcastRoomAndGame(roomCode);
       }
     });
 
@@ -129,7 +160,7 @@ export function setupSocketServer(io: SocketIOServer) {
     socket.on('disconnect', () => {
       const disconnectResult = roomManager.handleSocketDisconnect(socket.id);
       if (disconnectResult) {
-        io.to(roomChannel).emit(SOCKET_EVENTS.ROOM_STATE, disconnectResult.room);
+        broadcastRoomAndGame(roomCode);
       }
     });
   });

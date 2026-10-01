@@ -62,3 +62,15 @@ export const ConnectFourMoveSchema = z.object({
 });
 
 export type ConnectFourMoveInput = z.infer<typeof ConnectFourMoveSchema>;
+
+export const WordleMoveSchema = z.object({
+  action: z.literal('GUESS'),
+  guess: z
+    .string()
+    .trim()
+    .toUpperCase()
+    .length(5)
+    .regex(/^[A-Z]{5}$/, 'Guess must be a 5-letter word'),
+});
+
+export type WordleMoveInput = z.infer<typeof WordleMoveSchema>;

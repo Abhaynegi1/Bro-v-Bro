@@ -225,12 +225,23 @@ export class RoomManager {
     return this.sanitizeRoom(room);
   }
 
-  public sanitizeRoom(room: InternalRoom): RoomState {
+  public sanitizeRoom(room: InternalRoom, viewingPlayerId?: string): RoomState {
     const sanitizeSlot = (slot: InternalPlayerSlot | null): PlayerSlot | null => {
       if (!slot) return null;
       const { sessionToken, socketId, ...safeSlot } = slot;
       return safeSlot;
     };
+
+    let activeGame = room.activeGame;
+    if (activeGame && viewingPlayerId) {
+      const engine = getGameEngine(activeGame.gameId);
+      if (engine?.sanitizeStateForPlayer) {
+        activeGame = {
+          gameId: activeGame.gameId,
+          state: engine.sanitizeStateForPlayer(activeGame.state, viewingPlayerId),
+        };
+      }
+    }
 
     return {
       id: room.id,
@@ -241,7 +252,7 @@ export class RoomManager {
         playerB: sanitizeSlot(room.players.playerB),
       },
       currentMatch: room.currentMatch,
-      activeGame: room.activeGame,
+      activeGame,
       selectingPlayerId: room.selectingPlayerId || null,
       createdAt: room.createdAt,
     };

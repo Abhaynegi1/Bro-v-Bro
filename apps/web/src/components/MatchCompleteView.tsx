@@ -50,6 +50,8 @@ export const MatchCompleteView: React.FC<MatchCompleteViewProps> = ({
         return 'Reflex Duel';
       case 'connect-four':
         return 'Connect Four';
+      case 'wordle':
+        return 'Wordle Race';
       default:
         return gameId;
     }

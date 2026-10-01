@@ -123,6 +123,38 @@ export interface ConnectFourMove {
   column: number; // 0..6
 }
 
+export type WordleLetterState = 'CORRECT' | 'PRESENT' | 'ABSENT';
+
+export interface WordleGuess {
+  word: string; // Sanitized: empty string for opponent while in progress
+  evaluation: WordleLetterState[];
+}
+
+export interface WordlePlayerState {
+  guesses: WordleGuess[];
+  isCompleted: boolean;
+  hasWon: boolean;
+  finishedAt?: number;
+}
+
+export interface WordleState {
+  playerIds: [string, string];
+  targetWord: string; // Masked when sanitized
+  maxAttempts: number; // 6
+  playerStates: {
+    [playerId: string]: WordlePlayerState;
+  };
+  status: 'IN_PROGRESS' | 'FINISHED';
+  winnerPlayerId: string | null;
+  loserPlayerId: string | null;
+  summary?: string;
+}
+
+export interface WordleMove {
+  action: 'GUESS';
+  guess: string; // 5-letter uppercase string
+}
+
 export interface ActiveGameData {
   gameId: string;
   state: any;
