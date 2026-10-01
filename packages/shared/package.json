@@ -8,6 +8,10 @@
   "exports": {
     ".": "./src/index.ts"
   },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "tsx --test \"src/__tests__/*.test.ts\""
+  },
   "dependencies": {
     "zod": "^3.23.8"
   },
