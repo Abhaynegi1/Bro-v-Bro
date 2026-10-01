@@ -10,6 +10,7 @@ interface WaitingRoomViewProps {
   onToggleReady: () => void;
   onLeaveRoom: () => void;
   onStartMatch: () => void;
+  theme?: 'day' | 'night';
 }
 
 export const WaitingRoomView: React.FC<WaitingRoomViewProps> = ({
@@ -18,10 +19,12 @@ export const WaitingRoomView: React.FC<WaitingRoomViewProps> = ({
   onToggleReady,
   onLeaveRoom,
   onStartMatch,
+  theme = 'day',
 }) => {
   const [copiedCode, setCopiedCode] = useState(false);
   const [copiedLink, setCopiedLink] = useState(false);
 
+  const isNight = theme === 'night';
   const { playerA, playerB } = roomState.players;
   const isHost = playerA?.id === myPlayerId;
   const myPlayer = isHost ? playerA : playerB;
@@ -52,14 +55,75 @@ export const WaitingRoomView: React.FC<WaitingRoomViewProps> = ({
   };
 
   return (
-    <div className="flex-1 flex flex-col items-center justify-center px-4 py-8 max-w-2xl mx-auto w-full text-center select-none">
-      {/* Lobby Header & Room Cartridge (Dark Navy on Cream Page) */}
-      <div className="w-full bg-darkNavy text-paper border-3 border-ink p-5 sm:p-6 shadow-pixel-lg mb-6 relative">
-        <div className="flex items-center justify-between border-b border-paper/20 pb-2 mb-3">
-          <span className="font-arcade text-xs text-cartridgeYellow tracking-widest uppercase">
+    <div className="flex-1 flex flex-col items-center justify-center px-4 py-6 sm:py-8 max-w-2xl mx-auto w-full text-center select-none relative z-10">
+      {/* Background Floating Clouds (Day Mode) */}
+      {!isNight && (
+        <div className="absolute inset-0 pointer-events-none overflow-hidden -z-10">
+          <div
+            className="absolute top-[8%] left-[-15%] opacity-85"
+            style={{ animation: 'cloud-float 55s linear infinite' }}
+          >
+            <svg width="170" height="65" viewBox="0 0 28 11" style={{ shapeRendering: 'crispEdges' }}>
+              <path
+                d="M 6 4 h 16 v 1 h 4 v 1 h 2 v 4 h -26 v -4 h 2 v -1 h 2 v -1 z M 10 2 h 8 v 2 h -8 z M 14 0 h 4 v 2 h -4 z"
+                fill="#FFFFFF"
+              />
+            </svg>
+          </div>
+          <div
+            className="absolute top-[65%] right-[-10%] opacity-80"
+            style={{ animation: 'cloud-float 65s linear infinite', animationDelay: '-25s' }}
+          >
+            <svg width="140" height="54" viewBox="0 0 28 11" style={{ shapeRendering: 'crispEdges' }}>
+              <path
+                d="M 6 4 h 16 v 1 h 4 v 1 h 2 v 4 h -26 v -4 h 2 v -1 h 2 v -1 z M 10 2 h 8 v 2 h -8 z"
+                fill="#FFFFFF"
+              />
+            </svg>
+          </div>
+        </div>
+      )}
+
+      {/* Background Twinkling Stars (Night Mode) */}
+      {isNight && (
+        <div className="absolute inset-0 pointer-events-none overflow-hidden -z-10">
+          {[
+            { top: '10%', left: '8%', delay: '0s', size: 3 },
+            { top: '22%', left: '88%', delay: '0.7s', size: 4 },
+            { top: '70%', left: '5%', delay: '1.2s', size: 4 },
+            { top: '80%', left: '92%', delay: '0.4s', size: 3 },
+          ].map((star, i) => (
+            <div
+              key={i}
+              className="absolute bg-white animate-pulse"
+              style={{
+                top: star.top,
+                left: star.left,
+                width: star.size,
+                height: star.size,
+                animationDelay: star.delay,
+                boxShadow: '0 0 3px #FFFFFF',
+              }}
+            />
+          ))}
+          <div className="absolute top-[15%] left-[90%] text-cartridgeYellow text-[14px] font-pixel animate-pulse">★</div>
+          <div className="absolute top-[75%] left-[8%] text-white text-[12px] font-pixel animate-pulse">✦</div>
+        </div>
+      )}
+
+      {/* Lobby Header & Room Cartridge */}
+      <div
+        className={`w-full ${
+          isNight
+            ? 'bg-[#142247] border-2 border-[#4A68B1] shadow-[8px_8px_0px_#050A18]'
+            : 'bg-[#0A0F1D] border-3 border-black shadow-pixel-lg'
+        } text-white p-5 sm:p-6 mb-6 relative`}
+      >
+        <div className="flex items-center justify-between border-b border-white/20 pb-2 mb-3">
+          <span className="font-arcade text-xs text-cartridgeYellow tracking-widest uppercase font-bold">
             ARCADE LOBBY
           </span>
-          <span className="font-mono font-bold text-xs text-paper/80 tracking-wider">
+          <span className="font-mono font-bold text-xs text-white/90 tracking-wider">
             {roomState.currentMatch?.seriesCondition.type === 'FIRST_TO_N'
               ? `SERIES: FIRST TO ${roomState.currentMatch.seriesCondition.targetPoints}`
               : 'SERIES: MATCH PLAY'}
@@ -68,10 +132,10 @@ export const WaitingRoomView: React.FC<WaitingRoomViewProps> = ({
 
         {/* Large Retro Room Code */}
         <div className="my-2">
-          <div className="font-arcade text-[10px] text-paper/70 uppercase mb-1">
+          <div className="font-arcade text-[10px] text-white/70 uppercase mb-1">
             ROOM CODE
           </div>
-          <div className="font-pixel text-4xl sm:text-6xl text-paper tracking-widest py-1 drop-shadow-[3px_3px_0px_#111522]">
+          <div className="font-pixel text-4xl sm:text-6xl text-white tracking-widest py-1 drop-shadow-[3px_3px_0px_#000000]">
             {roomState.code}
           </div>
         </div>
@@ -190,8 +254,14 @@ export const WaitingRoomView: React.FC<WaitingRoomViewProps> = ({
       </div>
 
       {/* Status Announcement Banner */}
-      <div className="w-full bg-darkNavy text-paper border-2 border-ink px-4 py-3 mb-6 text-center shadow-pixel-sm">
-        <span className="font-arcade text-xs tracking-wider">
+      <div
+        className={`w-full ${
+          isNight
+            ? 'bg-[#142247] text-white border-2 border-[#4A68B1] shadow-[4px_4px_0px_#050A18]'
+            : 'bg-[#0A0F1D] text-white border-2 border-black shadow-pixel-sm'
+        } px-4 py-3 mb-6 text-center`}
+      >
+        <span className="font-arcade text-xs tracking-wider font-bold">
           {!playerB
             ? 'WAITING FOR YOUR BRO...'
             : !bothReady
@@ -230,13 +300,15 @@ export const WaitingRoomView: React.FC<WaitingRoomViewProps> = ({
         )}
       </div>
 
-      {/* Leave Room Action */}
+      {/* Prominent High-Visibility Leave Room Button */}
       <button
         type="button"
         onClick={onLeaveRoom}
-        className="mt-8 font-arcade text-[10px] text-ink/50 hover:text-arcadeRed transition-colors tracking-widest uppercase font-bold"
+        className="mt-6 px-6 py-2.5 bg-arcadeRed/90 hover:bg-arcadeRed text-white border-2 border-black font-pixel text-xs uppercase tracking-wider shadow-pixel transition-all hover:scale-105 active:scale-95 flex items-center justify-center gap-2"
+        title="Leave Room & Return to Arena"
       >
-        [ LEAVE ROOM ]
+        <span>✕</span>
+        <span>LEAVE ROOM & RETURN TO ARENA</span>
       </button>
     </div>
   );

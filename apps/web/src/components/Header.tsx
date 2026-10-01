@@ -7,79 +7,92 @@ interface HeaderProps {
   currentView?: 'landing' | 'how-to-play';
   onNavigateHowToPlay?: () => void;
   onNavigateHome?: () => void;
+  theme?: 'day' | 'night';
+  onToggleTheme?: () => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
   roomCode,
   isConnected,
   onLeave,
-  currentView = 'landing',
   onNavigateHowToPlay,
   onNavigateHome,
+  theme = 'day',
+  onToggleTheme,
 }) => {
+  const isNight = theme === 'night';
+
   return (
-    <header className="w-full bg-darkNavy text-paper border-b-2 border-ink px-4 py-2.5 select-none shadow-sm z-30 relative">
-      <div className="max-w-6xl mx-auto flex items-center justify-between">
-        {/* Brand with 1:1 Pixel Icon */}
-        <div
-          onClick={onLeave || onNavigateHome}
-          className="flex items-center gap-2.5 cursor-pointer group select-none"
-          title="Return to title screen"
-        >
-          <img
-            src="/favicon.png"
-            alt="BvB"
-            className="w-8 h-8 object-contain drop-shadow-sm group-hover:-translate-y-0.5 transition-transform"
-            style={{ imageRendering: 'pixelated' }}
-          />
-          <div className="flex items-center gap-1.5 font-pixel text-sm sm:text-base text-paper tracking-wider">
-            <span>BRO</span>
-            <span className="text-arcadeRed font-bold text-xs">[v]</span>
-            <span>BRO</span>
+    <header className="w-full bg-[#0A0F1D] text-white px-5 sm:px-10 py-3 flex items-center justify-between border-b-2 border-black z-30 flex-shrink-0 sticky top-0 shadow-md select-none">
+      {/* Left: Pixel Logo (Returns to Arena / Exit on click) */}
+      <div
+        onClick={onLeave || onNavigateHome}
+        className="flex items-center gap-1.5 font-pixel text-sm sm:text-base tracking-wider cursor-pointer group select-none"
+        title="Leave Room & Return to Arena"
+      >
+        <span className="group-hover:-translate-x-0.5 transition-transform">BRO</span>
+        <span className="text-arcadeRed font-bold text-xs sm:text-sm">[v]</span>
+        <span className="group-hover:translate-x-0.5 transition-transform">BRO</span>
+      </div>
+
+      {/* Center / Right controls */}
+      <div className="flex items-center gap-3 sm:gap-6">
+        {/* Room Code Badge */}
+        {roomCode && (
+          <div className="flex items-center gap-2 bg-[#121B35] border-2 border-white/30 px-3 py-1 text-xs shadow-pixel-sm">
+            <span className="font-arcade text-[10px] text-white/70 tracking-wider">ROOM:</span>
+            <span className="font-pixel text-xs text-cartridgeYellow tracking-widest font-bold">{roomCode}</span>
           </div>
-          <span className="hidden md:inline-block ml-2 px-1.5 py-0.5 bg-ink text-cartridgeYellow text-[9px] font-arcade tracking-widest border border-ink/40">
-            1v1 GAUNTLET
-          </span>
-        </div>
+        )}
 
-        {/* Center / Right arcade stats & nav */}
-        <div className="flex items-center gap-2.5 sm:gap-3">
-          {/* How To Play Navigation Link (Only when outside active room) */}
-          {!roomCode && (
-            <button
-              onClick={currentView === 'how-to-play' ? onNavigateHome : onNavigateHowToPlay}
-              className="px-2.5 py-1 text-xs font-mono font-bold border-2 border-paper/30 hover:border-cartridgeYellow text-paper hover:text-cartridgeYellow bg-mutedNavy/60 hover:bg-mutedNavy transition-all flex items-center gap-1.5 shadow-pixel-sm active:translate-y-0.5"
-            >
-              <span className="text-arcadeRed font-pixel text-[10px]">
-                {currentView === 'how-to-play' ? '◄' : '?'}
-              </span>
-              <span className="font-arcade text-[10px] sm:text-xs tracking-wider">
-                {currentView === 'how-to-play' ? 'ARENA' : 'HOW TO PLAY'}
-              </span>
-            </button>
-          )}
+        {/* Online status indicator */}
+        {isConnected !== undefined && (
+          <div className="hidden sm:flex items-center gap-2 bg-[#121B35] border-2 border-white/30 px-2.5 py-1 text-[10px] font-arcade shadow-pixel-sm">
+            <span
+              className={`w-2 h-2 ${
+                isConnected ? 'bg-gameboyGreen animate-pulse' : 'bg-arcadeRed'
+              }`}
+            />
+            <span className="text-white/90 tracking-wider font-bold">
+              {isConnected ? 'ONLINE' : 'CONNECTING...'}
+            </span>
+          </div>
+        )}
 
-          {roomCode && (
-            <div className="flex items-center gap-2 bg-[#11182A] border-2 border-ink px-3 py-1 shadow-pixel-sm">
-              <span className="font-arcade text-[10px] text-paper/70 tracking-wider">ROOM:</span>
-              <span className="font-pixel text-xs text-cartridgeYellow tracking-widest">{roomCode}</span>
-            </div>
-          )}
+        {/* How To Play Navigation Link */}
+        {onNavigateHowToPlay && (
+          <button
+            type="button"
+            onClick={onNavigateHowToPlay}
+            className="hidden md:inline-block font-pixel text-xs sm:text-sm text-white/90 hover:text-white uppercase tracking-wider hover:underline transition-all"
+          >
+            HOW TO PLAY
+          </button>
+        )}
 
-          {isConnected !== undefined && (
-            <div className="flex items-center gap-2 bg-[#11182A] border-2 border-ink px-2.5 py-1 text-[10px] font-mono shadow-pixel-sm">
-              <span
-                className={`w-2 h-2 ${
-                  isConnected ? 'bg-gameboyGreen animate-pulse' : 'bg-arcadeRed'
-                }`}
-                style={{ imageRendering: 'pixelated' }}
-              />
-              <span className="hidden sm:inline text-paper font-arcade tracking-wider">
-                {isConnected ? 'ONLINE' : 'CONNECTING...'}
-              </span>
-            </div>
-          )}
-        </div>
+        {/* Night / Day Toggle Button */}
+        {onToggleTheme && (
+          <button
+            type="button"
+            onClick={onToggleTheme}
+            className="bg-white hover:bg-cream text-black font-pixel text-xs sm:text-sm px-4 py-1.5 border-2 border-white rounded shadow-sm hover:scale-105 active:scale-95 transition-transform uppercase tracking-wider font-bold"
+          >
+            {isNight ? 'DAY' : 'NIGHT'}
+          </button>
+        )}
+
+        {/* PROMINENT EXIT BUTTON */}
+        {onLeave && (
+          <button
+            type="button"
+            onClick={onLeave}
+            className="px-3 py-1.5 sm:px-4 sm:py-1.5 bg-arcadeRed hover:bg-[#D32F2F] text-white border-2 border-black font-pixel text-xs sm:text-sm uppercase tracking-wider shadow-pixel-sm hover:scale-105 active:scale-95 transition-all flex items-center gap-1.5 font-bold"
+            title="Leave Room"
+          >
+            <span>✕</span>
+            <span>EXIT</span>
+          </button>
+        )}
       </div>
     </header>
   );

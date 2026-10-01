@@ -153,13 +153,13 @@ export const App: React.FC = () => {
 
   return (
     <div
-      className={`w-full text-ink font-mono relative selection:bg-arcadeRed selection:text-white ${
-        currentView === 'how-to-play'
-          ? 'min-h-screen overflow-y-auto'
-          : 'h-screen overflow-hidden bg-[#0A0F1D] flex flex-col'
+      className={`w-full text-ink font-mono relative selection:bg-arcadeRed selection:text-white transition-colors duration-700 ${
+        currentView === 'how-to-play' || roomCode
+          ? 'min-h-screen overflow-y-auto flex flex-col'
+          : 'h-screen overflow-hidden flex flex-col'
       }`}
       style={{
-        backgroundColor: currentView === 'how-to-play' ? (theme === 'night' ? '#0D193A' : '#72B6F4') : '#0A0F1D',
+        backgroundColor: theme === 'night' ? '#0D193A' : '#72B6F4',
       }}
     >
 
@@ -172,6 +172,8 @@ export const App: React.FC = () => {
           currentView={currentView}
           onNavigateHowToPlay={handleOpenHowToPlay}
           onNavigateHome={handleBackToLanding}
+          theme={theme}
+          onToggleTheme={toggleTheme}
         />
       )}
 
@@ -186,6 +188,8 @@ export const App: React.FC = () => {
         className={`w-full relative z-10 ${
           currentView === 'how-to-play'
             ? 'min-h-screen flex flex-col w-full'
+            : roomCode
+            ? 'flex-1 flex flex-col w-full min-h-screen'
             : 'flex-1 flex flex-col w-full h-full overflow-hidden'
         }`}
       >
@@ -211,13 +215,13 @@ export const App: React.FC = () => {
             />
           )
         ) : (
-
           <WaitingRoomView
             roomState={roomState}
             myPlayerId={playerId || ''}
             onToggleReady={toggleReady}
             onLeaveRoom={handleLeaveRoom}
             onStartMatch={handleStartMatch}
+            theme={theme}
           />
         )}
       </main>
