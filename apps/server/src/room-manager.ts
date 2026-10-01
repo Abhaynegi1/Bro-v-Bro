@@ -22,6 +22,7 @@ export interface InternalRoom {
   };
   currentMatch: MatchState | null;
   activeGame: ActiveGameData | null;
+  selectingPlayerId?: string | null;
   createdAt: number;
   updatedAt: number;
 }
@@ -241,14 +242,42 @@ export class RoomManager {
       },
       currentMatch: room.currentMatch,
       activeGame: room.activeGame,
+      selectingPlayerId: room.selectingPlayerId || null,
       createdAt: room.createdAt,
     };
   }
 
-  public startGame(
+  public startMatch(
+    code: string,
+    requesterPlayerId: string
+  ): RoomState | null {
+    const room = this.roomsByCode.get(code.toUpperCase());
+    if (!room) return null;
+
+    // Both players must be connected
+    if (!room.players.playerA || !room.players.playerB) return null;
+    if (!room.players.playerA.isConnected || !room.players.playerB.isConnected) return null;
+
+    // Only host can start the match series
+    if (room.players.playerA.id !== requesterPlayerId) return null;
+
+    // Round 1: Host picks the game!
+    room.status = 'SELECTING_GAME';
+    room.selectingPlayerId = room.players.playerA.id;
+    room.activeGame = null;
+    if (room.currentMatch) {
+      room.currentMatch.status = 'IN_PROGRESS';
+      room.currentMatch.nextPickerPlayerId = room.players.playerA.id;
+    }
+    room.updatedAt = Date.now();
+
+    return this.sanitizeRoom(room);
+  }
+
+  public selectGame(
     code: string,
     requesterPlayerId: string,
-    gameId: string = 'tic-tac-toe'
+    gameId: string
   ): { room: RoomState; activeGame: ActiveGameData } | null {
     const room = this.roomsByCode.get(code.toUpperCase());
     if (!room) return null;
@@ -257,12 +286,17 @@ export class RoomManager {
     if (!room.players.playerA || !room.players.playerB) return null;
     if (!room.players.playerA.isConnected || !room.players.playerB.isConnected) return null;
 
+    // Verify room is in SELECTING_GAME status and requester is the authorized picker
+    if (room.status !== 'SELECTING_GAME') return null;
+    if (room.selectingPlayerId && room.selectingPlayerId !== requesterPlayerId) return null;
+
     const engine = getGameEngine(gameId);
     if (!engine) return null;
 
     const initialState = engine.createInitialState([room.players.playerA.id, room.players.playerB.id]);
 
     room.status = 'IN_GAME';
+    room.selectingPlayerId = null;
     room.activeGame = {
       gameId,
       state: initialState,
@@ -278,6 +312,14 @@ export class RoomManager {
       room: this.sanitizeRoom(room),
       activeGame: room.activeGame,
     };
+  }
+
+  public startGame(
+    code: string,
+    requesterPlayerId: string,
+    gameId: string = 'tic-tac-toe'
+  ): { room: RoomState; activeGame: ActiveGameData } | null {
+    return this.selectGame(code, requesterPlayerId, gameId);
   }
 
   public handleMove(
@@ -340,12 +382,31 @@ export class RoomManager {
           room.status = 'MATCH_COMPLETE';
           room.currentMatch.status = 'COMPLETED';
           room.currentMatch.seriesWinnerId = room.players.playerA?.id || null;
+          room.selectingPlayerId = null;
         } else if (room.currentMatch.scores.playerB >= targetWins) {
           room.status = 'MATCH_COMPLETE';
           room.currentMatch.status = 'COMPLETED';
           room.currentMatch.seriesWinnerId = room.players.playerB?.id || null;
+          room.selectingPlayerId = null;
         } else {
           room.status = 'ROUND_COMPLETE';
+          // Game selection turn logic:
+          // 1. Loser of the previous round picks next game!
+          // 2. If Draw: Alternate player picks (player who did not pick the drawn game)
+          const playerAId = room.players.playerA?.id;
+          const playerBId = room.players.playerB?.id;
+          let nextPicker: string | null = null;
+
+          if (result.loserPlayerId) {
+            nextPicker = result.loserPlayerId;
+          } else {
+            // Draw: Alternate picker
+            const previousPicker = room.currentMatch.nextPickerPlayerId || playerAId;
+            nextPicker = previousPicker === playerAId ? playerBId || null : playerAId || null;
+          }
+
+          room.selectingPlayerId = nextPicker;
+          room.currentMatch.nextPickerPlayerId = nextPicker;
         }
       } else {
         room.status = 'ROUND_COMPLETE';
@@ -368,34 +429,37 @@ export class RoomManager {
     };
   }
 
-  public nextRound(code: string, requesterPlayerId: string): RoomState | null {
+  public nextRound(code: string, _requesterPlayerId: string): RoomState | null {
     const room = this.roomsByCode.get(code.toUpperCase());
     if (!room) return null;
 
     if (room.currentMatch && room.status === 'ROUND_COMPLETE') {
       room.currentMatch.currentRoundNumber++;
-      // Auto-start next round or return to ready
-      return this.startGame(code, requesterPlayerId, 'tic-tac-toe')?.room || null;
+      // Transition to game selection
+      room.status = 'SELECTING_GAME';
+      room.activeGame = null;
+      room.selectingPlayerId = room.currentMatch.nextPickerPlayerId || room.players.playerA?.id || null;
+      room.updatedAt = Date.now();
+      return this.sanitizeRoom(room);
     }
 
     return null;
   }
 
-  public rematch(code: string, requesterPlayerId: string): RoomState | null {
+  public rematch(code: string, _requesterPlayerId: string): RoomState | null {
     const room = this.roomsByCode.get(code.toUpperCase());
     if (!room || !room.currentMatch) return null;
-
-    const targetWins =
-      room.currentMatch.seriesCondition.type === 'FIRST_TO_N'
-        ? room.currentMatch.seriesCondition.targetPoints
-        : 3;
 
     room.currentMatch.scores = { playerA: 0, playerB: 0 };
     room.currentMatch.rounds = [];
     room.currentMatch.currentRoundNumber = 1;
     room.currentMatch.status = 'IN_PROGRESS';
     room.currentMatch.seriesWinnerId = null;
-    room.status = 'READY';
+    room.currentMatch.nextPickerPlayerId = room.players.playerA?.id || null;
+
+    // Reset to Game Selection with Host picking Round 1
+    room.status = 'SELECTING_GAME';
+    room.selectingPlayerId = room.players.playerA?.id || null;
     room.activeGame = null;
     room.updatedAt = Date.now();
 

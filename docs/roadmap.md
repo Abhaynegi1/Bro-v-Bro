@@ -40,13 +40,14 @@ Phase 0 (Docs) ➔ Phase 1 (Skeleton) ➔ Phase 2 (First Game) ➔ Phase 3 (Matc
 
 ---
 
-## Phase 3 — Full Match & Series System
+## Phase 3 — Full Match & Series System *(Completed)*
 **Goal:** Turn standalone game rounds into a continuous Bro v Bro competition series.
-- Implement multi-round match progression (e.g. First to 3 points).
-- Build the **Universal Match Header** (live scoreboard).
-- Implement the **Game Selection Screen** (Host picks Round 1; Loser picks subsequent rounds).
-- Implement Round Result breakdown and transition countdowns.
-- Implement Final Match Series screen and Rematch reset loop.
+- [x] Implement multi-round match progression (e.g. First to 3 points).
+- [x] Build the **Universal Match Header** (live scoreboard, player avatars, stars & target wins).
+- [x] Implement the **Game Selection Screen** (Host picks Round 1; Loser's Revenge picks subsequent rounds).
+- [x] Implement Round Result breakdown and transition countdowns.
+- [x] Implement Final Match Series screen, Champion podium, recap table, and Rematch reset loop.
+- [x] Implemented second plug-and-play game: **Reflex Duel** (`reaction-test`) for genuine multi-game selection.
 
 ---
 

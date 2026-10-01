@@ -46,16 +46,28 @@ export function setupSocketServer(io: SocketIOServer) {
       }
     });
 
-    // Handle Start Match (Host starts the game)
-    socket.on(SOCKET_EVENTS.ROOM_START_MATCH, (payload?: { gameId?: string }) => {
-      const gameId = payload?.gameId || 'tic-tac-toe';
-      const result = roomManager.startGame(roomCode, playerId, gameId);
+    // Handle Start Match (Host starts the match series -> moves to game selection)
+    socket.on(SOCKET_EVENTS.ROOM_START_MATCH, () => {
+      const updated = roomManager.startMatch(roomCode, playerId);
+      if (updated) {
+        io.to(roomChannel).emit(SOCKET_EVENTS.ROOM_STATE, updated);
+      }
+    });
+
+    // Handle Game Selection (Authorized picker selects which mini-game to play)
+    socket.on(SOCKET_EVENTS.GAME_SELECT, (payload: { gameId: string }) => {
+      const result = roomManager.selectGame(roomCode, playerId, payload.gameId);
       if (result) {
         io.to(roomChannel).emit(SOCKET_EVENTS.GAME_START, {
-          gameId,
+          gameId: result.activeGame.gameId,
           state: result.activeGame.state,
         });
         io.to(roomChannel).emit(SOCKET_EVENTS.ROOM_STATE, result.room);
+      } else {
+        socket.emit(SOCKET_EVENTS.ERROR, {
+          code: 'INVALID_GAME_SELECTION',
+          message: 'Could not select game. Make sure it is your turn to pick.',
+        });
       }
     });
 

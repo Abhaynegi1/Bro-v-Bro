@@ -97,9 +97,21 @@ export function useSocket({ roomCode, playerId, sessionToken, onPlayerJoined }: 
     }
   }, [isConnected]);
 
+  const startMatch = useCallback(() => {
+    if (socketRef.current && isConnected) {
+      socketRef.current.emit(SOCKET_EVENTS.ROOM_START_MATCH);
+    }
+  }, [isConnected]);
+
+  const selectGame = useCallback((gameId: string) => {
+    if (socketRef.current && isConnected) {
+      socketRef.current.emit(SOCKET_EVENTS.GAME_SELECT, { gameId });
+    }
+  }, [isConnected]);
+
   const startGame = useCallback((gameId: string = 'tic-tac-toe') => {
     if (socketRef.current && isConnected) {
-      socketRef.current.emit(SOCKET_EVENTS.ROOM_START_MATCH, { gameId });
+      socketRef.current.emit(SOCKET_EVENTS.GAME_SELECT, { gameId });
     }
   }, [isConnected]);
 
@@ -130,6 +142,8 @@ export function useSocket({ roomCode, playerId, sessionToken, onPlayerJoined }: 
     lastGameResult,
     error,
     toggleReady,
+    startMatch,
+    selectGame,
     startGame,
     sendMove,
     nextRound,

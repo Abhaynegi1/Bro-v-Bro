@@ -1,6 +1,7 @@
 export type RoomStatus =
   | 'WAITING'         // Host created room, waiting for Guest
   | 'READY'           // Both players present and ready
+  | 'SELECTING_GAME'  // In game selection screen, authorized player is picking
   | 'IN_GAME'         // A round is actively being played
   | 'ROUND_COMPLETE'  // Round finished, displaying round results / picking next
   | 'MATCH_COMPLETE'  // Series target reached, displaying final champion
@@ -42,6 +43,7 @@ export interface MatchState {
   activeGameId: string | null;
   status: 'IN_PROGRESS' | 'COMPLETED';
   seriesWinnerId: string | null;
+  nextPickerPlayerId?: string | null;
 }
 
 export interface MoveContext {
@@ -80,6 +82,28 @@ export interface TicTacToeMove {
   cellIndex: number;
 }
 
+export interface ReactionTestPlayerResult {
+  reactionMs: number | null;
+  earlyClick: boolean;
+  clickedAt?: number;
+}
+
+export interface ReactionTestState {
+  playerIds: [string, string];
+  triggerAt: number;
+  status: 'WAITING' | 'READY' | 'FINISHED';
+  playerResults: {
+    [playerId: string]: ReactionTestPlayerResult;
+  };
+  winnerPlayerId: string | null;
+  loserPlayerId: string | null;
+  summary?: string;
+}
+
+export interface ReactionTestMove {
+  action: 'CLICK';
+}
+
 export interface ActiveGameData {
   gameId: string;
   state: any;
@@ -95,6 +119,7 @@ export interface RoomState {
   };
   currentMatch: MatchState | null;
   activeGame: ActiveGameData | null;
+  selectingPlayerId?: string | null;
   createdAt: number;
 }
 

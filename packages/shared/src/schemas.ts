@@ -44,3 +44,15 @@ export const TicTacToeMoveSchema = z.object({
 });
 
 export type TicTacToeMoveInput = z.infer<typeof TicTacToeMoveSchema>;
+
+export const GameSelectSchema = z.object({
+  gameId: z.string().trim().min(1).max(50),
+});
+
+export type GameSelectInput = z.infer<typeof GameSelectSchema>;
+
+export const ReactionTestMoveSchema = z.object({
+  action: z.literal('CLICK'),
+});
+
+export type ReactionTestMoveInput = z.infer<typeof ReactionTestMoveSchema>;

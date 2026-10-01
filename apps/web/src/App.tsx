@@ -2,10 +2,15 @@ import React, { useState, useEffect, useCallback } from 'react';
 import type { RoomState } from '@bvb/shared';
 import { useSocket } from './hooks/useSocket';
 import { Header } from './components/Header';
+import { UniversalMatchHeader } from './components/UniversalMatchHeader';
 import { LandingView } from './components/LandingView';
 import { HowToPlayView } from './components/HowToPlayView';
 import { WaitingRoomView } from './components/WaitingRoomView';
+import { GameSelectionView } from './components/GameSelectionView';
 import { TicTacToeGame } from './components/games/TicTacToeGame';
+import { ReactionTestGame } from './components/games/ReactionTestGame';
+import { RoundResultModal } from './components/RoundResultModal';
+import { MatchCompleteView } from './components/MatchCompleteView';
 
 const STORAGE_KEYS = {
   ROOM_CODE: 'bvb_room_code',
@@ -46,6 +51,8 @@ export const App: React.FC = () => {
     activeGame,
     lastGameResult,
     toggleReady,
+    startMatch,
+    selectGame,
     startGame,
     sendMove,
     nextRound,
@@ -137,7 +144,7 @@ export const App: React.FC = () => {
   };
 
   const handleStartMatch = () => {
-    startGame('tic-tac-toe');
+    startMatch();
   };
 
   const handleOpenHowToPlay = () => {
@@ -163,6 +170,13 @@ export const App: React.FC = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  const isMatchPhase = Boolean(
+    roomState &&
+      ['SELECTING_GAME', 'IN_GAME', 'ROUND_COMPLETE', 'MATCH_COMPLETE'].includes(
+        roomState.status
+      )
+  );
+
   return (
     <div
       className={`w-full text-ink font-mono relative selection:bg-arcadeRed selection:text-white transition-colors duration-700 ${
@@ -174,19 +188,28 @@ export const App: React.FC = () => {
         backgroundColor: theme === 'night' ? '#0D193A' : '#72B6F4',
       }}
     >
-
-      {/* Show top Header only inside active room */}
-      {roomCode && (
-        <Header
-          roomCode={roomCode}
-          isConnected={isConnected}
-          onLeave={handleLeaveRoom}
-          currentView={currentView}
-          onNavigateHowToPlay={handleOpenHowToPlay}
-          onNavigateHome={handleBackToLanding}
-          theme={theme}
-          onToggleTheme={toggleTheme}
-        />
+      {/* Show top Header: Universal Match Header during match series, Lobby Header otherwise */}
+      {roomCode && roomState && (
+        isMatchPhase ? (
+          <UniversalMatchHeader
+            roomState={roomState}
+            myPlayerId={playerId || ''}
+            onLeaveRoom={handleLeaveRoom}
+            theme={theme}
+            onToggleTheme={toggleTheme}
+          />
+        ) : (
+          <Header
+            roomCode={roomCode}
+            isConnected={isConnected}
+            onLeave={handleLeaveRoom}
+            currentView={currentView}
+            onNavigateHowToPlay={handleOpenHowToPlay}
+            onNavigateHome={handleBackToLanding}
+            theme={theme}
+            onToggleTheme={toggleTheme}
+          />
+        )
       )}
 
       {/* Floating Retro Notification Banner */}
@@ -226,18 +249,55 @@ export const App: React.FC = () => {
               onToggleTheme={toggleTheme}
             />
           )
-        ) : (roomState.status === 'IN_GAME' || roomState.status === 'ROUND_COMPLETE' || (roomState.status === 'MATCH_COMPLETE' && activeGame)) && activeGame ? (
-          <TicTacToeGame
+        ) : roomState.status === 'MATCH_COMPLETE' ? (
+          <MatchCompleteView
             roomState={roomState}
-            gameState={activeGame.state as any}
             myPlayerId={playerId || ''}
-            onSendMove={sendMove}
-            onNextRound={nextRound}
             onRematch={requestRematch}
             onLeaveRoom={handleLeaveRoom}
-            lastResult={lastGameResult}
             theme={theme}
           />
+        ) : roomState.status === 'SELECTING_GAME' ? (
+          <GameSelectionView
+            roomState={roomState}
+            myPlayerId={playerId || ''}
+            onSelectGame={selectGame}
+            theme={theme}
+          />
+        ) : (roomState.status === 'IN_GAME' || roomState.status === 'ROUND_COMPLETE') && activeGame ? (
+          <div className="flex-1 flex flex-col w-full relative">
+            {activeGame.gameId === 'reaction-test' ? (
+              <ReactionTestGame
+                roomState={roomState}
+                gameState={activeGame.state}
+                myPlayerId={playerId || ''}
+                onSendMove={sendMove}
+                theme={theme}
+              />
+            ) : (
+              <TicTacToeGame
+                roomState={roomState}
+                gameState={activeGame.state as any}
+                myPlayerId={playerId || ''}
+                onSendMove={sendMove}
+                onNextRound={nextRound}
+                onRematch={requestRematch}
+                onLeaveRoom={handleLeaveRoom}
+                lastResult={lastGameResult}
+                theme={theme}
+              />
+            )}
+
+            {roomState.status === 'ROUND_COMPLETE' && (
+              <RoundResultModal
+                roomState={roomState}
+                myPlayerId={playerId || ''}
+                onNextRound={nextRound}
+                lastResult={lastGameResult}
+                theme={theme}
+              />
+            )}
+          </div>
         ) : (
           <WaitingRoomView
             roomState={roomState}
