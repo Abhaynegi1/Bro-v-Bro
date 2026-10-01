@@ -28,14 +28,14 @@ Phase 0 (Docs) ➔ Phase 1 (Skeleton) ➔ Phase 2 (First Game) ➔ Phase 3 (Matc
 
 ---
 
-## Phase 2 — First Game (Tic Tac Toe PoC)
+## Phase 2 — First Game (Tic Tac Toe PoC) *(Completed)*
 **Goal:** Prove the complete server-authoritative multiplayer game loop with the simplest possible game.
-- Implement `TicTacToeEngine` conforming to `GameDefinition`.
-- Server handles `game:move`, validates turns, applies moves, and detects 3-in-a-row or cat's game (draw).
-- Build client Tic Tac Toe board component.
-- Deliver end-to-end loop:
+- [x] Implement `TicTacToeEngine` conforming to `GameDefinition`.
+- [x] Server handles `game:move`, validates turns, applies moves, and detects 3-in-a-row or cat's game (draw).
+- [x] Build client Tic Tac Toe board component with retro arcade theme & confetti.
+- [x] Deliver end-to-end loop:
   ```text
-  Create Room ➔ Join Room ➔ Start Game ➔ Send Moves ➔ Synchronize State ➔ Determine Winner ➔ Declare Result
+  Create Room ➔ Join Room ➔ Start Game ➔ Send Moves ➔ Synchronize State ➔ Determine Winner ➔ Declare Result ➔ Next Round / Rematch
   ```
 
 ---

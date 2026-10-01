@@ -38,3 +38,9 @@ export const SocketAuthSchema = z.object({
 });
 
 export type SocketAuth = z.infer<typeof SocketAuthSchema>;
+
+export const TicTacToeMoveSchema = z.object({
+  cellIndex: z.number().int().min(0).max(8),
+});
+
+export type TicTacToeMoveInput = z.infer<typeof TicTacToeMoveSchema>;

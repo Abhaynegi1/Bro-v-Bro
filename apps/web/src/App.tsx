@@ -5,6 +5,7 @@ import { Header } from './components/Header';
 import { LandingView } from './components/LandingView';
 import { HowToPlayView } from './components/HowToPlayView';
 import { WaitingRoomView } from './components/WaitingRoomView';
+import { TicTacToeGame } from './components/games/TicTacToeGame';
 
 const STORAGE_KEYS = {
   ROOM_CODE: 'bvb_room_code',
@@ -38,7 +39,18 @@ export const App: React.FC = () => {
     setTimeout(() => setNotification(null), 4000);
   }, []);
 
-  const { isConnected, roomState, setRoomState, toggleReady } = useSocket({
+  const {
+    isConnected,
+    roomState,
+    setRoomState,
+    activeGame,
+    lastGameResult,
+    toggleReady,
+    startGame,
+    sendMove,
+    nextRound,
+    requestRematch,
+  } = useSocket({
     roomCode,
     playerId,
     sessionToken,
@@ -125,7 +137,7 @@ export const App: React.FC = () => {
   };
 
   const handleStartMatch = () => {
-    alert("🎉 Phase 1 Verified! In Phase 2, this launches the Tic Tac Toe multiplayer round.");
+    startGame('tic-tac-toe');
   };
 
   const handleOpenHowToPlay = () => {
@@ -214,6 +226,18 @@ export const App: React.FC = () => {
               onToggleTheme={toggleTheme}
             />
           )
+        ) : (roomState.status === 'IN_GAME' || roomState.status === 'ROUND_COMPLETE' || (roomState.status === 'MATCH_COMPLETE' && activeGame)) && activeGame ? (
+          <TicTacToeGame
+            roomState={roomState}
+            gameState={activeGame.state as any}
+            myPlayerId={playerId || ''}
+            onSendMove={sendMove}
+            onNextRound={nextRound}
+            onRematch={requestRematch}
+            onLeaveRoom={handleLeaveRoom}
+            lastResult={lastGameResult}
+            theme={theme}
+          />
         ) : (
           <WaitingRoomView
             roomState={roomState}

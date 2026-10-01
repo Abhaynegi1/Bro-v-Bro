@@ -1,8 +1,10 @@
 export const SOCKET_EVENTS = {
   // Client -> Server
   ROOM_READY_TOGGLE: 'room:ready_toggle',
+  ROOM_START_MATCH: 'room:start_match',
   GAME_SELECT: 'game:select',
   GAME_MOVE: 'game:move',
+  ROUND_NEXT: 'round:next',
   REMATCH_REQUEST: 'match:rematch_request',
 
   // Server -> Room / Client

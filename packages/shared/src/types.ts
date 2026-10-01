@@ -44,6 +44,47 @@ export interface MatchState {
   seriesWinnerId: string | null;
 }
 
+export interface MoveContext {
+  playerId: string;
+  timestamp: number;
+}
+
+export interface GameDefinition<TState, TMove> {
+  id: string;
+  name: string;
+  description: string;
+  minPlayers: 2;
+  maxPlayers: 2;
+  createInitialState(playerIds: [string, string]): TState;
+  validateMove(state: TState, move: TMove, context: MoveContext): boolean;
+  applyMove(state: TState, move: TMove, context: MoveContext): TState;
+  isFinished(state: TState): boolean;
+  getResult(state: TState): GameResult;
+  sanitizeStateForPlayer?(state: TState, viewingPlayerId: string): unknown;
+}
+
+export type TicTacToeCell = 'X' | 'O' | null;
+
+export interface TicTacToeState {
+  board: TicTacToeCell[];
+  currentTurnPlayerId: string;
+  playerXId: string;
+  playerOId: string;
+  winningLine: [number, number, number] | null;
+  status: 'IN_PROGRESS' | 'WIN' | 'DRAW';
+  winnerPlayerId: string | null;
+  moveCount: number;
+}
+
+export interface TicTacToeMove {
+  cellIndex: number;
+}
+
+export interface ActiveGameData {
+  gameId: string;
+  state: any;
+}
+
 export interface RoomState {
   id: string;
   code: string;
@@ -53,6 +94,7 @@ export interface RoomState {
     playerB: PlayerSlot | null;
   };
   currentMatch: MatchState | null;
+  activeGame: ActiveGameData | null;
   createdAt: number;
 }
 

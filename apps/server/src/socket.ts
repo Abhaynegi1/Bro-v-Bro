@@ -46,6 +46,73 @@ export function setupSocketServer(io: SocketIOServer) {
       }
     });
 
+    // Handle Start Match (Host starts the game)
+    socket.on(SOCKET_EVENTS.ROOM_START_MATCH, (payload?: { gameId?: string }) => {
+      const gameId = payload?.gameId || 'tic-tac-toe';
+      const result = roomManager.startGame(roomCode, playerId, gameId);
+      if (result) {
+        io.to(roomChannel).emit(SOCKET_EVENTS.GAME_START, {
+          gameId,
+          state: result.activeGame.state,
+        });
+        io.to(roomChannel).emit(SOCKET_EVENTS.ROOM_STATE, result.room);
+      }
+    });
+
+    // Handle Game Move (Active player sends a turn/move)
+    socket.on(SOCKET_EVENTS.GAME_MOVE, (movePayload: any) => {
+      const result = roomManager.handleMove(roomCode, playerId, movePayload);
+      if (result.success && result.room && result.activeGame) {
+        // Broadcast updated game state
+        io.to(roomChannel).emit(SOCKET_EVENTS.GAME_STATE, {
+          gameId: result.activeGame.gameId,
+          state: result.activeGame.state,
+        });
+
+        // Broadcast updated room state
+        io.to(roomChannel).emit(SOCKET_EVENTS.ROOM_STATE, result.room);
+
+        // If game reached terminal condition, broadcast completion
+        if (result.isFinished && result.result) {
+          io.to(roomChannel).emit(SOCKET_EVENTS.GAME_COMPLETE, {
+            gameId: result.activeGame.gameId,
+            result: result.result,
+            match: result.room.currentMatch,
+          });
+
+          if (result.room.status === 'MATCH_COMPLETE') {
+            io.to(roomChannel).emit(SOCKET_EVENTS.MATCH_COMPLETE, {
+              match: result.room.currentMatch,
+            });
+          }
+        }
+      } else {
+        socket.emit(SOCKET_EVENTS.ERROR, {
+          code: result.reason || 'INVALID_MOVE',
+          message: 'The submitted move could not be processed.',
+        });
+      }
+    });
+
+    // Handle Next Round
+    socket.on(SOCKET_EVENTS.ROUND_NEXT, () => {
+      const updatedRoom = roomManager.nextRound(roomCode, playerId);
+      if (updatedRoom) {
+        io.to(roomChannel).emit(SOCKET_EVENTS.ROOM_STATE, updatedRoom);
+        if (updatedRoom.activeGame) {
+          io.to(roomChannel).emit(SOCKET_EVENTS.GAME_START, updatedRoom.activeGame);
+        }
+      }
+    });
+
+    // Handle Rematch Request
+    socket.on(SOCKET_EVENTS.REMATCH_REQUEST, () => {
+      const updatedRoom = roomManager.rematch(roomCode, playerId);
+      if (updatedRoom) {
+        io.to(roomChannel).emit(SOCKET_EVENTS.ROOM_STATE, updatedRoom);
+      }
+    });
+
     // Handle Disconnect
     socket.on('disconnect', () => {
       const disconnectResult = roomManager.handleSocketDisconnect(socket.id);

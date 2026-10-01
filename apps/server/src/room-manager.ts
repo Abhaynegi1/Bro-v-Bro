@@ -1,5 +1,6 @@
 import { customAlphabet } from 'nanoid';
-import type { RoomState, RoomStatus, PlayerSlot, MatchState } from '@bvb/shared';
+import type { RoomState, RoomStatus, PlayerSlot, MatchState, ActiveGameData, GameResult } from '@bvb/shared';
+import { getGameEngine } from './games/index.js';
 
 // 5-character readable code excluding 0, O, 1, I, L
 const generateReadableCode = customAlphabet('23456789ABCDEFGHJKMNPQRSTUVWXYZ', 5);
@@ -20,6 +21,7 @@ export interface InternalRoom {
     playerB: InternalPlayerSlot | null;
   };
   currentMatch: MatchState | null;
+  activeGame: ActiveGameData | null;
   createdAt: number;
   updatedAt: number;
 }
@@ -74,6 +76,7 @@ export class RoomManager {
         playerB: null,
       },
       currentMatch: initialMatch,
+      activeGame: null,
       createdAt: now,
       updatedAt: now,
     };
@@ -237,8 +240,166 @@ export class RoomManager {
         playerB: sanitizeSlot(room.players.playerB),
       },
       currentMatch: room.currentMatch,
+      activeGame: room.activeGame,
       createdAt: room.createdAt,
     };
+  }
+
+  public startGame(
+    code: string,
+    requesterPlayerId: string,
+    gameId: string = 'tic-tac-toe'
+  ): { room: RoomState; activeGame: ActiveGameData } | null {
+    const room = this.roomsByCode.get(code.toUpperCase());
+    if (!room) return null;
+
+    // Both players must be connected
+    if (!room.players.playerA || !room.players.playerB) return null;
+    if (!room.players.playerA.isConnected || !room.players.playerB.isConnected) return null;
+
+    const engine = getGameEngine(gameId);
+    if (!engine) return null;
+
+    const initialState = engine.createInitialState([room.players.playerA.id, room.players.playerB.id]);
+
+    room.status = 'IN_GAME';
+    room.activeGame = {
+      gameId,
+      state: initialState,
+    };
+
+    if (room.currentMatch) {
+      room.currentMatch.activeGameId = gameId;
+    }
+
+    room.updatedAt = Date.now();
+
+    return {
+      room: this.sanitizeRoom(room),
+      activeGame: room.activeGame,
+    };
+  }
+
+  public handleMove(
+    code: string,
+    playerId: string,
+    move: any
+  ): {
+    success: boolean;
+    room?: RoomState;
+    activeGame?: ActiveGameData;
+    isFinished?: boolean;
+    result?: GameResult;
+    reason?: string;
+  } {
+    const room = this.roomsByCode.get(code.toUpperCase());
+    if (!room) return { success: false, reason: 'ROOM_NOT_FOUND' };
+    if (room.status !== 'IN_GAME' || !room.activeGame) return { success: false, reason: 'NOT_IN_GAME' };
+
+    const engine = getGameEngine(room.activeGame.gameId);
+    if (!engine) return { success: false, reason: 'ENGINE_NOT_FOUND' };
+
+    const context = { playerId, timestamp: Date.now() };
+
+    const isValid = engine.validateMove(room.activeGame.state, move, context);
+    if (!isValid) {
+      return { success: false, reason: 'INVALID_MOVE' };
+    }
+
+    const nextState = engine.applyMove(room.activeGame.state, move, context);
+    room.activeGame.state = nextState;
+    room.updatedAt = Date.now();
+
+    if (engine.isFinished(nextState)) {
+      const result = engine.getResult(nextState);
+
+      if (room.currentMatch) {
+        if (result.winnerPlayerId === room.players.playerA?.id) {
+          room.currentMatch.scores.playerA++;
+        } else if (result.winnerPlayerId === room.players.playerB?.id) {
+          room.currentMatch.scores.playerB++;
+        }
+
+        room.currentMatch.rounds.push({
+          roundNumber: room.currentMatch.currentRoundNumber,
+          gameId: room.activeGame.gameId,
+          winnerPlayerId: result.winnerPlayerId,
+          loserPlayerId: result.loserPlayerId,
+          result: result.result,
+          reason: result.reason,
+          durationMs: 0,
+          summary: result.summary,
+        });
+
+        const targetWins =
+          room.currentMatch.seriesCondition.type === 'FIRST_TO_N'
+            ? room.currentMatch.seriesCondition.targetPoints
+            : 3;
+
+        if (room.currentMatch.scores.playerA >= targetWins) {
+          room.status = 'MATCH_COMPLETE';
+          room.currentMatch.status = 'COMPLETED';
+          room.currentMatch.seriesWinnerId = room.players.playerA?.id || null;
+        } else if (room.currentMatch.scores.playerB >= targetWins) {
+          room.status = 'MATCH_COMPLETE';
+          room.currentMatch.status = 'COMPLETED';
+          room.currentMatch.seriesWinnerId = room.players.playerB?.id || null;
+        } else {
+          room.status = 'ROUND_COMPLETE';
+        }
+      } else {
+        room.status = 'ROUND_COMPLETE';
+      }
+
+      return {
+        success: true,
+        room: this.sanitizeRoom(room),
+        activeGame: room.activeGame,
+        isFinished: true,
+        result,
+      };
+    }
+
+    return {
+      success: true,
+      room: this.sanitizeRoom(room),
+      activeGame: room.activeGame,
+      isFinished: false,
+    };
+  }
+
+  public nextRound(code: string, requesterPlayerId: string): RoomState | null {
+    const room = this.roomsByCode.get(code.toUpperCase());
+    if (!room) return null;
+
+    if (room.currentMatch && room.status === 'ROUND_COMPLETE') {
+      room.currentMatch.currentRoundNumber++;
+      // Auto-start next round or return to ready
+      return this.startGame(code, requesterPlayerId, 'tic-tac-toe')?.room || null;
+    }
+
+    return null;
+  }
+
+  public rematch(code: string, requesterPlayerId: string): RoomState | null {
+    const room = this.roomsByCode.get(code.toUpperCase());
+    if (!room || !room.currentMatch) return null;
+
+    const targetWins =
+      room.currentMatch.seriesCondition.type === 'FIRST_TO_N'
+        ? room.currentMatch.seriesCondition.targetPoints
+        : 3;
+
+    room.currentMatch.scores = { playerA: 0, playerB: 0 };
+    room.currentMatch.rounds = [];
+    room.currentMatch.currentRoundNumber = 1;
+    room.currentMatch.status = 'IN_PROGRESS';
+    room.currentMatch.seriesWinnerId = null;
+    room.status = 'READY';
+    room.activeGame = null;
+    room.updatedAt = Date.now();
+
+    return this.sanitizeRoom(room);
   }
 }
 
