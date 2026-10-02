@@ -208,11 +208,15 @@ export const App: React.FC = () => {
         roomState.status
       )
   );
+  const isScrollableView =
+    currentView === 'how-to-play' ||
+    Boolean(permalinkMatchId) ||
+    roomState?.status === 'MATCH_COMPLETE';
 
   return (
     <div
       className={`w-full text-ink font-mono relative selection:bg-arcadeRed selection:text-white transition-colors duration-700 ${
-        currentView === 'how-to-play' || roomCode
+        isScrollableView
           ? 'min-h-screen overflow-y-auto flex flex-col'
           : 'h-screen overflow-hidden flex flex-col'
       }`}
@@ -252,12 +256,10 @@ export const App: React.FC = () => {
       )}
 
       <main
-        className={`w-full relative z-10 ${
-          currentView === 'how-to-play'
-            ? 'min-h-screen flex flex-col w-full'
-            : roomCode
-            ? 'flex-1 flex flex-col w-full min-h-screen'
-            : 'flex-1 flex flex-col w-full h-full overflow-hidden'
+        className={`w-full relative z-10 flex-1 flex flex-col min-h-0 ${
+          isScrollableView
+            ? 'overflow-y-auto'
+            : 'overflow-hidden justify-center'
         }`}
       >
         {!roomCode || !roomState ? (
@@ -304,7 +306,7 @@ export const App: React.FC = () => {
             theme={theme}
           />
         ) : (roomState.status === 'IN_GAME' || roomState.status === 'ROUND_COMPLETE') && activeGame ? (
-          <div className="flex-1 flex flex-col w-full relative">
+          <div className="flex-1 flex flex-col w-full relative h-full min-h-0 overflow-hidden justify-center items-center">
             {activeGame.gameId === 'reaction-test' ? (
               <ReactionTestGame
                 roomState={roomState}

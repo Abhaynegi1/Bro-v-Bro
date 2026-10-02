@@ -59,10 +59,10 @@ export const ConnectFourGame: React.FC<ConnectFourGameProps> = ({
   };
 
   return (
-    <div className="flex-1 flex flex-col items-center justify-start sm:justify-center px-4 py-4 sm:py-6 max-w-4xl mx-auto w-full select-none">
+    <div className="flex-1 flex flex-col items-center justify-center px-3 py-1.5 sm:py-2 max-w-3xl mx-auto w-full select-none h-full min-h-0">
       {/* Turn Announcement Banner */}
       <div
-        className={`w-full max-w-2xl py-2.5 px-4 mb-3 sm:mb-4 border-2 transition-all text-center shadow-pixel ${
+        className={`w-full max-w-xl py-1.5 px-3 mb-2 border-2 transition-all text-center shadow-pixel ${
           isFinished
             ? iWon
               ? 'bg-gameBoyGreen text-ink border-ink font-bold'
@@ -76,7 +76,7 @@ export const ConnectFourGame: React.FC<ConnectFourGameProps> = ({
             : 'bg-paper text-ink border-ink'
         }`}
       >
-        <span className="font-arcade text-xs sm:text-sm tracking-wider uppercase font-bold">
+        <span className="font-arcade text-xs tracking-wider uppercase font-bold">
           {isFinished
             ? iWon
               ? '★ 4-IN-A-ROW! YOU WON THIS BATTLE! ★'
@@ -90,9 +90,9 @@ export const ConnectFourGame: React.FC<ConnectFourGameProps> = ({
       </div>
 
       {/* Players Color Strip */}
-      <div className="w-full max-w-2xl flex items-center justify-between px-3 mb-2 font-mono text-xs font-bold">
-        <div className="flex items-center gap-2">
-          <span className="w-4 h-4 rounded-full bg-arcadeRed border-2 border-ink inline-block shadow-sm" />
+      <div className="w-full max-w-xl flex items-center justify-between px-2 mb-1.5 font-mono text-xs font-bold">
+        <div className="flex items-center gap-1.5">
+          <span className="w-3.5 h-3.5 rounded-full bg-arcadeRed border-2 border-ink inline-block shadow-sm" />
           <span className={isNight ? 'text-slate-200' : 'text-stone-800'}>
             {playerA?.name || 'HOST'}: <span className="text-arcadeRed">RED</span>
           </span>
@@ -103,7 +103,7 @@ export const ConnectFourGame: React.FC<ConnectFourGameProps> = ({
           )}
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1.5">
           {!isRed && (
             <span className="px-1.5 py-0.5 bg-cartridgeYellow text-darkNavy text-[9px] rounded font-arcade">
               YOU
@@ -112,18 +112,18 @@ export const ConnectFourGame: React.FC<ConnectFourGameProps> = ({
           <span className={isNight ? 'text-slate-200' : 'text-stone-800'}>
             {playerB?.name || 'GUEST'}: <span className="text-cartridgeYellow">YELLOW</span>
           </span>
-          <span className="w-4 h-4 rounded-full bg-cartridgeYellow border-2 border-ink inline-block shadow-sm" />
+          <span className="w-3.5 h-3.5 rounded-full bg-cartridgeYellow border-2 border-ink inline-block shadow-sm" />
         </div>
       </div>
 
       {/* Main Connect Four Cabinet */}
       <div
-        className={`p-3 sm:p-5 border-4 border-ink shadow-pixel relative rounded-lg ${
+        className={`p-2.5 sm:p-3.5 border-4 border-ink shadow-pixel relative rounded-lg ${
           isNight ? 'bg-[#142A63]' : 'bg-[#1C4EAA]'
         }`}
       >
         {/* Column Drop Buttons Header */}
-        <div className="grid grid-cols-7 gap-2 sm:gap-3 mb-2 px-1">
+        <div className="grid grid-cols-7 gap-1.5 sm:gap-2 mb-1.5 px-1">
           {Array.from({ length: 7 }).map((_, col) => {
             const isFull = gameState.board[0][col] !== null;
             const canClick = isMyTurn && !isFull && !isFinished;
@@ -138,14 +138,14 @@ export const ConnectFourGame: React.FC<ConnectFourGameProps> = ({
                 onMouseLeave={() => setHoveredCol(null)}
                 disabled={!canClick}
                 title={isFull ? 'Column Full' : `Drop in Column ${col + 1}`}
-                className={`h-8 sm:h-10 flex items-center justify-center font-arcade text-xs sm:text-sm border-2 border-ink transition-all rounded ${
+                className={`h-7 sm:h-8 flex items-center justify-center font-arcade text-xs border-2 border-ink transition-all rounded ${
                   isFull
                     ? 'bg-slate-700/60 text-slate-400 border-slate-600 cursor-not-allowed'
                     : canClick
                     ? isHovered
                       ? isRed
-                        ? 'bg-arcadeRed text-white scale-110 shadow-pixel animate-bounce'
-                        : 'bg-cartridgeYellow text-darkNavy scale-110 shadow-pixel animate-bounce'
+                        ? 'bg-arcadeRed text-white scale-105 shadow-pixel animate-bounce'
+                        : 'bg-cartridgeYellow text-darkNavy scale-105 shadow-pixel animate-bounce'
                       : 'bg-paper text-ink hover:bg-stone-200 shadow-sm'
                     : 'bg-paper/40 text-stone-400 opacity-60 cursor-default'
                 }`}
@@ -158,7 +158,7 @@ export const ConnectFourGame: React.FC<ConnectFourGameProps> = ({
 
         {/* 7x6 Slots Grid */}
         <div
-          className="grid grid-cols-7 gap-2 sm:gap-3 bg-[#0A1D4A] p-2.5 sm:p-4 rounded border-2 border-black/40 shadow-inner"
+          className="grid grid-cols-7 gap-1.5 sm:gap-2.5 bg-[#0A1D4A] p-2 sm:p-3 rounded border-2 border-black/40 shadow-inner"
           onMouseLeave={() => setHoveredCol(null)}
         >
           {gameState.board.map((rowArr, rowIdx) =>
@@ -171,7 +171,7 @@ export const ConnectFourGame: React.FC<ConnectFourGameProps> = ({
                   key={`${rowIdx}-${colIdx}`}
                   onClick={() => handleColumnClick(colIdx)}
                   onMouseEnter={() => setHoveredCol(colIdx)}
-                  className={`w-10 h-10 sm:w-14 sm:h-14 rounded-full border-2 border-black/60 flex items-center justify-center relative transition-transform ${
+                  className={`w-9 h-9 sm:w-11 sm:h-11 md:w-12 md:h-12 rounded-full border-2 border-black/60 flex items-center justify-center relative transition-transform ${
                     isMyTurn && !isFinished ? 'cursor-pointer' : 'cursor-default'
                   } ${
                     cell === null
