@@ -58,6 +58,7 @@ export class RoomManager {
       socketId: null,
     };
 
+    const totalGamesNeeded = Math.min(6, 2 * targetWins - 1);
     const initialMatch: MatchState = {
       id: `match_${generateId()}`,
       seriesCondition: { type: 'FIRST_TO_N', targetPoints: targetWins },
@@ -67,6 +68,9 @@ export class RoomManager {
       activeGameId: null,
       status: 'IN_PROGRESS',
       seriesWinnerId: null,
+      gamePlaylist: [],
+      totalGamesNeeded,
+      nextPickerPlayerId: playerId,
     };
 
     const room: InternalRoom = {
@@ -273,12 +277,20 @@ export class RoomManager {
     // Only host can start the match series
     if (room.players.playerA.id !== requesterPlayerId) return null;
 
-    // Round 1: Host picks the game!
+    const targetWins =
+      room.currentMatch?.seriesCondition.type === 'FIRST_TO_N'
+        ? room.currentMatch.seriesCondition.targetPoints
+        : 3;
+    const totalGamesNeeded = Math.min(6, 2 * targetWins - 1);
+
+    // Enter Match Lineup Draft! Host begins drafting Round 1
     room.status = 'SELECTING_GAME';
     room.selectingPlayerId = room.players.playerA.id;
     room.activeGame = null;
     if (room.currentMatch) {
       room.currentMatch.status = 'IN_PROGRESS';
+      room.currentMatch.gamePlaylist = [];
+      room.currentMatch.totalGamesNeeded = totalGamesNeeded;
       room.currentMatch.nextPickerPlayerId = room.players.playerA.id;
     }
     room.updatedAt = Date.now();
@@ -290,9 +302,9 @@ export class RoomManager {
     code: string,
     requesterPlayerId: string,
     gameId: string
-  ): { room: RoomState; activeGame: ActiveGameData } | null {
+  ): { room: RoomState; activeGame: ActiveGameData | null } | null {
     const room = this.roomsByCode.get(code.toUpperCase());
-    if (!room) return null;
+    if (!room || !room.currentMatch) return null;
 
     // Both players must be connected
     if (!room.players.playerA || !room.players.playerB) return null;
@@ -305,19 +317,54 @@ export class RoomManager {
     const engine = getGameEngine(gameId);
     if (!engine) return null;
 
-    const initialState = engine.createInitialState([room.players.playerA.id, room.players.playerB.id]);
+    const targetWins =
+      room.currentMatch.seriesCondition.type === 'FIRST_TO_N'
+        ? room.currentMatch.seriesCondition.targetPoints
+        : 3;
+    const totalGamesNeeded = room.currentMatch.totalGamesNeeded || Math.min(6, 2 * targetWins - 1);
+    room.currentMatch.totalGamesNeeded = totalGamesNeeded;
 
+    if (!room.currentMatch.gamePlaylist) {
+      room.currentMatch.gamePlaylist = [];
+    }
+
+    // Uniqueness rule: A game can only be drafted once across the playlist until all games are used
+    if (room.currentMatch.gamePlaylist.includes(gameId)) {
+      return null;
+    }
+
+    // Add selected game to the series playlist
+    room.currentMatch.gamePlaylist.push(gameId);
+
+    // If more games need to be drafted, alternate the picker!
+    if (room.currentMatch.gamePlaylist.length < totalGamesNeeded) {
+      const playerAId = room.players.playerA.id;
+      const playerBId = room.players.playerB.id;
+      const nextPicker = requesterPlayerId === playerAId ? playerBId : playerAId;
+
+      room.selectingPlayerId = nextPicker;
+      room.currentMatch.nextPickerPlayerId = nextPicker;
+      room.updatedAt = Date.now();
+
+      return {
+        room: this.sanitizeRoom(room),
+        activeGame: null,
+      };
+    }
+
+    // Draft is complete! Launch Round 1 with the first game drafted
+    const firstGameId = room.currentMatch.gamePlaylist[0];
+    const firstEngine = getGameEngine(firstGameId);
+    if (!firstEngine) return null;
+
+    const initialState = firstEngine.createInitialState([room.players.playerA.id, room.players.playerB.id]);
     room.status = 'IN_GAME';
     room.selectingPlayerId = null;
     room.activeGame = {
-      gameId,
+      gameId: firstGameId,
       state: initialState,
     };
-
-    if (room.currentMatch) {
-      room.currentMatch.activeGameId = gameId;
-    }
-
+    room.currentMatch.activeGameId = firstGameId;
     room.updatedAt = Date.now();
 
     return {
@@ -330,7 +377,7 @@ export class RoomManager {
     code: string,
     requesterPlayerId: string,
     gameId: string = 'tic-tac-toe'
-  ): { room: RoomState; activeGame: ActiveGameData } | null {
+  ): { room: RoomState; activeGame: ActiveGameData | null } | null {
     return this.selectGame(code, requesterPlayerId, gameId);
   }
 
@@ -445,14 +492,37 @@ export class RoomManager {
 
   public nextRound(code: string, _requesterPlayerId: string): RoomState | null {
     const room = this.roomsByCode.get(code.toUpperCase());
-    if (!room) return null;
+    if (!room || !room.currentMatch || !room.players.playerA || !room.players.playerB) return null;
 
-    if (room.currentMatch && room.status === 'ROUND_COMPLETE') {
+    if (room.status === 'ROUND_COMPLETE') {
       room.currentMatch.currentRoundNumber++;
-      // Transition to game selection
+      const nextRoundIndex = room.currentMatch.currentRoundNumber - 1;
+
+      let nextGameId: string | null = null;
+      if (room.currentMatch.gamePlaylist && nextRoundIndex < room.currentMatch.gamePlaylist.length) {
+        nextGameId = room.currentMatch.gamePlaylist[nextRoundIndex];
+      }
+
+      if (nextGameId) {
+        const engine = getGameEngine(nextGameId);
+        if (engine) {
+          const initialState = engine.createInitialState([room.players.playerA.id, room.players.playerB.id]);
+          room.status = 'IN_GAME';
+          room.selectingPlayerId = null;
+          room.activeGame = {
+            gameId: nextGameId,
+            state: initialState,
+          };
+          room.currentMatch.activeGameId = nextGameId;
+          room.updatedAt = Date.now();
+          return this.sanitizeRoom(room);
+        }
+      }
+
+      // If playlist somehow exhausted (e.g. extra ties), allow picker to draft an extra round
       room.status = 'SELECTING_GAME';
       room.activeGame = null;
-      room.selectingPlayerId = room.currentMatch.nextPickerPlayerId || room.players.playerA?.id || null;
+      room.selectingPlayerId = room.currentMatch.nextPickerPlayerId || room.players.playerA.id;
       room.updatedAt = Date.now();
       return this.sanitizeRoom(room);
     }
@@ -462,7 +532,13 @@ export class RoomManager {
 
   public rematch(code: string, _requesterPlayerId: string): RoomState | null {
     const room = this.roomsByCode.get(code.toUpperCase());
-    if (!room || !room.currentMatch) return null;
+    if (!room || !room.currentMatch || !room.players.playerA) return null;
+
+    const targetWins =
+      room.currentMatch.seriesCondition.type === 'FIRST_TO_N'
+        ? room.currentMatch.seriesCondition.targetPoints
+        : 3;
+    const totalGamesNeeded = Math.min(6, 2 * targetWins - 1);
 
     room.currentMatch.id = `match_${generateId()}`;
     room.currentMatch.scores = { playerA: 0, playerB: 0 };
@@ -470,11 +546,13 @@ export class RoomManager {
     room.currentMatch.currentRoundNumber = 1;
     room.currentMatch.status = 'IN_PROGRESS';
     room.currentMatch.seriesWinnerId = null;
-    room.currentMatch.nextPickerPlayerId = room.players.playerA?.id || null;
+    room.currentMatch.gamePlaylist = [];
+    room.currentMatch.totalGamesNeeded = totalGamesNeeded;
+    room.currentMatch.nextPickerPlayerId = room.players.playerA.id;
 
-    // Reset to Game Selection with Host picking Round 1
+    // Reset to Game Lineup Draft with Host picking first
     room.status = 'SELECTING_GAME';
-    room.selectingPlayerId = room.players.playerA?.id || null;
+    room.selectingPlayerId = room.players.playerA.id;
     room.activeGame = null;
     room.updatedAt = Date.now();
 

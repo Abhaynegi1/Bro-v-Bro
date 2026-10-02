@@ -44,6 +44,8 @@ export interface MatchState {
   status: 'IN_PROGRESS' | 'COMPLETED';
   seriesWinnerId: string | null;
   nextPickerPlayerId?: string | null;
+  gamePlaylist?: string[];
+  totalGamesNeeded?: number;
 }
 
 export interface MoveContext {

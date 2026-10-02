@@ -99,11 +99,15 @@ export function setupSocketServer(io: SocketIOServer) {
     socket.on(SOCKET_EVENTS.GAME_SELECT, (payload: { gameId: string }) => {
       const result = roomManager.selectGame(roomCode, playerId, payload.gameId);
       if (result) {
-        broadcastGameStart(roomCode);
+        if (result.activeGame) {
+          broadcastGameStart(roomCode);
+        } else {
+          broadcastRoomAndGame(roomCode);
+        }
       } else {
         socket.emit(SOCKET_EVENTS.ERROR, {
           code: 'INVALID_GAME_SELECTION',
-          message: 'Could not select game. Make sure it is your turn to pick.',
+          message: 'Could not select game. Make sure it is your turn to pick and game is not already drafted.',
         });
       }
     });
