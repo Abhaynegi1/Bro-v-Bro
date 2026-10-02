@@ -1,6 +1,7 @@
 import { customAlphabet } from 'nanoid';
 import type { RoomState, RoomStatus, PlayerSlot, MatchState, ActiveGameData, GameResult } from '@bvb/shared';
 import { getGameEngine } from './games/index.js';
+import { saveMatchResult } from './db/index.js';
 
 // 5-character readable code excluding 0, O, 1, I, L
 const generateReadableCode = customAlphabet('23456789ABCDEFGHJKMNPQRSTUVWXYZ', 5);
@@ -394,11 +395,13 @@ export class RoomManager {
           room.currentMatch.status = 'COMPLETED';
           room.currentMatch.seriesWinnerId = room.players.playerA?.id || null;
           room.selectingPlayerId = null;
+          this.persistCompletedMatch(room);
         } else if (room.currentMatch.scores.playerB >= targetWins) {
           room.status = 'MATCH_COMPLETE';
           room.currentMatch.status = 'COMPLETED';
           room.currentMatch.seriesWinnerId = room.players.playerB?.id || null;
           room.selectingPlayerId = null;
+          this.persistCompletedMatch(room);
         } else {
           room.status = 'ROUND_COMPLETE';
           // Game selection turn logic:
@@ -461,6 +464,7 @@ export class RoomManager {
     const room = this.roomsByCode.get(code.toUpperCase());
     if (!room || !room.currentMatch) return null;
 
+    room.currentMatch.id = `match_${generateId()}`;
     room.currentMatch.scores = { playerA: 0, playerB: 0 };
     room.currentMatch.rounds = [];
     room.currentMatch.currentRoundNumber = 1;
@@ -475,6 +479,41 @@ export class RoomManager {
     room.updatedAt = Date.now();
 
     return this.sanitizeRoom(room);
+  }
+
+  private persistCompletedMatch(room: InternalRoom) {
+    if (!room.currentMatch || !room.players.playerA || !room.players.playerB) return;
+    const match = room.currentMatch;
+    const winnerId = match.seriesWinnerId;
+    const winnerName =
+      winnerId === room.players.playerA.id
+        ? room.players.playerA.name
+        : winnerId === room.players.playerB.id
+        ? room.players.playerB.name
+        : null;
+
+    const targetWins =
+      match.seriesCondition.type === 'FIRST_TO_N'
+        ? match.seriesCondition.targetPoints
+        : 3;
+
+    saveMatchResult({
+      id: match.id,
+      roomCode: room.code,
+      targetWins,
+      playerAId: room.players.playerA.id,
+      playerAName: room.players.playerA.name,
+      playerBId: room.players.playerB.id,
+      playerBName: room.players.playerB.name,
+      winnerId,
+      winnerName,
+      scoreA: match.scores.playerA,
+      scoreB: match.scores.playerB,
+      totalRounds: match.rounds.length,
+      rounds: match.rounds,
+    }).catch((err) => {
+      console.error('Error persisting completed match to Neon DB:', err);
+    });
   }
 }
 

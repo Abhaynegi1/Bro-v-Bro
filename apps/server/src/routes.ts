@@ -2,6 +2,7 @@ import type { FastifyInstance } from 'fastify';
 import type { Server as SocketIOServer } from 'socket.io';
 import { CreateRoomSchema, JoinRoomSchema, RoomCodeParamSchema, SOCKET_EVENTS } from '@bvb/shared';
 import { roomManager } from './room-manager.js';
+import { getMatchById, getRecentMatches } from './db/index.js';
 
 export function registerRoutes(app: FastifyInstance, io: SocketIOServer) {
   // Health check
@@ -97,4 +98,29 @@ export function registerRoutes(app: FastifyInstance, io: SocketIOServer) {
       return reply.status(500).send({ error: 'SERVER_ERROR', message });
     }
   });
+
+  // Get completed match series recap by ID (Permanent Shareable Permalink)
+  app.get('/api/matches/:id', async (request, reply) => {
+    const { id } = request.params as { id: string };
+    if (!id || typeof id !== 'string') {
+      return reply.status(400).send({ error: 'INVALID_MATCH_ID' });
+    }
+
+    const match = await getMatchById(id);
+    if (!match) {
+      return reply.status(404).send({
+        error: 'MATCH_NOT_FOUND',
+        message: 'Match history record could not be found.',
+      });
+    }
+
+    return reply.send({ match });
+  });
+
+  // Get recent completed matches archive
+  app.get('/api/matches/recent', async (_request, reply) => {
+    const matches = await getRecentMatches(10);
+    return reply.send({ matches });
+  });
 }
+

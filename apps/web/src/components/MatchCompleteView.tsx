@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import type { RoomState } from '@bvb/shared';
 import confetti from 'canvas-confetti';
 import { PixelCharacter } from './pixel/PixelCharacter';
@@ -32,6 +32,8 @@ export const MatchCompleteView: React.FC<MatchCompleteViewProps> = ({
   const scoreB = match?.scores.playerB ?? 0;
   const rounds = match?.rounds ?? [];
 
+  const [copied, setCopied] = useState(false);
+
   // Victory Confetti
   useEffect(() => {
     confetti({
@@ -41,6 +43,14 @@ export const MatchCompleteView: React.FC<MatchCompleteViewProps> = ({
       colors: ['#EF4444', '#FBBF24', '#3B82F6', '#10B981'],
     });
   }, []);
+
+  const handleCopyShareLink = () => {
+    if (!match?.id) return;
+    const url = `${window.location.origin}/match/${match.id}`;
+    navigator.clipboard.writeText(url);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2500);
+  };
 
   const getGameTitle = (gameId: string) => {
     switch (gameId) {
@@ -67,8 +77,15 @@ export const MatchCompleteView: React.FC<MatchCompleteViewProps> = ({
           isNight ? 'bg-[#18243A] text-paper' : 'bg-paper text-ink'
         }`}
       >
-        <div className="inline-block px-3 py-1 bg-ink text-cartridgeYellow font-arcade text-xs tracking-wider border-2 border-ink mb-3 font-bold">
-          ★ SERIES CONCLUDED ★
+        <div className="flex flex-wrap items-center justify-center gap-2 mb-3">
+          <div className="inline-block px-3 py-1 bg-ink text-cartridgeYellow font-arcade text-xs tracking-wider border-2 border-ink font-bold">
+            ★ SERIES CONCLUDED ★
+          </div>
+          {match?.id && (
+            <span className="px-2.5 py-1 bg-darkNavy text-paper border border-ink/40 font-mono text-[10px] tracking-wide">
+              ARCHIVE: {match.id}
+            </span>
+          )}
         </div>
 
         {/* Podium Characters */}
@@ -202,15 +219,22 @@ export const MatchCompleteView: React.FC<MatchCompleteViewProps> = ({
       {/* Action Buttons */}
       <div className="w-full flex flex-col sm:flex-row gap-4 justify-center">
         <button
+          onClick={handleCopyShareLink}
+          className="flex-1 sm:flex-initial sm:px-7 py-3.5 bg-cartridgeYellow text-ink font-arcade text-xs sm:text-sm tracking-wider border-2 border-ink shadow-pixel hover:bg-yellow-300 hover:translate-x-[-1px] hover:translate-y-[-1px] active:translate-x-[1px] active:translate-y-[1px] transition-all font-bold"
+        >
+          {copied ? '✅ LINK COPIED!' : '📋 SHARE PERMANENT RECAP'}
+        </button>
+
+        <button
           onClick={onRematch}
-          className="flex-1 sm:flex-initial sm:px-8 py-3.5 bg-gameBoyGreen text-ink font-arcade text-xs sm:text-sm tracking-wider border-2 border-ink shadow-pixel hover:bg-emerald-400 hover:translate-x-[-1px] hover:translate-y-[-1px] active:translate-x-[1px] active:translate-y-[1px] transition-all font-bold"
+          className="flex-1 sm:flex-initial sm:px-7 py-3.5 bg-gameBoyGreen text-ink font-arcade text-xs sm:text-sm tracking-wider border-2 border-ink shadow-pixel hover:bg-emerald-400 hover:translate-x-[-1px] hover:translate-y-[-1px] active:translate-x-[1px] active:translate-y-[1px] transition-all font-bold"
         >
           🔄 RUN IT BACK (REMATCH)
         </button>
 
         <button
           onClick={onLeaveRoom}
-          className="flex-1 sm:flex-initial sm:px-8 py-3.5 bg-arcadeRed text-white font-arcade text-xs sm:text-sm tracking-wider border-2 border-ink shadow-pixel hover:bg-red-600 hover:translate-x-[-1px] hover:translate-y-[-1px] active:translate-x-[1px] active:translate-y-[1px] transition-all font-bold"
+          className="flex-1 sm:flex-initial sm:px-7 py-3.5 bg-arcadeRed text-white font-arcade text-xs sm:text-sm tracking-wider border-2 border-ink shadow-pixel hover:bg-red-600 hover:translate-x-[-1px] hover:translate-y-[-1px] active:translate-x-[1px] active:translate-y-[1px] transition-all font-bold"
         >
           🚪 EXIT TO LOBBY
         </button>

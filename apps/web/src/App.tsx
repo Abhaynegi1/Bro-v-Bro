@@ -15,11 +15,24 @@ import { MinesweeperGame } from './components/games/MinesweeperGame';
 import { ChessGame } from './components/games/ChessGame';
 import { RoundResultModal } from './components/RoundResultModal';
 import { MatchCompleteView } from './components/MatchCompleteView';
+import { MatchPermalinkView } from './components/MatchPermalinkView';
 
 const STORAGE_KEYS = {
   ROOM_CODE: 'bvb_room_code',
   PLAYER_ID: 'bvb_player_id',
   SESSION_TOKEN: 'bvb_session_token',
+};
+
+const getInitialPermalinkMatchId = (): string | null => {
+  const path = window.location.pathname;
+  if (path.startsWith('/match/')) {
+    const id = path.replace('/match/', '').trim();
+    if (id) return id;
+  }
+  const params = new URLSearchParams(window.location.search);
+  const matchParam = params.get('match');
+  if (matchParam) return matchParam;
+  return null;
 };
 
 export const App: React.FC = () => {
@@ -30,10 +43,25 @@ export const App: React.FC = () => {
   const [theme, setTheme] = useState<'day' | 'night'>(() => (localStorage.getItem('bvb_theme') as 'day' | 'night') || 'day');
   const [currentView, setCurrentView] = useState<'landing' | 'how-to-play'>('landing');
   const [initialModal, setInitialModal] = useState<'create' | 'join' | null>(null);
+  const [permalinkMatchId, setPermalinkMatchId] = useState<string | null>(getInitialPermalinkMatchId);
 
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [notification, setNotification] = useState<string | null>(null);
+
+  // Listen to browser navigation back/forward for permalink URLs
+  useEffect(() => {
+    const onPopState = () => {
+      setPermalinkMatchId(getInitialPermalinkMatchId());
+    };
+    window.addEventListener('popstate', onPopState);
+    return () => window.removeEventListener('popstate', onPopState);
+  }, []);
+
+  const handleClosePermalink = () => {
+    setPermalinkMatchId(null);
+    window.history.pushState({}, '', '/');
+  };
 
   const toggleTheme = () => {
     setTheme((prev) => {
@@ -233,7 +261,14 @@ export const App: React.FC = () => {
         }`}
       >
         {!roomCode || !roomState ? (
-          currentView === 'how-to-play' ? (
+          permalinkMatchId ? (
+            <MatchPermalinkView
+              matchId={permalinkMatchId}
+              onGoHome={handleClosePermalink}
+              theme={theme}
+              onToggleTheme={toggleTheme}
+            />
+          ) : currentView === 'how-to-play' ? (
             <HowToPlayView
               onBack={handleBackToLanding}
               onOpenCreate={handleOpenCreateFromHowToPlay}

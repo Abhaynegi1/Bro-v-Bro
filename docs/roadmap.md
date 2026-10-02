@@ -61,11 +61,12 @@ Phase 0 (Docs) ➔ Phase 1 (Skeleton) ➔ Phase 2 (First Game) ➔ Phase 3 (Matc
 
 ---
 
-## Phase 5 — Persistence & History (PostgreSQL + Drizzle)
+## Phase 5 — Persistence & History (Neon PostgreSQL + Drizzle) *(Completed)*
 **Goal:** Store completed match results for permanent post-game recaps.
-- Introduce PostgreSQL and Drizzle ORM into `apps/server`.
-- Save finalized matches, player names, and round summaries.
-- Generate shareable post-match summary URLs (e.g. `/match/m-xyz987`).
+- [x] Introduce PostgreSQL and Drizzle ORM into `apps/server` connected to Neon DB.
+- [x] Save finalized matches, player names, scores, and round summaries automatically upon series conclusion.
+- [x] Build shareable post-match summary permalinks (`/match/:id`) with verified database archive cards.
+- [x] Added "Share Permanent Recap" button with clipboard integration on the post-match victory screen.
 
 ---
 
