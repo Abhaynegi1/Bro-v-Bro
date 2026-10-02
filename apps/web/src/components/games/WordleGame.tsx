@@ -180,10 +180,10 @@ export const WordleGame: React.FC<WordleGameProps> = ({
   };
 
   return (
-    <div className="flex-1 flex flex-col items-center justify-between p-3 sm:p-5 w-full max-w-4xl mx-auto select-none">
+    <div className="flex-1 flex flex-col items-center justify-center p-3 sm:p-4 w-full max-w-5xl mx-auto select-none h-full min-h-0">
       {/* Game Status Banner */}
       <div
-        className={`w-full max-w-2xl p-3 sm:p-4 mb-4 border-4 border-ink shadow-pixel text-center transition-colors relative ${
+        className={`w-full max-w-4xl p-2.5 sm:p-3 mb-2.5 border-4 border-ink shadow-pixel text-center transition-colors relative ${
           isNight ? 'bg-[#18243A] text-paper' : 'bg-paper text-ink'
         }`}
       >
@@ -194,22 +194,27 @@ export const WordleGame: React.FC<WordleGameProps> = ({
           </div>
         )}
 
-        <div className="flex items-center justify-between px-2 mb-1">
-          <span className="font-arcade text-[10px] sm:text-xs text-cartridgeYellow font-bold flex items-center gap-1.5">
+        <div className="flex items-center justify-between px-3 mb-1">
+          <span className="font-arcade text-xs sm:text-sm text-cartridgeYellow font-bold flex items-center gap-1.5">
             <span className="animate-pulse">🟩🟨</span> WORDLE RACE 1v1
           </span>
-          <span className="font-mono text-[10px] sm:text-xs font-bold px-2 py-0.5 border border-ink bg-ink text-white">
-            {myState.guesses.length}/6 GUESSES
-          </span>
+          <div className="flex items-center gap-2 font-mono text-[11px] sm:text-xs font-bold">
+            <span className="px-2 py-0.5 border border-ink bg-ink text-white">
+              YOU: {myState.guesses.length}/6
+            </span>
+            <span className="px-2 py-0.5 border border-ink/40 bg-darkNavy text-paper">
+              {opponentPlayer?.name?.toUpperCase() || 'OPP'}: {opponentState?.guesses.length || 0}/6
+            </span>
+          </div>
         </div>
 
         {/* Dynamic Status Headline */}
         {iWon ? (
           <div>
             <h2 className="font-arcade text-base sm:text-xl text-[#22C55E] font-bold tracking-wide animate-pulse">
-              🎉 CIPHER CRACKED! YOU WON!
+              🎉 CIPHER CRACKED! YOU WON THIS BATTLE!
             </h2>
-            <p className="font-mono text-xs mt-1">
+            <p className="font-mono text-xs mt-0.5">
               Secret word was: <span className="font-bold font-arcade tracking-wider px-2 py-0.5 bg-ink text-cartridgeYellow border border-ink">{gameState.targetWord}</span>
             </p>
           </div>
@@ -218,7 +223,7 @@ export const WordleGame: React.FC<WordleGameProps> = ({
             <h2 className="font-arcade text-base sm:text-xl text-arcadeRed font-bold tracking-wide">
               💀 {opponentPlayer?.name?.toUpperCase() || 'OPPONENT'} CRACKED IT FIRST!
             </h2>
-            <p className="font-mono text-xs mt-1">
+            <p className="font-mono text-xs mt-0.5">
               Secret word was: <span className="font-bold font-arcade tracking-wider px-2 py-0.5 bg-ink text-cartridgeYellow border border-ink">{gameState.targetWord}</span>
             </p>
           </div>
@@ -227,44 +232,44 @@ export const WordleGame: React.FC<WordleGameProps> = ({
             <h2 className="font-arcade text-base sm:text-xl text-cartridgeYellow font-bold tracking-wide">
               🤝 NEITHER BRO CRACKED THE CIPHER!
             </h2>
-            <p className="font-mono text-xs mt-1">
+            <p className="font-mono text-xs mt-0.5">
               Secret word was: <span className="font-bold font-arcade tracking-wider px-2 py-0.5 bg-ink text-cartridgeYellow border border-ink">{gameState.targetWord}</span>
             </p>
           </div>
         ) : myState.isCompleted ? (
           <div>
-            <h2 className="font-arcade text-sm sm:text-base text-cartridgeYellow font-bold">
+            <h2 className="font-arcade text-xs sm:text-sm text-cartridgeYellow font-bold">
               OUT OF GUESSES! SPECTATING {opponentPlayer?.name?.toUpperCase() || 'OPPONENT'}...
             </h2>
-            <p className="font-mono text-xs mt-0.5 opacity-80">
+            <p className="font-mono text-[11px] opacity-80 mt-0.5">
               Hoping they fail too so you escape with a draw!
             </p>
           </div>
         ) : (
           <div>
-            <h2 className="font-arcade text-sm sm:text-base text-ink dark:text-paper font-bold tracking-wide">
-              TYPE 5 LETTERS & PRESS ENTER TO SUBMIT
-            </h2>
-            <p className={`font-mono text-[11px] mt-0.5 ${isNight ? 'text-slate-300' : 'text-stone-600'}`}>
-              Both bros have the same secret word. First to crack it takes the point!
+            <p className={`font-mono text-xs sm:text-sm font-bold ${isNight ? 'text-cartridgeYellow' : 'text-stone-800'}`}>
+              Type 5 letters & press Enter. Both bros race for the same secret word!
             </p>
           </div>
         )}
       </div>
 
       {/* Duel Arena: Split Grids */}
-      <div className="w-full max-w-2xl flex flex-col md:flex-row items-center md:items-start justify-center gap-4 sm:gap-8 mb-4">
+      <div className="w-full max-w-4xl flex items-center justify-center gap-4 sm:gap-8 md:gap-12 mb-3">
         {/* PLAYER'S BOARD (Primary Focus) */}
         <div className="flex flex-col items-center">
-          <div className="flex items-center gap-2 mb-2">
+          <div className="flex items-center gap-2 mb-1.5">
             <PixelCharacter type={myPlayer?.isHost ? 'bro1' : 'bro2'} size={24} />
-            <span className="font-arcade text-xs font-bold tracking-wide">
+            <span className="font-arcade text-xs sm:text-sm font-bold tracking-wide text-cartridgeYellow">
               {myPlayer?.name || 'YOU'} (YOU)
+            </span>
+            <span className="text-[10px] font-mono px-1.5 py-0.2 bg-gameBoyGreen text-ink font-bold border border-ink">
+              ACTIVE
             </span>
           </div>
 
           <div
-            className={`flex flex-col gap-1.5 p-3 border-4 border-ink shadow-pixel transition-transform ${
+            className={`flex flex-col gap-1.5 p-3 sm:p-4 border-4 border-ink shadow-pixel transition-transform ${
               isShaking ? 'animate-wordle-shake' : ''
             } ${isNight ? 'bg-[#18243A]' : 'bg-[#FBF6E9]'}`}
           >
@@ -290,7 +295,7 @@ export const WordleGame: React.FC<WordleGameProps> = ({
                     return (
                       <div
                         key={colIndex}
-                        className={`w-10 h-10 sm:w-12 sm:h-12 border-2 flex items-center justify-center font-arcade text-base sm:text-xl font-bold uppercase transition-all ${
+                        className={`w-11 h-11 sm:w-13 sm:h-13 md:w-14 md:h-14 border-2 flex items-center justify-center font-arcade text-base sm:text-xl font-bold uppercase transition-all ${
                           isPop ? 'animate-wordle-pop' : ''
                         } ${getTileStyle(tileState)}`}
                       >
@@ -304,22 +309,35 @@ export const WordleGame: React.FC<WordleGameProps> = ({
           </div>
         </div>
 
+        {/* CENTER VS ENERGY COLUMN */}
+        <div className="hidden sm:flex flex-col items-center justify-center opacity-80 px-1">
+          <span className="text-xl animate-bounce">⚡</span>
+          <span className="font-arcade text-arcadeRed text-base sm:text-lg font-bold my-2 tracking-wider">
+            VS
+          </span>
+          <span className="text-xl animate-bounce">⚡</span>
+        </div>
+
         {/* OPPONENT'S LIVE GHOST BOARD (Live progress spectator) */}
         <div className="flex flex-col items-center">
-          <div className="flex items-center gap-2 mb-2">
+          <div className="flex items-center gap-2 mb-1.5">
             <PixelCharacter type={opponentPlayer?.isHost ? 'bro1' : 'bro2'} size={24} />
-            <span className="font-arcade text-xs font-bold tracking-wide text-stone-500">
+            <span className="font-arcade text-xs sm:text-sm font-bold tracking-wide opacity-80">
               {opponentPlayer?.name || 'OPPONENT'}
             </span>
-            {opponentState?.hasWon && (
-              <span className="text-xs bg-[#22C55E] text-white px-1.5 py-0.2 font-arcade font-bold border border-ink">
+            {opponentState?.hasWon ? (
+              <span className="text-[10px] bg-[#22C55E] text-white px-1.5 py-0.2 font-arcade font-bold border border-ink">
                 WINNER
+              </span>
+            ) : (
+              <span className="text-[10px] font-mono px-1.5 py-0.2 bg-slate-700 text-slate-200 border border-ink/40">
+                RADAR
               </span>
             )}
           </div>
 
           <div
-            className={`flex flex-col gap-1.5 p-3 border-4 border-dashed border-ink/40 shadow-pixel-sm ${
+            className={`flex flex-col gap-1.5 p-3 sm:p-4 border-4 border-dashed border-ink/40 shadow-pixel-sm ${
               isNight ? 'bg-[#18243A]/70' : 'bg-[#EAE4D2]'
             }`}
           >
@@ -333,7 +351,6 @@ export const WordleGame: React.FC<WordleGameProps> = ({
                     let tileState: WordleLetterState | undefined = undefined;
 
                     if (oppGuess) {
-                      // If game finished, show actual opponent letter; else '?'
                       letter = isFinished ? oppGuess.word[colIndex] || '' : '?';
                       tileState = oppGuess.evaluation[colIndex];
                     }
@@ -341,9 +358,9 @@ export const WordleGame: React.FC<WordleGameProps> = ({
                     return (
                       <div
                         key={colIndex}
-                        className={`w-7 h-7 sm:w-8 sm:h-8 border-2 flex items-center justify-center font-arcade text-xs font-bold uppercase transition-all ${getTileStyle(
+                        className={`w-8 h-8 sm:w-10 sm:h-10 md:w-11 md:h-11 border-2 flex items-center justify-center font-arcade text-xs sm:text-sm font-bold uppercase transition-all ${getTileStyle(
                           tileState
-                        )} ${!oppGuess ? 'opacity-40' : ''}`}
+                        )} ${!oppGuess ? 'opacity-35' : ''}`}
                       >
                         {letter}
                       </div>
@@ -353,14 +370,14 @@ export const WordleGame: React.FC<WordleGameProps> = ({
               );
             })}
           </div>
-          <span className="font-mono text-[10px] text-stone-500 mt-1">
-            Opponent's live radar
+          <span className="font-mono text-[10px] text-stone-500 mt-1 font-bold">
+            Live Spectator Radar
           </span>
         </div>
       </div>
 
       {/* On-Screen Pixel Keyboard */}
-      <div className="w-full max-w-xl flex flex-col gap-1.5 sm:gap-2 px-1">
+      <div className="w-full max-w-xl flex flex-col gap-1.5 px-2">
         {KEYBOARD_ROWS.map((row, rowIdx) => (
           <div key={rowIdx} className="flex justify-center gap-1 sm:gap-1.5">
             {row.map((key) => {
@@ -371,7 +388,7 @@ export const WordleGame: React.FC<WordleGameProps> = ({
                   key={key}
                   onClick={() => handleKeyInput(key)}
                   disabled={!canType}
-                  className={`border-2 font-arcade font-bold text-xs sm:text-sm py-2.5 sm:py-3 transition-transform active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed ${
+                  className={`border-2 font-arcade font-bold text-xs sm:text-sm h-8 sm:h-9 transition-transform active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed ${
                     isActionKey ? 'px-2.5 sm:px-4 text-[10px] sm:text-xs' : 'flex-1 max-w-[42px]'
                   } ${getKeyStyle(key)}`}
                 >
