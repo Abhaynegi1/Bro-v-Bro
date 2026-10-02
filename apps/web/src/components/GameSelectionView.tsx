@@ -73,12 +73,12 @@ const GAMES_CATALOG: GameCard[] = [
   },
   {
     id: 'chess',
-    title: 'BULLET CHESS',
+    title: 'SPEED CHESS',
     category: 'GRANDMASTER SHOWDOWN',
-    description: 'Fast-paced 1v1 blitz chess with server-authoritative move verification.',
-    duration: '~3 MIN',
+    description: 'Fast-paced 1v1 blitz chess with server-authoritative move verification & digital clocks.',
+    duration: '~2 MIN',
     icon: '♟️👑',
-    isAvailable: false,
+    isAvailable: true,
     accentColor: 'border-purple-400 text-purple-400',
   },
 ];

@@ -51,13 +51,13 @@ Phase 0 (Docs) ➔ Phase 1 (Skeleton) ➔ Phase 2 (First Game) ➔ Phase 3 (Matc
 
 ---
 
-## Phase 4 — Game Library Expansion *(In Progress)*
+## Phase 4 — Game Library Expansion *(Completed)*
 **Goal:** Introduce diverse mini-games one by one into the plug-in registry.
 1. [x] **Reaction Test (Reflex Duel):** Simultaneous reflex test (measures server-validated reaction time).
 2. [x] **Connect Four:** 7x6 gravity grid with turn-based column dropping and 4-in-a-row detection.
 3. [x] **Wordle Race:** Word-guessing game featuring state sanitization (hiding secret word from client).
 4. [x] **Minesweeper (Minefield Battle):** 1v1 speed race on 9x9 dual boards with first-click safety & detonation knockout.
-5. [ ] **Speed Chess:** Classic 1v1 integrated with `chess.js` for move validation and standard clocks.
+5. [x] **Speed Chess:** Classic 1v1 integrated with `chess.js` for move validation and standard clocks.
 
 ---
 

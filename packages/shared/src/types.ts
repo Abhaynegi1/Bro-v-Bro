@@ -194,6 +194,57 @@ export interface MinesweeperMove {
   col: number;
 }
 
+export type ChessPieceColor = 'w' | 'b';
+export type ChessPieceType = 'p' | 'n' | 'b' | 'r' | 'q' | 'k';
+
+export interface ChessMoveRecord {
+  san: string;
+  from: string;
+  to: string;
+  piece: string;
+  color: ChessPieceColor;
+  captured?: string;
+  promotion?: string;
+}
+
+export interface ChessState {
+  playerWhiteId: string;
+  playerBlackId: string;
+  currentTurnPlayerId: string;
+  fen: string;
+  history: ChessMoveRecord[];
+  clocks: {
+    [playerId: string]: number; // remaining ms
+  };
+  lastMoveTimestamp: number;
+  initialTimeMs: number;
+  status: 'IN_PROGRESS' | 'WIN' | 'DRAW';
+  reason?: 'CHECKMATE' | 'TIMEOUT' | 'RESIGNED' | 'STALEMATE' | 'INSUFFICIENT_MATERIAL' | 'THREEFOLD_REPETITION' | '50_MOVE_RULE';
+  winnerPlayerId: string | null;
+  loserPlayerId: string | null;
+  isCheck: boolean;
+  isCheckmate: boolean;
+  isStalemate: boolean;
+  isDraw: boolean;
+  moveCount: number;
+  lastMove?: { from: string; to: string; san: string } | null;
+  summary?: string;
+}
+
+export type ChessMove =
+  | {
+      action: 'MOVE';
+      from: string;
+      to: string;
+      promotion?: 'q' | 'r' | 'b' | 'n';
+    }
+  | {
+      action: 'RESIGN';
+    }
+  | {
+      action: 'CLAIM_TIMEOUT';
+    };
+
 export interface ActiveGameData {
   gameId: string;
   state: any;

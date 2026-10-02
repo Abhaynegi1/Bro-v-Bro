@@ -82,3 +82,21 @@ export const MinesweeperMoveSchema = z.object({
 });
 
 export type MinesweeperMoveInput = z.infer<typeof MinesweeperMoveSchema>;
+
+export const ChessMoveSchema = z.discriminatedUnion('action', [
+  z.object({
+    action: z.literal('MOVE'),
+    from: z.string().trim().toLowerCase().regex(/^[a-h][1-8]$/, 'Invalid from square'),
+    to: z.string().trim().toLowerCase().regex(/^[a-h][1-8]$/, 'Invalid to square'),
+    promotion: z.enum(['q', 'r', 'b', 'n']).optional(),
+  }),
+  z.object({
+    action: z.literal('RESIGN'),
+  }),
+  z.object({
+    action: z.literal('CLAIM_TIMEOUT'),
+  }),
+]);
+
+export type ChessMoveInput = z.infer<typeof ChessMoveSchema>;
+

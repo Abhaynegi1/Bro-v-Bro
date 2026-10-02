@@ -13,6 +13,7 @@
   "dependencies": {
     "@bvb/shared": "*",
     "@fastify/cors": "^9.0.1",
+    "chess.js": "^1.4.0",
     "fastify": "^4.28.1",
     "nanoid": "^5.0.7",
     "socket.io": "^4.7.5",

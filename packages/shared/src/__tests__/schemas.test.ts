@@ -10,6 +10,7 @@ import {
   ConnectFourMoveSchema,
   WordleMoveSchema,
   MinesweeperMoveSchema,
+  ChessMoveSchema,
 } from '../schemas.js';
 
 describe('Shared Zod Schemas', () => {
@@ -118,5 +119,16 @@ describe('Shared Zod Schemas', () => {
       assert.strictEqual(MinesweeperMoveSchema.safeParse({ action: 'REVEAL', row: 9, col: 0 }).success, false);
       assert.strictEqual(MinesweeperMoveSchema.safeParse({ action: 'EXPLODE', row: 0, col: 0 }).success, false);
     });
+
+    it('ChessMoveSchema validates MOVE, RESIGN, and CLAIM_TIMEOUT', () => {
+      assert.strictEqual(ChessMoveSchema.safeParse({ action: 'MOVE', from: 'e2', to: 'e4' }).success, true);
+      assert.strictEqual(ChessMoveSchema.safeParse({ action: 'MOVE', from: 'e7', to: 'e8', promotion: 'q' }).success, true);
+      assert.strictEqual(ChessMoveSchema.safeParse({ action: 'MOVE', from: 'e2', to: 'e9' }).success, false);
+      assert.strictEqual(ChessMoveSchema.safeParse({ action: 'MOVE', from: 'z1', to: 'e4' }).success, false);
+      assert.strictEqual(ChessMoveSchema.safeParse({ action: 'RESIGN' }).success, true);
+      assert.strictEqual(ChessMoveSchema.safeParse({ action: 'CLAIM_TIMEOUT' }).success, true);
+      assert.strictEqual(ChessMoveSchema.safeParse({ action: 'UNKNOWN' }).success, false);
+    });
   });
 });
+
