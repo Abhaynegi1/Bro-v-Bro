@@ -76,3 +76,5 @@ Phase 0 (Docs) ➔ Phase 1 (Skeleton) ➔ Phase 2 (First Game) ➔ Phase 3 (Matc
 - Snappy visual micro-animations (confetti, score counter flips).
 - 30-second disconnect pause and graceful reconnection recovery.
 - Full mobile browser touch optimization.
+- [x] **Post-Match Surrender Accord & Inferiority Decree:** Interactive digital signature canvas for the defeated player, live socket synchronization, custom confession clauses, and high-resolution downloadable PNG & PDF certificates stamped with the official wax seal of humiliation.
+

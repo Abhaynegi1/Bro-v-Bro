@@ -160,6 +160,23 @@ export function setupSocketServer(io: SocketIOServer) {
       }
     });
 
+    // Handle Surrender Document Signing
+    socket.on(
+      SOCKET_EVENTS.SURRENDER_SIGN,
+      (payload: { signatureDataUrl: string; confessionClause?: string }) => {
+        if (!payload || !payload.signatureDataUrl) return;
+        const updatedRoom = roomManager.signSurrenderDocument(
+          roomCode,
+          playerId,
+          payload.signatureDataUrl,
+          payload.confessionClause
+        );
+        if (updatedRoom) {
+          broadcastRoomAndGame(roomCode);
+        }
+      }
+    );
+
     // Handle Disconnect
     socket.on('disconnect', () => {
       const disconnectResult = roomManager.handleSocketDisconnect(socket.id);

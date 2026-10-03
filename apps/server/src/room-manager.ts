@@ -442,12 +442,38 @@ export class RoomManager {
           room.currentMatch.status = 'COMPLETED';
           room.currentMatch.seriesWinnerId = room.players.playerA?.id || null;
           room.selectingPlayerId = null;
+          if (room.players.playerA && room.players.playerB) {
+            room.currentMatch.surrenderDocument = {
+              id: `DECREE-${Math.random().toString(36).substring(2, 8).toUpperCase()}`,
+              loserPlayerId: room.players.playerB.id,
+              winnerPlayerId: room.players.playerA.id,
+              loserName: room.players.playerB.name,
+              winnerName: room.players.playerA.name,
+              scoreWinner: room.currentMatch.scores.playerA,
+              scoreLoser: room.currentMatch.scores.playerB,
+              confessionClause: 'I hereby admit that my opponent is simply the superior gamer and diffed me fair and square.',
+              isSigned: false,
+            };
+          }
           this.persistCompletedMatch(room);
         } else if (room.currentMatch.scores.playerB >= targetWins) {
           room.status = 'MATCH_COMPLETE';
           room.currentMatch.status = 'COMPLETED';
           room.currentMatch.seriesWinnerId = room.players.playerB?.id || null;
           room.selectingPlayerId = null;
+          if (room.players.playerA && room.players.playerB) {
+            room.currentMatch.surrenderDocument = {
+              id: `DECREE-${Math.random().toString(36).substring(2, 8).toUpperCase()}`,
+              loserPlayerId: room.players.playerA.id,
+              winnerPlayerId: room.players.playerB.id,
+              loserName: room.players.playerA.name,
+              winnerName: room.players.playerB.name,
+              scoreWinner: room.currentMatch.scores.playerB,
+              scoreLoser: room.currentMatch.scores.playerA,
+              confessionClause: 'I hereby admit that my opponent is simply the superior gamer and diffed me fair and square.',
+              isSigned: false,
+            };
+          }
           this.persistCompletedMatch(room);
         } else {
           room.status = 'ROUND_COMPLETE';
@@ -549,6 +575,7 @@ export class RoomManager {
     room.currentMatch.gamePlaylist = [];
     room.currentMatch.totalGamesNeeded = totalGamesNeeded;
     room.currentMatch.nextPickerPlayerId = room.players.playerA.id;
+    room.currentMatch.surrenderDocument = null;
 
     // Reset to Game Lineup Draft with Host picking first
     room.status = 'SELECTING_GAME';
@@ -557,6 +584,52 @@ export class RoomManager {
     room.updatedAt = Date.now();
 
     return this.sanitizeRoom(room);
+  }
+
+  public signSurrenderDocument(
+    code: string,
+    playerId: string,
+    signatureDataUrl: string,
+    confessionClause?: string
+  ): InternalRoom | null {
+    const room = this.roomsByCode.get(code.toUpperCase());
+    if (!room || !room.currentMatch) {
+      return null;
+    }
+
+    if (!room.currentMatch.surrenderDocument) {
+      const winnerId = room.currentMatch.seriesWinnerId;
+      const winnerPlayer =
+        winnerId === room.players.playerA?.id ? room.players.playerA : room.players.playerB;
+      const loserPlayer =
+        winnerId === room.players.playerA?.id ? room.players.playerB : room.players.playerA;
+
+      if (winnerPlayer && loserPlayer) {
+        room.currentMatch.surrenderDocument = {
+          id: `DECREE-${Math.random().toString(36).substring(2, 8).toUpperCase()}`,
+          loserPlayerId: loserPlayer.id,
+          winnerPlayerId: winnerPlayer.id,
+          loserName: loserPlayer.name,
+          winnerName: winnerPlayer.name,
+          scoreWinner: Math.max(room.currentMatch.scores.playerA, room.currentMatch.scores.playerB),
+          scoreLoser: Math.min(room.currentMatch.scores.playerA, room.currentMatch.scores.playerB),
+          confessionClause: confessionClause || 'I hereby admit that my opponent is simply the superior gamer.',
+          isSigned: true,
+          signedAt: Date.now(),
+          signatureDataUrl,
+        };
+      }
+    } else {
+      room.currentMatch.surrenderDocument.isSigned = true;
+      room.currentMatch.surrenderDocument.signedAt = Date.now();
+      room.currentMatch.surrenderDocument.signatureDataUrl = signatureDataUrl;
+      if (confessionClause) {
+        room.currentMatch.surrenderDocument.confessionClause = confessionClause;
+      }
+    }
+
+    room.updatedAt = Date.now();
+    return room;
   }
 
   private persistCompletedMatch(room: InternalRoom) {

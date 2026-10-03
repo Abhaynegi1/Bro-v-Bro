@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import type { RoundRecord } from '@bvb/shared';
 import confetti from 'canvas-confetti';
 import { PixelCharacter } from './pixel/PixelCharacter';
+import { SurrenderCertificateModal } from './SurrenderCertificateModal';
+import type { SurrenderDocument } from '@bvb/shared';
 
 interface MatchDbData {
   id: string;
@@ -38,6 +40,7 @@ export const MatchPermalinkView: React.FC<MatchPermalinkViewProps> = ({
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
+  const [showSurrenderModal, setShowSurrenderModal] = useState(false);
 
   const isNight = theme === 'night';
 
@@ -342,6 +345,14 @@ export const MatchPermalinkView: React.FC<MatchPermalinkViewProps> = ({
             {/* Action Buttons */}
             <div className="w-full flex flex-col sm:flex-row gap-4 justify-center">
               <button
+                onClick={() => setShowSurrenderModal(true)}
+                className="flex-1 sm:flex-initial sm:px-7 py-3.5 bg-paper text-ink font-arcade text-xs sm:text-sm tracking-wider border-2 border-ink shadow-pixel hover:bg-stone-100 hover:translate-x-[-1px] hover:translate-y-[-1px] active:translate-x-[1px] active:translate-y-[1px] transition-all font-bold flex items-center justify-center gap-2"
+              >
+                <span>📜</span>
+                <span>SURRENDER DECREE (PDF/PNG)</span>
+              </button>
+
+              <button
                 onClick={handleCopyLink}
                 className="flex-1 sm:flex-initial sm:px-7 py-3.5 bg-cartridgeYellow text-ink font-arcade text-xs sm:text-sm tracking-wider border-2 border-ink shadow-pixel hover:bg-yellow-300 hover:translate-x-[-1px] hover:translate-y-[-1px] active:translate-x-[1px] active:translate-y-[1px] transition-all font-bold"
               >
@@ -355,6 +366,28 @@ export const MatchPermalinkView: React.FC<MatchPermalinkViewProps> = ({
                 ⚔️ CHALLENGE A BRO (NEW MATCH)
               </button>
             </div>
+
+            {/* Surrender Decree Modal */}
+            {showSurrenderModal && match && (
+              <SurrenderCertificateModal
+                documentData={{
+                  id: `ARCHIVE-${match.id.replace('match_', '').substring(0, 8).toUpperCase()}`,
+                  loserPlayerId: match.winnerId === match.playerAId ? match.playerBId : match.playerAId,
+                  winnerPlayerId: match.winnerId || match.playerAId,
+                  loserName: match.winnerId === match.playerAId ? match.playerBName : match.playerAName,
+                  winnerName: match.winnerName || (match.winnerId === match.playerAId ? match.playerAName : match.playerBName),
+                  scoreWinner: Math.max(match.scoreA, match.scoreB),
+                  scoreLoser: Math.min(match.scoreA, match.scoreB),
+                  confessionClause: 'I hereby admit that my opponent is simply the superior gamer and diffed me fair and square.',
+                  isSigned: true,
+                }}
+                myPlayerId=""
+                roomCode={match.roomCode}
+                onSignSurrender={() => {}}
+                onClose={() => setShowSurrenderModal(false)}
+                theme={theme}
+              />
+            )}
           </div>
         )}
       </main>

@@ -100,3 +100,9 @@ export const ChessMoveSchema = z.discriminatedUnion('action', [
 
 export type ChessMoveInput = z.infer<typeof ChessMoveSchema>;
 
+export const SurrenderSignSchema = z.object({
+  signatureDataUrl: z.string().min(1),
+  confessionClause: z.string().max(250).optional(),
+});
+
+export type SurrenderSignInput = z.infer<typeof SurrenderSignSchema>;

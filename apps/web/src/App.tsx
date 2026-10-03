@@ -89,6 +89,7 @@ export const App: React.FC = () => {
     sendMove,
     nextRound,
     requestRematch,
+    signSurrender,
   } = useSocket({
     roomCode,
     playerId,
@@ -296,6 +297,7 @@ export const App: React.FC = () => {
             myPlayerId={playerId || ''}
             onRematch={requestRematch}
             onLeaveRoom={handleLeaveRoom}
+            onSignSurrender={signSurrender}
             theme={theme}
           />
         ) : roomState.status === 'SELECTING_GAME' ? (

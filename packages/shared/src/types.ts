@@ -31,6 +31,20 @@ export interface RoundRecord {
   summary?: string;
 }
 
+export interface SurrenderDocument {
+  id: string;
+  loserPlayerId: string;
+  winnerPlayerId: string;
+  loserName: string;
+  winnerName: string;
+  scoreWinner: number;
+  scoreLoser: number;
+  confessionClause: string;
+  isSigned: boolean;
+  signedAt?: number;
+  signatureDataUrl?: string;
+}
+
 export interface MatchState {
   id: string;
   seriesCondition: SeriesCondition;
@@ -46,6 +60,7 @@ export interface MatchState {
   nextPickerPlayerId?: string | null;
   gamePlaylist?: string[];
   totalGamesNeeded?: number;
+  surrenderDocument?: SurrenderDocument | null;
 }
 
 export interface MoveContext {

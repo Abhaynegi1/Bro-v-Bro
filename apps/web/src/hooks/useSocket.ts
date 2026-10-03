@@ -133,6 +133,15 @@ export function useSocket({ roomCode, playerId, sessionToken, onPlayerJoined }: 
     }
   }, [isConnected]);
 
+  const signSurrender = useCallback(
+    (data: { signatureDataUrl: string; confessionClause?: string }) => {
+      if (socketRef.current && isConnected) {
+        socketRef.current.emit(SOCKET_EVENTS.SURRENDER_SIGN, data);
+      }
+    },
+    [isConnected]
+  );
+
   return {
     socket: socketRef.current,
     isConnected,
@@ -148,5 +157,6 @@ export function useSocket({ roomCode, playerId, sessionToken, onPlayerJoined }: 
     sendMove,
     nextRound,
     requestRematch,
+    signSurrender,
   };
 }

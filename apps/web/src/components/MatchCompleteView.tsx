@@ -1,13 +1,19 @@
 import React, { useEffect, useState } from 'react';
-import type { RoomState } from '@bvb/shared';
+import type { RoomState, SurrenderDocument } from '@bvb/shared';
 import confetti from 'canvas-confetti';
 import { PixelCharacter } from './pixel/PixelCharacter';
+import { SurrenderCertificateModal } from './SurrenderCertificateModal';
+import {
+  downloadCertificateAsPng,
+  downloadCertificateAsPdf,
+} from '../utils/certificateGenerator';
 
 interface MatchCompleteViewProps {
   roomState: RoomState;
   myPlayerId: string;
   onRematch: () => void;
   onLeaveRoom: () => void;
+  onSignSurrender?: (data: { signatureDataUrl: string; confessionClause?: string }) => void;
   theme?: 'day' | 'night';
 }
 
@@ -16,6 +22,7 @@ export const MatchCompleteView: React.FC<MatchCompleteViewProps> = ({
   myPlayerId,
   onRematch,
   onLeaveRoom,
+  onSignSurrender,
   theme = 'day',
 }) => {
   const isNight = theme === 'night';
@@ -27,12 +34,29 @@ export const MatchCompleteView: React.FC<MatchCompleteViewProps> = ({
   const winner = playerA?.id === winnerPlayerId ? playerA : playerB?.id === winnerPlayerId ? playerB : null;
   const loser = playerA?.id === winnerPlayerId ? playerB : playerA;
   const iWon = myPlayerId === winnerPlayerId;
+  const iAmLoser = myPlayerId === loser?.id;
 
   const scoreA = match?.scores.playerA ?? 0;
   const scoreB = match?.scores.playerB ?? 0;
   const rounds = match?.rounds ?? [];
 
   const [copied, setCopied] = useState(false);
+  const [showSurrenderModal, setShowSurrenderModal] = useState(false);
+  const [isDownloadingPng, setIsDownloadingPng] = useState(false);
+  const [isDownloadingPdf, setIsDownloadingPdf] = useState(false);
+
+  // Construct or retrieve surrender document data
+  const surrenderDoc: SurrenderDocument = match?.surrenderDocument || {
+    id: `DECREE-${match?.id ? match.id.replace('match_', '').substring(0, 6).toUpperCase() : 'BVB'}`,
+    loserPlayerId: loser?.id || '',
+    winnerPlayerId: winner?.id || '',
+    loserName: loser?.name || 'Loser',
+    winnerName: winner?.name || 'Winner',
+    scoreWinner: Math.max(scoreA, scoreB),
+    scoreLoser: Math.min(scoreA, scoreB),
+    confessionClause: 'I hereby admit that my opponent is simply the superior gamer and diffed me fair and square.',
+    isSigned: false,
+  };
 
   // Victory Confetti
   useEffect(() => {
@@ -66,6 +90,46 @@ export const MatchCompleteView: React.FC<MatchCompleteViewProps> = ({
         return 'Minefield Battle';
       default:
         return gameId;
+    }
+  };
+
+  const handleQuickDownloadPng = async () => {
+    try {
+      setIsDownloadingPng(true);
+      await downloadCertificateAsPng({
+        id: surrenderDoc.id,
+        loserName: surrenderDoc.loserName,
+        winnerName: surrenderDoc.winnerName,
+        scoreWinner: surrenderDoc.scoreWinner,
+        scoreLoser: surrenderDoc.scoreLoser,
+        signatureDataUrl: surrenderDoc.signatureDataUrl,
+        signedAt: surrenderDoc.signedAt || Date.now(),
+        roomCode: roomState.code,
+      });
+    } catch (err) {
+      console.error('Failed to download PNG decree:', err);
+    } finally {
+      setIsDownloadingPng(false);
+    }
+  };
+
+  const handleQuickDownloadPdf = async () => {
+    try {
+      setIsDownloadingPdf(true);
+      await downloadCertificateAsPdf({
+        id: surrenderDoc.id,
+        loserName: surrenderDoc.loserName,
+        winnerName: surrenderDoc.winnerName,
+        scoreWinner: surrenderDoc.scoreWinner,
+        scoreLoser: surrenderDoc.scoreLoser,
+        signatureDataUrl: surrenderDoc.signatureDataUrl,
+        signedAt: surrenderDoc.signedAt || Date.now(),
+        roomCode: roomState.code,
+      });
+    } catch (err) {
+      console.error('Failed to download PDF decree:', err);
+    } finally {
+      setIsDownloadingPdf(false);
     }
   };
 
@@ -146,6 +210,81 @@ export const MatchCompleteView: React.FC<MatchCompleteViewProps> = ({
         </div>
       </div>
 
+      {/* Surrender Accord & Inferiority Decree Showcase Card */}
+      <div
+        className={`w-full p-5 sm:p-6 border-4 border-ink shadow-pixel transition-colors mb-6 relative overflow-hidden ${
+          isNight ? 'bg-[#152033] text-paper' : 'bg-[#FFFBEB] text-ink'
+        }`}
+      >
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pb-3 border-b-2 border-ink">
+          <div className="flex items-center gap-2">
+            <span className="text-xl">📜</span>
+            <div>
+              <h2 className="font-arcade text-xs sm:text-sm text-arcadeRed font-bold tracking-wider uppercase">
+                DECLARATION OF SUPERIOR GAMER
+              </h2>
+              <span className="font-mono text-[10px] text-gray-500 dark:text-gray-400">
+                OFFICIAL MATCH SURRENDER PROTOCOL
+              </span>
+            </div>
+          </div>
+
+          <div>
+            {surrenderDoc.isSigned ? (
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-gameBoyGreen/20 text-gameBoyGreen border-2 border-gameBoyGreen font-mono text-xs font-bold uppercase">
+                <span>✅</span> SIGNED &amp; SEALED
+              </span>
+            ) : (
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-arcadeRed/20 text-arcadeRed border-2 border-arcadeRed font-mono text-xs font-bold uppercase animate-pulse">
+                <span>⚠️</span> {iAmLoser ? 'YOUR SIGNATURE REQUIRED' : "AWAITING LOSER'S SIGNATURE"}
+              </span>
+            )}
+          </div>
+        </div>
+
+        {/* 1 Clean Minimal Paragraph */}
+        <div className="my-4 p-4 bg-amber-500/10 border-2 border-dashed border-cartridgeYellow text-xs sm:text-sm font-mono leading-relaxed">
+          <p className="italic text-gray-800 dark:text-gray-200">
+            &ldquo;I, <strong className="text-arcadeRed font-bold uppercase">[{surrenderDoc.loserName}]</strong>, hereby declare that{' '}
+            <strong className="text-gameBoyGreen font-bold uppercase">[{surrenderDoc.winnerName}]</strong> is the superior gamer than me. Having suffered a decisive defeat of {surrenderDoc.scoreWinner} to {surrenderDoc.scoreLoser} in Bro v Bro, I openly concede that I was fairly outplayed with zero excuses, zero lag, and full respect to the better player.&rdquo;
+          </p>
+          <div className="mt-2 text-[11px] font-bold text-cartridgeYellow uppercase">
+            — {surrenderDoc.loserName}{surrenderDoc.isSigned ? ' (Signed)' : ' (Awaiting Signature)'}
+          </div>
+        </div>
+
+        {/* Interactive Buttons */}
+        <div className="flex flex-wrap items-center gap-3">
+          <button
+            onClick={() => setShowSurrenderModal(true)}
+            className="flex-1 sm:flex-initial px-5 py-3 bg-arcadeRed text-white font-arcade text-xs tracking-wider border-2 border-ink shadow-pixel hover:bg-red-600 font-bold transition-all flex items-center justify-center gap-2"
+          >
+            <span>✍️</span>
+            <span>{surrenderDoc.isSigned ? 'VIEW & PRINT DECLARATION' : 'SIGN DECLARATION'}</span>
+          </button>
+
+          <button
+            onClick={handleQuickDownloadPng}
+            disabled={isDownloadingPng}
+            className="px-4 py-3 bg-cartridgeYellow text-ink font-arcade text-xs tracking-wider border-2 border-ink shadow-pixel hover:bg-yellow-300 font-bold transition-all flex items-center justify-center gap-1.5"
+            title="Download PNG image"
+          >
+            <span>📸</span>
+            <span>{isDownloadingPng ? 'SAVING...' : 'PNG'}</span>
+          </button>
+
+          <button
+            onClick={handleQuickDownloadPdf}
+            disabled={isDownloadingPdf}
+            className="px-4 py-3 bg-gameBoyGreen text-ink font-arcade text-xs tracking-wider border-2 border-ink shadow-pixel hover:bg-emerald-400 font-bold transition-all flex items-center justify-center gap-1.5"
+            title="Download PDF document"
+          >
+            <span>📄</span>
+            <span>{isDownloadingPdf ? 'SAVING...' : 'PDF'}</span>
+          </button>
+        </div>
+      </div>
+
       {/* Complete Match Breakdown Table */}
       <div
         className={`w-full p-5 border-4 border-ink shadow-pixel transition-colors mb-6 ${
@@ -219,6 +358,14 @@ export const MatchCompleteView: React.FC<MatchCompleteViewProps> = ({
       {/* Action Buttons */}
       <div className="w-full flex flex-col sm:flex-row gap-4 justify-center">
         <button
+          onClick={() => setShowSurrenderModal(true)}
+          className="flex-1 sm:flex-initial sm:px-7 py-3.5 bg-paper text-ink font-arcade text-xs sm:text-sm tracking-wider border-2 border-ink shadow-pixel hover:bg-stone-100 hover:translate-x-[-1px] hover:translate-y-[-1px] active:translate-x-[1px] active:translate-y-[1px] transition-all font-bold flex items-center justify-center gap-2"
+        >
+          <span>📜</span>
+          <span>SURRENDER DECREE (PDF/PNG)</span>
+        </button>
+
+        <button
           onClick={handleCopyShareLink}
           className="flex-1 sm:flex-initial sm:px-7 py-3.5 bg-cartridgeYellow text-ink font-arcade text-xs sm:text-sm tracking-wider border-2 border-ink shadow-pixel hover:bg-yellow-300 hover:translate-x-[-1px] hover:translate-y-[-1px] active:translate-x-[1px] active:translate-y-[1px] transition-all font-bold"
         >
@@ -239,6 +386,20 @@ export const MatchCompleteView: React.FC<MatchCompleteViewProps> = ({
           🚪 EXIT TO LOBBY
         </button>
       </div>
+
+      {/* Surrender Decree Modal */}
+      {showSurrenderModal && (
+        <SurrenderCertificateModal
+          documentData={surrenderDoc}
+          myPlayerId={myPlayerId}
+          roomCode={roomState.code}
+          onSignSurrender={(data) => {
+            onSignSurrender?.(data);
+          }}
+          onClose={() => setShowSurrenderModal(false)}
+          theme={theme}
+        />
+      )}
     </div>
   );
 };

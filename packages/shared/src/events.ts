@@ -6,6 +6,7 @@ export const SOCKET_EVENTS = {
   GAME_MOVE: 'game:move',
   ROUND_NEXT: 'round:next',
   REMATCH_REQUEST: 'match:rematch_request',
+  SURRENDER_SIGN: 'match:surrender_sign',
 
   // Server -> Room / Client
   ROOM_STATE: 'room:state',
