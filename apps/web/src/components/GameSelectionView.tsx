@@ -183,7 +183,12 @@ export const GameSelectionView: React.FC<GameSelectionViewProps> = ({
                 >
                   <div className="flex items-center justify-between text-[10px] font-arcade mb-1">
                     <span className={`font-bold ${isNight ? 'text-cartridgeYellow' : 'text-amber-800'}`}>RND #{idx + 1}</span>
-                    <span className="text-[9px] opacity-75 truncate max-w-[65px]">
+                    <span
+                      title={slotPickerName}
+                      className={`text-[9px] font-mono font-bold tracking-wide truncate max-w-[80px] ${
+                        isNight ? 'text-slate-200' : 'text-stone-800'
+                      }`}
+                    >
                       {slotPickerName}
                     </span>
                   </div>
