@@ -25,13 +25,42 @@ if (connectionString) {
 
 export const db = dbInstance;
 
+const inMemoryMatches = new Map<string, MatchDbRecord>();
+
+function createInMemoryRecord(data: NewMatchDbRecord): MatchDbRecord {
+  return {
+    id: data.id,
+    roomCode: data.roomCode,
+    targetWins: data.targetWins ?? 3,
+    playerAId: data.playerAId,
+    playerAName: data.playerAName,
+    playerBId: data.playerBId,
+    playerBName: data.playerBName,
+    winnerId: data.winnerId ?? null,
+    winnerName: data.winnerName ?? null,
+    scoreA: data.scoreA ?? 0,
+    scoreB: data.scoreB ?? 0,
+    totalRounds: data.totalRounds ?? 0,
+    rounds: (data.rounds as MatchDbRecord['rounds']) ?? [],
+    createdAt: data.createdAt ? new Date(data.createdAt) : new Date(),
+    completedAt: data.completedAt ? new Date(data.completedAt) : new Date(),
+  };
+}
+
+function getInMemoryRecentMatches(limit = 10): MatchDbRecord[] {
+  const all = Array.from(inMemoryMatches.values());
+  all.sort((a, b) => new Date(b.completedAt).getTime() - new Date(a.completedAt).getTime());
+  return all.slice(0, limit);
+}
+
 /**
- * Persist a finalized series match result to Neon DB
+ * Persist a finalized series match result to Neon DB (or in-memory store if DB is unavailable)
  */
 export async function saveMatchResult(data: NewMatchDbRecord): Promise<MatchDbRecord | null> {
   if (!db) {
-    console.warn('Skipping DB save: database connection not initialized.');
-    return null;
+    const record = createInMemoryRecord(data);
+    inMemoryMatches.set(record.id, record);
+    return record;
   }
 
   try {
@@ -39,11 +68,14 @@ export async function saveMatchResult(data: NewMatchDbRecord): Promise<MatchDbRe
     const result = inserted[0] || null;
     if (result) {
       console.log(`💾 Match ${result.id} successfully saved to Neon DB.`);
+      inMemoryMatches.set(result.id, result);
     }
     return result;
   } catch (err) {
-    console.error(`❌ Failed to save match ${data.id} to Neon DB:`, err);
-    return null;
+    console.error(`❌ Failed to save match ${data.id} to Neon DB, falling back to in-memory:`, err);
+    const record = createInMemoryRecord(data);
+    inMemoryMatches.set(record.id, record);
+    return record;
   }
 }
 
@@ -51,7 +83,9 @@ export async function saveMatchResult(data: NewMatchDbRecord): Promise<MatchDbRe
  * Retrieve a match record by its unique ID
  */
 export async function getMatchById(matchId: string): Promise<MatchDbRecord | null> {
-  if (!db) return null;
+  if (!db) {
+    return inMemoryMatches.get(matchId) || null;
+  }
 
   try {
     const rows = await db
@@ -60,10 +94,10 @@ export async function getMatchById(matchId: string): Promise<MatchDbRecord | nul
       .where(eq(schema.matches.id, matchId))
       .limit(1);
 
-    return rows[0] || null;
+    return rows[0] || inMemoryMatches.get(matchId) || null;
   } catch (err) {
     console.error(`❌ Failed to fetch match ${matchId} from Neon DB:`, err);
-    return null;
+    return inMemoryMatches.get(matchId) || null;
   }
 }
 
@@ -71,7 +105,9 @@ export async function getMatchById(matchId: string): Promise<MatchDbRecord | nul
  * Retrieve recent matches for archive/history view
  */
 export async function getRecentMatches(limit = 10): Promise<MatchDbRecord[]> {
-  if (!db) return [];
+  if (!db) {
+    return getInMemoryRecentMatches(limit);
+  }
 
   try {
     const rows = await db
@@ -80,9 +116,10 @@ export async function getRecentMatches(limit = 10): Promise<MatchDbRecord[]> {
       .orderBy(desc(schema.matches.completedAt))
       .limit(limit);
 
-    return rows;
+    if (rows.length > 0) return rows;
+    return getInMemoryRecentMatches(limit);
   } catch (err) {
     console.error('❌ Failed to fetch recent matches from Neon DB:', err);
-    return [];
+    return getInMemoryRecentMatches(limit);
   }
 }
