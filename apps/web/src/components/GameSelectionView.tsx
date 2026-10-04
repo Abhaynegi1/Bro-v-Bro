@@ -1,6 +1,7 @@
 import React from 'react';
 import type { RoomState } from '@bvb/shared';
 import { PixelCharacter } from './pixel/PixelCharacter';
+import { GamePixelIcon } from './game-icons/GamePixelIcon';
 
 interface GameSelectionViewProps {
   roomState: RoomState;
@@ -15,7 +16,6 @@ interface GameCard {
   category: string;
   description: string;
   duration: string;
-  icon: string;
   isAvailable: boolean;
   accentColor: string;
 }
@@ -27,7 +27,6 @@ const GAMES_CATALOG: GameCard[] = [
     category: 'TACTICAL GRID',
     description: '3-in-a-row classic territorial combat. Fast, simple, and unforgiving.',
     duration: '~1 MIN',
-    icon: '❌⭕',
     isAvailable: true,
     accentColor: 'border-arcadeRed text-arcadeRed',
   },
@@ -37,7 +36,6 @@ const GAMES_CATALOG: GameCard[] = [
     category: 'QUICKDRAW REFLEX',
     description: 'Wait for the signal to turn GREEN and strike! False start equals instant defeat.',
     duration: '~15 SEC',
-    icon: '⚡🎯',
     isAvailable: true,
     accentColor: 'border-gameBoyGreen text-gameBoyGreen',
   },
@@ -47,7 +45,6 @@ const GAMES_CATALOG: GameCard[] = [
     category: 'GRAVITY PUZZLE',
     description: 'Drop colored tokens into a 7x6 vertical grid to align four in a row.',
     duration: '~2 MIN',
-    icon: '🔴🟡',
     isAvailable: true,
     accentColor: 'border-crtCyan text-crtCyan',
   },
@@ -57,7 +54,6 @@ const GAMES_CATALOG: GameCard[] = [
     category: 'SECRET CIPHER',
     description: 'Guess the hidden 5-letter word first using server-sanitized clues.',
     duration: '~2 MIN',
-    icon: '🟩🟨',
     isAvailable: true,
     accentColor: 'border-cartridgeYellow text-cartridgeYellow',
   },
@@ -67,7 +63,6 @@ const GAMES_CATALOG: GameCard[] = [
     category: 'HAZARD RACE',
     description: 'Race to clear identical 9x9 minefields without detonating. First click guaranteed safe!',
     duration: '~2 MIN',
-    icon: '💣🚩',
     isAvailable: true,
     accentColor: 'border-pixelPink text-pixelPink',
   },
@@ -77,7 +72,6 @@ const GAMES_CATALOG: GameCard[] = [
     category: 'GRANDMASTER SHOWDOWN',
     description: 'Fast-paced 1v1 blitz chess with server-authoritative move verification & digital clocks.',
     duration: '~2 MIN',
-    icon: '♟️👑',
     isAvailable: true,
     accentColor: 'border-purple-400 text-purple-400',
   },
@@ -195,7 +189,7 @@ export const GameSelectionView: React.FC<GameSelectionViewProps> = ({
 
                   {draftedGame ? (
                     <div className="flex items-center gap-1.5 mt-1">
-                      <span className="text-base">{draftedGame.icon.split('')[0]}</span>
+                      <GamePixelIcon gameId={draftedGame.id} size={16} />
                       <span className="font-arcade text-[10px] font-bold truncate">
                         {draftedGame.title}
                       </span>
@@ -243,7 +237,7 @@ export const GameSelectionView: React.FC<GameSelectionViewProps> = ({
             >
               {/* Header Badge */}
               <div className="flex items-center justify-between mb-3">
-                <span className="text-2xl">{game.icon}</span>
+                <GamePixelIcon gameId={game.id} size={32} />
                 <span
                   className={`text-[10px] font-mono px-2 py-0.5 border font-bold uppercase ${
                     isAlreadyDrafted
