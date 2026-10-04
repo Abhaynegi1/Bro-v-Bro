@@ -72,6 +72,27 @@ export const RoundResultModal: React.FC<RoundResultModalProps> = ({
     /false start/i.test(summaryText) ||
     Boolean(playerAResult?.earlyClick || playerBResult?.earlyClick);
 
+  // Wordle detection and target word extraction
+  const isWordle =
+    roomState.activeGame?.gameId === 'wordle' ||
+    lastRound?.gameId === 'wordle' ||
+    /wordle|cracked|cipher/i.test(lastResult?.summary || '') ||
+    /wordle|cracked|cipher/i.test(lastRound?.summary || '');
+
+  const wordleState =
+    roomState.activeGame?.gameId === 'wordle'
+      ? (roomState.activeGame.state as any)
+      : null;
+
+  const wordMatch = summaryText.match(/"([A-Za-z]{5})"/);
+  const secretWord = (
+    wordleState?.targetWord && wordleState.targetWord.length === 5
+      ? wordleState.targetWord
+      : wordMatch
+      ? wordMatch[1]
+      : ''
+  ).toUpperCase();
+
   let winnerReactionMs: number | null = null;
   if (
     winnerPlayerId &&
@@ -261,6 +282,41 @@ export const RoundResultModal: React.FC<RoundResultModalProps> = ({
                 </div>
               </div>
             </div>
+          </div>
+        )}
+
+        {/* 🟩 High-Visibility Secret Word Reveal HUD (Wordle Battle) 🟩 */}
+        {isWordle && secretWord && (
+          <div className="my-4 p-4 bg-slate-950 border-3 border-ink shadow-pixel text-center relative overflow-hidden rounded">
+            {/* Top Badge */}
+            <div className="text-[10px] font-arcade uppercase tracking-widest text-gameBoyGreen mb-2 flex items-center justify-center gap-2 font-bold">
+              <GamePixelIcon gameId="wordle" size={18} className="flex-shrink-0" />
+              <span>THE SECRET WORD WAS</span>
+              <GamePixelIcon gameId="wordle" size={18} className="flex-shrink-0" />
+            </div>
+
+            {/* 5 Big Retro Wordle Letter Tiles */}
+            <div className="flex items-center justify-center gap-1.5 sm:gap-2.5 my-2">
+              {secretWord.split('').map((char: string, idx: number) => (
+                <div
+                  key={idx}
+                  className="w-11 h-11 sm:w-14 sm:h-14 bg-gameBoyGreen text-ink font-arcade text-xl sm:text-2xl font-black border-3 border-ink shadow-pixel flex items-center justify-center animate-bounce select-none"
+                  style={{ animationDelay: `${idx * 80}ms` }}
+                >
+                  {char}
+                </div>
+              ))}
+            </div>
+
+            <p className="mt-2 text-xs font-mono font-bold text-white/90">
+              {isDraw ? (
+                <span className="text-cartridgeYellow">Neither bro cracked the cipher • It was &ldquo;{secretWord}&rdquo;!</span>
+              ) : winner ? (
+                <span>Cracked by <strong className="text-gameBoyGreen">{winner.name}</strong>!</span>
+              ) : (
+                <span>Round cipher concluded!</span>
+              )}
+            </p>
           </div>
         )}
 

@@ -50,6 +50,12 @@ export const WordleGame: React.FC<WordleGameProps> = ({
   const isDraw = isFinished && !gameState.winnerPlayerId;
   const canType = !isFinished && !myState.isCompleted;
 
+  const revealedWord = (
+    gameState.targetWord ||
+    (gameState.summary || '').match(/"([A-Za-z]{5})"/)?.[1] ||
+    ''
+  ).toUpperCase();
+
   // Trigger victory confetti
   useEffect(() => {
     if (iWon) {
@@ -216,27 +222,42 @@ export const WordleGame: React.FC<WordleGameProps> = ({
             <h2 className="font-arcade text-base sm:text-xl text-[#22C55E] font-bold tracking-wide animate-pulse">
               🎉 CIPHER CRACKED! YOU WON THIS BATTLE!
             </h2>
-            <p className="font-mono text-xs mt-0.5">
-              Secret word was: <span className="font-bold font-arcade tracking-wider px-2 py-0.5 bg-ink text-cartridgeYellow border border-ink">{gameState.targetWord}</span>
-            </p>
+            {revealedWord && (
+              <div className="mt-2 flex items-center justify-center gap-2">
+                <span className="font-mono text-xs font-bold text-stone-700 dark:text-stone-300">SECRET WORD WAS:</span>
+                <span className="font-bold font-arcade text-sm sm:text-base tracking-widest px-3 py-0.5 bg-gameBoyGreen text-ink border-2 border-ink shadow-pixel uppercase">
+                  {revealedWord}
+                </span>
+              </div>
+            )}
           </div>
         ) : iLost ? (
           <div>
             <h2 className="font-arcade text-base sm:text-xl text-arcadeRed font-bold tracking-wide">
               💀 {opponentPlayer?.name?.toUpperCase() || 'OPPONENT'} CRACKED IT FIRST!
             </h2>
-            <p className="font-mono text-xs mt-0.5">
-              Secret word was: <span className="font-bold font-arcade tracking-wider px-2 py-0.5 bg-ink text-cartridgeYellow border border-ink">{gameState.targetWord}</span>
-            </p>
+            {revealedWord && (
+              <div className="mt-2 flex items-center justify-center gap-2">
+                <span className="font-mono text-xs font-bold text-stone-700 dark:text-stone-300">SECRET WORD WAS:</span>
+                <span className="font-bold font-arcade text-sm sm:text-base tracking-widest px-3 py-0.5 bg-gameBoyGreen text-ink border-2 border-ink shadow-pixel uppercase">
+                  {revealedWord}
+                </span>
+              </div>
+            )}
           </div>
         ) : isDraw ? (
           <div>
             <h2 className={`font-arcade text-base sm:text-xl font-bold tracking-wide ${isNight ? 'text-cartridgeYellow' : 'text-amber-800'}`}>
               🤝 NEITHER BRO CRACKED THE CIPHER!
             </h2>
-            <p className="font-mono text-xs mt-0.5">
-              Secret word was: <span className="font-bold font-arcade tracking-wider px-2 py-0.5 bg-ink text-cartridgeYellow border border-ink">{gameState.targetWord}</span>
-            </p>
+            {revealedWord && (
+              <div className="mt-2 flex items-center justify-center gap-2">
+                <span className="font-mono text-xs font-bold text-stone-700 dark:text-stone-300">SECRET WORD WAS:</span>
+                <span className="font-bold font-arcade text-sm sm:text-base tracking-widest px-3 py-0.5 bg-gameBoyGreen text-ink border-2 border-ink shadow-pixel uppercase">
+                  {revealedWord}
+                </span>
+              </div>
+            )}
           </div>
         ) : myState.isCompleted ? (
           <div>
