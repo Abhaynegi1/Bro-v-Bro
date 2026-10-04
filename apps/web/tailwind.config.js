@@ -10,7 +10,7 @@ export default {
         darkNavy: '#18243A',
         mutedNavy: '#24334E',
         arcadeRed: '#E84B4B',
-        cartridgeYellow: '#F4D35E',
+        cartridgeYellow: '#EAB308',
         crtCyan: '#42B8C7',
         gameboyGreen: '#69B85A',
         pixelPink: '#E95A8A',

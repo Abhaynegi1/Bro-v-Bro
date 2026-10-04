@@ -7,6 +7,7 @@ import type {
 } from '@bvb/shared';
 import confetti from 'canvas-confetti';
 import { PixelCharacter } from '../pixel/PixelCharacter';
+import { GamePixelIcon } from '../game-icons/GamePixelIcon';
 
 interface MinesweeperGameProps {
   roomState: RoomState;
@@ -131,8 +132,9 @@ export const MinesweeperGame: React.FC<MinesweeperGameProps> = ({
         }`}
       >
         <div className="flex items-center justify-between px-2 mb-1.5">
-          <span className="font-arcade text-[10px] sm:text-xs text-cartridgeYellow font-bold flex items-center gap-1.5">
-            <span className="animate-pulse">💣🚩</span> MINEFIELD SPEED RACE
+          <span className={`font-arcade text-[10px] sm:text-xs font-bold flex items-center gap-2 ${isNight ? 'text-cartridgeYellow' : 'text-amber-800'}`}>
+            <GamePixelIcon gameId="minesweeper" size={22} className="flex-shrink-0" />
+            <span>MINEFIELD SPEED RACE</span>
           </span>
           <div className="flex items-center gap-2">
             <span className="font-mono text-[10px] sm:text-xs font-bold px-2 py-0.5 border border-ink bg-ink text-cartridgeYellow">
@@ -161,7 +163,7 @@ export const MinesweeperGame: React.FC<MinesweeperGameProps> = ({
           </div>
         ) : isDraw ? (
           <div>
-            <h2 className="font-arcade text-base sm:text-xl text-cartridgeYellow font-bold tracking-wide">
+            <h2 className={`font-arcade text-base sm:text-xl font-bold tracking-wide ${isNight ? 'text-cartridgeYellow' : 'text-amber-800'}`}>
               🤝 MINEFIELD DUEL CONCLUDED IN A DRAW!
             </h2>
             <p className="font-mono text-xs mt-0.5 opacity-90">{gameState.summary}</p>

@@ -3,6 +3,7 @@ import type { RoomState, WordleState, WordleMove, WordleLetterState } from '@bvb
 import { isValidWord } from '@bvb/shared';
 import confetti from 'canvas-confetti';
 import { PixelCharacter } from '../pixel/PixelCharacter';
+import { GamePixelIcon } from '../game-icons/GamePixelIcon';
 
 interface WordleGameProps {
   roomState: RoomState;
@@ -195,8 +196,9 @@ export const WordleGame: React.FC<WordleGameProps> = ({
         )}
 
         <div className="flex items-center justify-between px-3 mb-1">
-          <span className="font-arcade text-xs sm:text-sm text-cartridgeYellow font-bold flex items-center gap-1.5">
-            <span className="animate-pulse">🟩🟨</span> WORDLE RACE 1v1
+          <span className={`font-arcade text-xs sm:text-sm font-bold flex items-center gap-2 ${isNight ? 'text-cartridgeYellow' : 'text-amber-800'}`}>
+            <GamePixelIcon gameId="wordle" size={22} className="flex-shrink-0" />
+            <span>WORDLE RACE 1v1</span>
           </span>
           <div className="flex items-center gap-2 font-mono text-[11px] sm:text-xs font-bold">
             <span className="px-2 py-0.5 border border-ink bg-ink text-white">
@@ -229,7 +231,7 @@ export const WordleGame: React.FC<WordleGameProps> = ({
           </div>
         ) : isDraw ? (
           <div>
-            <h2 className="font-arcade text-base sm:text-xl text-cartridgeYellow font-bold tracking-wide">
+            <h2 className={`font-arcade text-base sm:text-xl font-bold tracking-wide ${isNight ? 'text-cartridgeYellow' : 'text-amber-800'}`}>
               🤝 NEITHER BRO CRACKED THE CIPHER!
             </h2>
             <p className="font-mono text-xs mt-0.5">
@@ -238,7 +240,7 @@ export const WordleGame: React.FC<WordleGameProps> = ({
           </div>
         ) : myState.isCompleted ? (
           <div>
-            <h2 className="font-arcade text-xs sm:text-sm text-cartridgeYellow font-bold">
+            <h2 className={`font-arcade text-xs sm:text-sm font-bold ${isNight ? 'text-cartridgeYellow' : 'text-amber-800'}`}>
               OUT OF GUESSES! SPECTATING {opponentPlayer?.name?.toUpperCase() || 'OPPONENT'}...
             </h2>
             <p className="font-mono text-[11px] opacity-80 mt-0.5">
@@ -260,7 +262,7 @@ export const WordleGame: React.FC<WordleGameProps> = ({
         <div className="flex flex-col items-center">
           <div className="flex items-center gap-2 mb-1.5">
             <PixelCharacter type={myPlayer?.isHost ? 'bro1' : 'bro2'} size={24} />
-            <span className="font-arcade text-xs sm:text-sm font-bold tracking-wide text-cartridgeYellow">
+            <span className={`font-arcade text-xs sm:text-sm font-bold tracking-wide ${isNight ? 'text-white' : 'text-ink'}`}>
               {myPlayer?.name || 'YOU'} (YOU)
             </span>
             <span className="text-[10px] font-mono px-1.5 py-0.2 bg-gameBoyGreen text-ink font-bold border border-ink">

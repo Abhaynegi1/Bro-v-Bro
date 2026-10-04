@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import type { RoomState, ConnectFourState, ConnectFourMove } from '@bvb/shared';
 import confetti from 'canvas-confetti';
+import { GamePixelIcon } from '../game-icons/GamePixelIcon';
 
 interface ConnectFourGameProps {
   roomState: RoomState;
@@ -76,17 +77,20 @@ export const ConnectFourGame: React.FC<ConnectFourGameProps> = ({
             : 'bg-paper text-ink border-ink'
         }`}
       >
-        <span className="font-arcade text-xs tracking-wider uppercase font-bold">
-          {isFinished
-            ? iWon
-              ? '★ 4-IN-A-ROW! YOU WON THIS BATTLE! ★'
-              : iLost
-              ? '💀 BRO CONNECTED 4! YOU WERE DEFEATED! 💀'
-              : "⚔️ GRIDLOCK! IT'S A DRAW! ⚔️"
-            : isMyTurn
-            ? `★ YOUR TURN! DROP YOUR ${myColor} TOKEN ★`
-            : `⏳ OPPONENT'S TURN (${opponentColor})... WATCH THE GRID`}
-        </span>
+        <div className="flex items-center justify-center gap-2">
+          <GamePixelIcon gameId="connect-four" size={20} className="flex-shrink-0" />
+          <span className="font-arcade text-xs tracking-wider uppercase font-bold">
+            {isFinished
+              ? iWon
+                ? '★ 4-IN-A-ROW! YOU WON THIS BATTLE! ★'
+                : iLost
+                ? '💀 BRO CONNECTED 4! YOU WERE DEFEATED! 💀'
+                : "⚔️ GRIDLOCK! IT'S A DRAW! ⚔️"
+              : isMyTurn
+              ? `★ YOUR TURN! DROP YOUR ${myColor} TOKEN ★`
+              : `⏳ OPPONENT'S TURN (${opponentColor})... WATCH THE GRID`}
+          </span>
+        </div>
       </div>
 
       {/* Players Color Strip */}
@@ -105,12 +109,12 @@ export const ConnectFourGame: React.FC<ConnectFourGameProps> = ({
 
         <div className="flex items-center gap-1.5">
           {!isRed && (
-            <span className="px-1.5 py-0.5 bg-cartridgeYellow text-darkNavy text-[9px] rounded font-arcade">
+            <span className="px-1.5 py-0.5 bg-cartridgeYellow text-darkNavy text-[9px] rounded font-arcade font-bold border border-ink">
               YOU
             </span>
           )}
           <span className={isNight ? 'text-slate-200' : 'text-stone-800'}>
-            {playerB?.name || 'GUEST'}: <span className="text-cartridgeYellow">YELLOW</span>
+            {playerB?.name || 'GUEST'}: <span className={`font-bold ${isNight ? 'text-cartridgeYellow' : 'text-amber-700'}`}>YELLOW</span>
           </span>
           <span className="w-3.5 h-3.5 rounded-full bg-cartridgeYellow border-2 border-ink inline-block shadow-sm" />
         </div>

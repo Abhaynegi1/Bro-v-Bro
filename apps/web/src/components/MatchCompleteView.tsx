@@ -3,6 +3,7 @@ import type { RoomState, SurrenderDocument } from '@bvb/shared';
 import confetti from 'canvas-confetti';
 import { PixelCharacter } from './pixel/PixelCharacter';
 import { SurrenderCertificateModal } from './SurrenderCertificateModal';
+import { GamePixelIcon } from './game-icons/GamePixelIcon';
 import {
   downloadCertificateAsPng,
   downloadCertificateAsPdf,
@@ -162,7 +163,7 @@ export const MatchCompleteView: React.FC<MatchCompleteViewProps> = ({
               size={64}
               className="drop-shadow-pixel"
             />
-            <span className="font-arcade text-xs text-cartridgeYellow font-bold mt-2 truncate max-w-[120px]">
+            <span className={`font-arcade text-xs font-bold mt-2 truncate max-w-[120px] ${isNight ? 'text-cartridgeYellow' : 'text-amber-800'}`}>
               {winner?.name || 'CHAMPION'}
             </span>
             <span className="text-[10px] font-mono font-bold text-gameBoyGreen uppercase mt-0.5">
@@ -194,7 +195,7 @@ export const MatchCompleteView: React.FC<MatchCompleteViewProps> = ({
         </h1>
 
         {/* Humorous Banter Tagline */}
-        <p className="font-mono text-xs sm:text-sm max-w-xl mx-auto mt-2 font-bold text-cartridgeYellow">
+        <p className={`font-mono text-xs sm:text-sm max-w-xl mx-auto mt-2 font-bold ${isNight ? 'text-cartridgeYellow' : 'text-amber-900'}`}>
           &ldquo;The winner becomes the better gamer for the next month, and the loser can&rsquo;t deny it.&rdquo;
         </p>
 
@@ -248,7 +249,7 @@ export const MatchCompleteView: React.FC<MatchCompleteViewProps> = ({
             &ldquo;I, <strong className="text-arcadeRed font-bold uppercase">[{surrenderDoc.loserName}]</strong>, hereby declare that{' '}
             <strong className="text-gameBoyGreen font-bold uppercase">[{surrenderDoc.winnerName}]</strong> is the superior gamer than me. Having suffered a decisive defeat of {surrenderDoc.scoreWinner} to {surrenderDoc.scoreLoser} in Bro v Bro, I openly concede that I was fairly outplayed with zero excuses, zero lag, and full respect to the better player.&rdquo;
           </p>
-          <div className="mt-2 text-[11px] font-bold text-cartridgeYellow uppercase">
+          <div className={`mt-2 text-[11px] font-bold uppercase ${isNight ? 'text-cartridgeYellow' : 'text-amber-800'}`}>
             — {surrenderDoc.loserName}{surrenderDoc.isSigned ? ' (Signed)' : ' (Awaiting Signature)'}
           </div>
         </div>
@@ -291,7 +292,7 @@ export const MatchCompleteView: React.FC<MatchCompleteViewProps> = ({
           isNight ? 'bg-[#1E293B] text-paper' : 'bg-[#FFFDF5] text-ink'
         }`}
       >
-        <h3 className="font-arcade text-xs sm:text-sm text-cartridgeYellow font-bold tracking-wider mb-3">
+        <h3 className={`font-arcade text-xs sm:text-sm font-bold tracking-wider mb-3 ${isNight ? 'text-cartridgeYellow' : 'text-amber-800'}`}>
           ★ SERIES ROUND-BY-ROUND BREAKDOWN ★
         </h3>
 
@@ -332,10 +333,15 @@ export const MatchCompleteView: React.FC<MatchCompleteViewProps> = ({
                         isNight ? 'hover:bg-slate-800/40' : 'hover:bg-stone-100'
                       }`}
                     >
-                      <td className="p-2.5 font-arcade text-[10px] text-cartridgeYellow">
+                      <td className={`p-2.5 font-arcade text-[10px] font-bold ${isNight ? 'text-cartridgeYellow' : 'text-amber-800'}`}>
                         #{round.roundNumber}
                       </td>
-                      <td className="p-2.5 font-bold">{getGameTitle(round.gameId)}</td>
+                      <td className="p-2.5 font-bold">
+                        <div className="flex items-center gap-1.5">
+                          <GamePixelIcon gameId={round.gameId} size={18} className="flex-shrink-0" />
+                          <span>{getGameTitle(round.gameId)}</span>
+                        </div>
+                      </td>
                       <td className="p-2.5 font-bold">
                         {round.result === 'DRAW' ? (
                           <span className="text-amber-500">DRAW</span>

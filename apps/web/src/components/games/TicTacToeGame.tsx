@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import type { RoomState, TicTacToeState, TicTacToeMove, GameResult } from '@bvb/shared';
 import confetti from 'canvas-confetti';
 import { PixelCharacter } from '../pixel/PixelCharacter';
+import { GamePixelIcon } from '../game-icons/GamePixelIcon';
 
 interface TicTacToeGameProps {
   roomState: RoomState;
@@ -78,8 +79,9 @@ export const TicTacToeGame: React.FC<TicTacToeGameProps> = ({
       <div className={`w-full ${arcadeBox} p-3 sm:p-4 mb-4 sm:mb-6 relative`}>
         {/* Top Header: Series target & Round */}
         <div className="flex items-center justify-between border-b border-white/20 pb-2 mb-2">
-          <span className="font-arcade text-[10px] sm:text-xs text-cartridgeYellow uppercase tracking-widest font-bold">
-            ROUND {currentMatch?.currentRoundNumber || 1} • TIC-TAC-TOE
+          <span className="font-arcade text-[10px] sm:text-xs text-cartridgeYellow uppercase tracking-widest font-bold flex items-center gap-1.5">
+            <GamePixelIcon gameId="tic-tac-toe" size={18} className="flex-shrink-0" />
+            <span>ROUND {currentMatch?.currentRoundNumber || 1} • TIC-TAC-TOE</span>
           </span>
           <span className="font-mono font-bold text-[10px] sm:text-xs text-white/80 tracking-wider">
             FIRST TO {targetWins} WINS

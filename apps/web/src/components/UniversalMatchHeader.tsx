@@ -70,7 +70,7 @@ export const UniversalMatchHeader: React.FC<UniversalMatchHeaderProps> = ({
                 <span
                   key={i}
                   className={`text-xs ${
-                    i < scoreA ? (isNight ? 'text-cartridgeYellow' : 'text-amber-500') : isNight ? 'text-slate-600' : 'text-stone-300'
+                    i < scoreA ? (isNight ? 'text-cartridgeYellow font-bold' : 'text-amber-700 font-bold') : isNight ? 'text-slate-600' : 'text-stone-400'
                   }`}
                 >
                   ★
@@ -136,7 +136,7 @@ export const UniversalMatchHeader: React.FC<UniversalMatchHeaderProps> = ({
                 <span
                   key={i}
                   className={`text-xs ${
-                    i < scoreB ? (isNight ? 'text-cartridgeYellow' : 'text-amber-500') : isNight ? 'text-slate-600' : 'text-stone-300'
+                    i < scoreB ? (isNight ? 'text-cartridgeYellow font-bold' : 'text-amber-700 font-bold') : isNight ? 'text-slate-600' : 'text-stone-400'
                   }`}
                 >
                   ★

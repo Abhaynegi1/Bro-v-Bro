@@ -1,14 +1,16 @@
 import React from 'react';
 import type { RoomState, GameResult, ReactionTestState } from '@bvb/shared';
 import { PixelCharacter } from './pixel/PixelCharacter';
+import { GamePixelIcon } from './game-icons/GamePixelIcon';
 
 const GAME_NAMES: Record<string, string> = {
   'tic-tac-toe': 'Tic-Tac-Toe',
   'reaction-test': 'Reflex Duel',
   'connect-four': 'Connect Four',
   'wordle': 'Wordle Battle',
-  'math-blitz': 'Math Blitz',
-  'rps': 'Rock Paper Scissors',
+  'minesweeper': 'Minefield Battle',
+  'chess': 'Speed Chess',
+  'flag-duel': 'Flag Duel',
 };
 
 interface RoundResultModalProps {
@@ -269,7 +271,7 @@ export const RoundResultModal: React.FC<RoundResultModalProps> = ({
           }`}
         >
           <div className="flex flex-col items-center">
-            <span className="font-arcade text-xs text-cartridgeYellow font-bold truncate max-w-[120px]">
+            <span className={`font-arcade text-xs font-bold truncate max-w-[120px] ${isNight ? 'text-cartridgeYellow' : 'text-amber-800'}`}>
               {playerA?.name || 'PLAYER 1'}
             </span>
             <span className="font-arcade text-2xl sm:text-3xl text-ink dark:text-paper font-bold mt-1">
@@ -300,22 +302,22 @@ export const RoundResultModal: React.FC<RoundResultModalProps> = ({
             isNight ? 'bg-slate-800/60 text-slate-300' : 'bg-amber-50 text-stone-700'
           }`}
         >
-          {nextGameName ? (
+          {nextGameId && nextGameName ? (
             <div>
               <div className="flex items-center justify-between text-[11px] mb-1">
-                <span className="font-bold text-cartridgeYellow uppercase font-arcade">UPCOMING BATTLE:</span>
+                <span className={`font-bold uppercase font-arcade ${isNight ? 'text-cartridgeYellow' : 'text-amber-800'}`}>UPCOMING BATTLE:</span>
                 <span className="font-mono text-[10px] opacity-75">
                   Round {nextRoundNumber} of {match?.gamePlaylist?.length || 5}
                 </span>
               </div>
               <div className="flex items-center gap-2 font-arcade text-sm text-ink dark:text-paper font-bold">
-                <span className="text-base">🎮</span>
+                <GamePixelIcon gameId={nextGameId} size={22} className="flex-shrink-0" />
                 <span className="text-arcadeRed dark:text-cartridgeYellow">{nextGameName}</span>
               </div>
             </div>
           ) : (
             <div>
-              <span className="font-bold text-cartridgeYellow">NEXT GAME SELECTION: </span>
+              <span className={`font-bold ${isNight ? 'text-cartridgeYellow' : 'text-amber-800'}`}>NEXT GAME SELECTION: </span>
               {nextPicker ? (
                 nextPicker.id === myPlayerId ? (
                   <span className="font-bold text-arcadeRed">YOU get to pick the next battle!</span>

@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import type { RoomState, ReactionTestState, ReactionTestMove } from '@bvb/shared';
 import confetti from 'canvas-confetti';
+import { GamePixelIcon } from '../game-icons/GamePixelIcon';
 
 interface ReactionTestGameProps {
   roomState: RoomState;
@@ -77,8 +78,10 @@ export const ReactionTestGame: React.FC<ReactionTestGameProps> = ({
     <div className="flex-1 flex flex-col items-center justify-center p-4 max-w-4xl mx-auto w-full select-none">
       {/* Game Title & Rule */}
       <div className="text-center mb-4">
-        <h2 className="font-arcade text-lg sm:text-2xl text-cartridgeYellow tracking-wider font-bold drop-shadow-pixel">
-          ⚡ REFLEX DUEL ⚡
+        <h2 className={`font-arcade text-lg sm:text-2xl tracking-wider font-bold drop-shadow-pixel flex items-center justify-center gap-2.5 ${isNight ? 'text-cartridgeYellow' : 'text-ink'}`}>
+          <GamePixelIcon gameId="reaction-test" size={26} className="flex-shrink-0" />
+          <span>REFLEX DUEL</span>
+          <GamePixelIcon gameId="reaction-test" size={26} className="flex-shrink-0" />
         </h2>
         <p className={`font-mono text-xs sm:text-sm mt-1 ${isNight ? 'text-slate-300' : 'text-stone-700'}`}>
           {isGreen

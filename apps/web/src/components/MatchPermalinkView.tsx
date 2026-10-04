@@ -3,6 +3,7 @@ import type { RoundRecord } from '@bvb/shared';
 import confetti from 'canvas-confetti';
 import { PixelCharacter } from './pixel/PixelCharacter';
 import { SurrenderCertificateModal } from './SurrenderCertificateModal';
+import { GamePixelIcon } from './game-icons/GamePixelIcon';
 import type { SurrenderDocument } from '@bvb/shared';
 
 interface MatchDbData {
@@ -216,7 +217,7 @@ export const MatchPermalinkView: React.FC<MatchPermalinkViewProps> = ({
                     size={64}
                     className="drop-shadow-pixel"
                   />
-                  <span className="font-arcade text-xs text-cartridgeYellow font-bold mt-2 truncate max-w-[130px]">
+                  <span className={`font-arcade text-xs font-bold mt-2 truncate max-w-[130px] ${isNight ? 'text-cartridgeYellow' : 'text-amber-800'}`}>
                     {match.winnerName || 'CHAMPION'}
                   </span>
                   <span className="text-[10px] font-mono font-bold text-gameBoyGreen uppercase mt-0.5">
@@ -248,7 +249,7 @@ export const MatchPermalinkView: React.FC<MatchPermalinkViewProps> = ({
                 {match.winnerName ? `${match.winnerName.toUpperCase()} CLAIMED THE CROWN!` : 'SERIES CONCLUDED'}
               </h1>
 
-              <p className="font-mono text-xs sm:text-sm max-w-xl mx-auto mt-2 font-bold text-cartridgeYellow">
+              <p className={`font-mono text-xs sm:text-sm max-w-xl mx-auto mt-2 font-bold ${isNight ? 'text-cartridgeYellow' : 'text-amber-900'}`}>
                 &ldquo;History is written by the victors. The loser must carry this record forever.&rdquo;
               </p>
 
@@ -278,7 +279,7 @@ export const MatchPermalinkView: React.FC<MatchPermalinkViewProps> = ({
                 isNight ? 'bg-[#1E293B] text-paper' : 'bg-[#FFFDF5] text-ink'
               }`}
             >
-              <h3 className="font-arcade text-xs sm:text-sm text-cartridgeYellow font-bold tracking-wider mb-3">
+              <h3 className={`font-arcade text-xs sm:text-sm font-bold tracking-wider mb-3 ${isNight ? 'text-cartridgeYellow' : 'text-amber-800'}`}>
                 ★ ARCHIVED ROUND-BY-ROUND BREAKDOWN ★
               </h3>
 
@@ -319,10 +320,15 @@ export const MatchPermalinkView: React.FC<MatchPermalinkViewProps> = ({
                               isNight ? 'hover:bg-slate-800/40' : 'hover:bg-stone-100'
                             }`}
                           >
-                            <td className="p-2.5 font-arcade text-[10px] text-cartridgeYellow">
+                            <td className={`p-2.5 font-arcade text-[10px] font-bold ${isNight ? 'text-cartridgeYellow' : 'text-amber-800'}`}>
                               #{round.roundNumber}
                             </td>
-                            <td className="p-2.5 font-bold">{getGameTitle(round.gameId)}</td>
+                            <td className="p-2.5 font-bold">
+                              <div className="flex items-center gap-1.5">
+                                <GamePixelIcon gameId={round.gameId} size={18} className="flex-shrink-0" />
+                                <span>{getGameTitle(round.gameId)}</span>
+                              </div>
+                            </td>
                             <td className="p-2.5 font-bold">
                               {round.result === 'DRAW' ? (
                                 <span className="text-amber-500">DRAW</span>

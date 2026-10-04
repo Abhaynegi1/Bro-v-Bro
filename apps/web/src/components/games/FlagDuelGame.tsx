@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import type { RoomState, FlagDuelState, FlagDuelMove } from '@bvb/shared';
 import { PixelCharacter } from '../pixel/PixelCharacter';
+import { GamePixelIcon } from '../game-icons/GamePixelIcon';
 
 interface FlagDuelGameProps {
   roomState: RoomState;
@@ -136,13 +137,13 @@ export const FlagDuelGame: React.FC<FlagDuelGameProps> = ({
               </div>
 
               {/* Score Stars */}
-              <div className="flex items-center gap-0.5 text-[10px] font-arcade text-cartridgeYellow font-bold">
+              <div className="flex items-center gap-0.5 text-[10px] font-arcade font-bold">
                 {Array.from({ length: 3 }).map((_, i) => (
                   <span
                     key={i}
                     className={
                       i < (gameState.playerStates[playerA?.id || '']?.score ?? 0)
-                        ? 'text-cartridgeYellow'
+                        ? isNight ? 'text-cartridgeYellow' : 'text-amber-700'
                         : 'text-slate-600 opacity-40'
                     }
                   >
@@ -156,8 +157,9 @@ export const FlagDuelGame: React.FC<FlagDuelGameProps> = ({
 
         {/* Center Arena Banner */}
         <div className="flex flex-col items-center text-center px-2">
-          <span className="px-2 py-0.5 bg-ink text-cartridgeYellow font-arcade text-[10px] sm:text-xs tracking-wider border border-ink font-bold shadow-pixel-sm uppercase">
-            FLAG DUEL
+          <span className="px-2.5 py-0.5 bg-ink text-cartridgeYellow font-arcade text-[10px] sm:text-xs tracking-wider border border-ink font-bold shadow-pixel-sm uppercase flex items-center gap-1.5">
+            <GamePixelIcon gameId="flag-duel" size={18} className="flex-shrink-0" />
+            <span>FLAG DUEL</span>
           </span>
           <span className={`text-[10px] font-mono mt-1 font-bold ${isNight ? 'text-slate-300' : 'text-stone-700'}`}>
             ROUND #{gameState.currentQuestionIndex} • 1ST TO 3 WINS
@@ -178,13 +180,13 @@ export const FlagDuelGame: React.FC<FlagDuelGameProps> = ({
             {/* Lives and Stars */}
             <div className="flex items-center justify-end gap-2 mt-1">
               {/* Score Stars */}
-              <div className="flex items-center gap-0.5 text-[10px] font-arcade text-cartridgeYellow font-bold">
+              <div className="flex items-center gap-0.5 text-[10px] font-arcade font-bold">
                 {Array.from({ length: 3 }).map((_, i) => (
                   <span
                     key={i}
                     className={
                       i < (gameState.playerStates[playerB?.id || '']?.score ?? 0)
-                        ? 'text-cartridgeYellow'
+                        ? isNight ? 'text-cartridgeYellow' : 'text-amber-700'
                         : 'text-slate-600 opacity-40'
                     }
                   >

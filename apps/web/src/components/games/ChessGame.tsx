@@ -4,6 +4,7 @@ import { Chess } from 'chess.js';
 import confetti from 'canvas-confetti';
 import { ChessPieceIcon } from './ChessPieceIcon';
 import { Flag, Clock, Crown, ShieldAlert, CheckCircle2 } from 'lucide-react';
+import { GamePixelIcon } from '../game-icons/GamePixelIcon';
 
 interface ChessGameProps {
   roomState: RoomState;
@@ -289,7 +290,9 @@ export const ChessGame: React.FC<ChessGameProps> = ({
             : 'bg-paper text-ink border-ink'
         }`}
       >
-        <span className="font-arcade text-xs sm:text-sm tracking-wider uppercase font-bold flex items-center gap-2 mx-auto">
+        <div className="flex items-center justify-center gap-2 mx-auto">
+          <GamePixelIcon gameId="chess" size={20} className="flex-shrink-0" />
+          <span className="font-arcade text-xs sm:text-sm tracking-wider uppercase font-bold flex items-center gap-2">
           {isFinished ? (
             iWon ? (
               <>
@@ -318,7 +321,8 @@ export const ChessGame: React.FC<ChessGameProps> = ({
           ) : (
             `⏳ OPPONENT'S TURN (${isWhite ? 'BLACK' : 'WHITE'})... AWAITING MOVE`
           )}
-        </span>
+          </span>
+        </div>
       </div>
 
       <div className="w-full max-w-4xl flex flex-col lg:flex-row items-center lg:items-start justify-center gap-4">
@@ -346,7 +350,7 @@ export const ChessGame: React.FC<ChessGameProps> = ({
                     </span>
                   ))}
                   {(opponentColor === 'w' ? whiteAdvantage : blackAdvantage) > 0 && (
-                    <span className="font-pixel text-[10px] text-cartridgeYellow font-bold ml-1">
+                    <span className={`font-pixel text-[10px] font-bold ml-1 ${isNight ? 'text-cartridgeYellow' : 'text-amber-800'}`}>
                       +{(opponentColor === 'w' ? whiteAdvantage : blackAdvantage)}
                     </span>
                   )}
@@ -491,7 +495,7 @@ export const ChessGame: React.FC<ChessGameProps> = ({
                     </span>
                   ))}
                   {(myColor === 'w' ? whiteAdvantage : blackAdvantage) > 0 && (
-                    <span className="font-pixel text-[10px] text-cartridgeYellow font-bold ml-1">
+                    <span className={`font-pixel text-[10px] font-bold ml-1 ${isNight ? 'text-cartridgeYellow' : 'text-amber-800'}`}>
                       +{(myColor === 'w' ? whiteAdvantage : blackAdvantage)}
                     </span>
                   )}
@@ -524,7 +528,7 @@ export const ChessGame: React.FC<ChessGameProps> = ({
             }`}
           >
             <div className="flex items-center justify-between border-b-2 border-ink pb-1.5 mb-2">
-              <span className="font-pixel text-[10px] tracking-wider uppercase text-cartridgeYellow">
+              <span className={`font-pixel text-[10px] tracking-wider uppercase font-bold ${isNight ? 'text-cartridgeYellow' : 'text-amber-800'}`}>
                 MOVE LOG
               </span>
               <span className="font-mono text-xs opacity-75">

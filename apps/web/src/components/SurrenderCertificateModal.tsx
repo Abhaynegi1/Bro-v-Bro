@@ -313,7 +313,7 @@ export const SurrenderCertificateModal: React.FC<SurrenderCertificateModalProps>
                 isNight ? 'bg-slate-900 text-paper' : 'bg-white text-ink'
               }`}
             >
-              <span className="font-arcade text-xs text-cartridgeYellow font-bold animate-pulse">
+              <span className={`font-arcade text-xs font-bold animate-pulse ${isNight ? 'text-cartridgeYellow' : 'text-amber-800'}`}>
                 ⏳ WAITING FOR [{documentData.loserName.toUpperCase()}] TO SIGN...
               </span>
               <div className="mt-2">
