@@ -139,8 +139,8 @@ export const GameSelectionView: React.FC<GameSelectionViewProps> = ({
         ) : (
           <div className="flex flex-col items-center">
             <div className="flex items-center gap-2">
-              <span className="inline-block w-3 h-3 bg-cartridgeYellow animate-ping rounded-full" />
-              <h2 className="font-arcade text-base sm:text-xl text-cartridgeYellow tracking-wider font-bold">
+              <span className={`inline-block w-3 h-3 animate-ping rounded-full ${isNight ? 'bg-cartridgeYellow' : 'bg-amber-600'}`} />
+              <h2 className={`font-arcade text-base sm:text-xl tracking-wider font-bold ${isNight ? 'text-cartridgeYellow' : 'text-amber-800'}`}>
                 WAITING FOR {pickerName.toUpperCase()} TO DRAFT ROUND {currentDraftSlot}...
               </h2>
             </div>
@@ -152,7 +152,7 @@ export const GameSelectionView: React.FC<GameSelectionViewProps> = ({
 
         {/* ================= ORDERED SERIES PLAYLIST SLOTS ================= */}
         <div className="mt-5 pt-4 border-t-2 border-dashed border-ink/20">
-          <h4 className="font-arcade text-[10px] sm:text-xs text-cartridgeYellow font-bold tracking-wider mb-3 uppercase">
+          <h4 className={`font-arcade text-[10px] sm:text-xs font-bold tracking-wider mb-3 uppercase ${isNight ? 'text-cartridgeYellow' : 'text-amber-800'}`}>
             PLANNED BATTLE SEQUENCE:
           </h4>
 
@@ -182,7 +182,7 @@ export const GameSelectionView: React.FC<GameSelectionViewProps> = ({
                   }`}
                 >
                   <div className="flex items-center justify-between text-[10px] font-arcade mb-1">
-                    <span className="text-cartridgeYellow font-bold">RND #{idx + 1}</span>
+                    <span className={`font-bold ${isNight ? 'text-cartridgeYellow' : 'text-amber-800'}`}>RND #{idx + 1}</span>
                     <span className="text-[9px] opacity-75 truncate max-w-[65px]">
                       {slotPickerName}
                     </span>
@@ -256,7 +256,9 @@ export const GameSelectionView: React.FC<GameSelectionViewProps> = ({
 
               {/* Title & Category */}
               <div className="mb-4">
-                <span className="text-[10px] font-mono uppercase tracking-widest text-cartridgeYellow font-bold block mb-0.5">
+                <span className={`text-[10px] font-mono uppercase tracking-widest font-bold block mb-0.5 ${
+                  isNight ? 'text-cartridgeYellow' : 'text-amber-800'
+                }`}>
                   {game.category}
                 </span>
                 <h3 className="font-arcade text-sm sm:text-base font-bold tracking-wide">
