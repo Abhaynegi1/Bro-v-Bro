@@ -59,8 +59,8 @@ export const Header: React.FC<HeaderProps> = ({
           </div>
         )}
 
-        {/* How To Play Navigation Link */}
-        {onNavigateHowToPlay && (
+        {/* How To Play Navigation Link (hidden while in a room) */}
+        {!roomCode && onNavigateHowToPlay && (
           <button
             type="button"
             onClick={onNavigateHowToPlay}

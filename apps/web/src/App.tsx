@@ -241,7 +241,7 @@ export const App: React.FC = () => {
             isConnected={isConnected}
             onLeave={handleLeaveRoom}
             currentView={currentView}
-            onNavigateHowToPlay={handleOpenHowToPlay}
+            onNavigateHowToPlay={roomCode ? undefined : handleOpenHowToPlay}
             onNavigateHome={handleBackToLanding}
             theme={theme}
             onToggleTheme={toggleTheme}
