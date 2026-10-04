@@ -106,3 +106,10 @@ export const SurrenderSignSchema = z.object({
 });
 
 export type SurrenderSignInput = z.infer<typeof SurrenderSignSchema>;
+
+export const FlagDuelMoveSchema = z.object({
+  action: z.literal('GUESS'),
+  country: z.string().min(1).max(60),
+});
+
+export type FlagDuelMoveInput = z.infer<typeof FlagDuelMoveSchema>;

@@ -13,6 +13,7 @@ import { ConnectFourGame } from './components/games/ConnectFourGame';
 import { WordleGame } from './components/games/WordleGame';
 import { MinesweeperGame } from './components/games/MinesweeperGame';
 import { ChessGame } from './components/games/ChessGame';
+import { FlagDuelGame } from './components/games/FlagDuelGame';
 import { RoundResultModal } from './components/RoundResultModal';
 import { MatchCompleteView } from './components/MatchCompleteView';
 import { MatchPermalinkView } from './components/MatchPermalinkView';
@@ -343,6 +344,14 @@ export const App: React.FC = () => {
               />
             ) : activeGame.gameId === 'chess' ? (
               <ChessGame
+                roomState={roomState}
+                gameState={activeGame.state}
+                myPlayerId={playerId || ''}
+                onSendMove={sendMove}
+                theme={theme}
+              />
+            ) : activeGame.gameId === 'flag-duel' ? (
+              <FlagDuelGame
                 roomState={roomState}
                 gameState={activeGame.state}
                 myPlayerId={playerId || ''}

@@ -76,6 +76,15 @@ const GAMES_CATALOG: GameCard[] = [
     isAvailable: true,
     accentColor: 'border-purple-400 text-purple-400',
   },
+  {
+    id: 'flag-duel',
+    title: 'FLAG DUEL',
+    category: 'GEOGRAPHY BLITZ',
+    description: 'Rapid 1v1 flag identification! First to 3 correct wins, but 3 wrong answers eliminate you.',
+    duration: '~1 MIN',
+    isAvailable: true,
+    accentColor: 'border-amber-500 text-amber-500',
+  },
 ];
 
 export const GameSelectionView: React.FC<GameSelectionViewProps> = ({
@@ -107,7 +116,7 @@ export const GameSelectionView: React.FC<GameSelectionViewProps> = ({
 
   return (
     <PixelDraftAtmosphere theme={theme} roomState={roomState}>
-      <div className="flex-1 flex flex-col items-center justify-between p-2 sm:p-3 md:p-4 w-full max-w-5xl mx-auto select-none relative z-10 min-h-0">
+      <div className="flex-1 flex flex-col items-center justify-between p-2 sm:p-3 md:p-4 w-full max-w-6xl mx-auto select-none relative z-10 min-h-0">
         {/* Retro 1v1 Gauntlet Tag */}
         <div className="flex items-center justify-center gap-2 mb-1 sm:mb-1.5">
           <span className="text-white/60 text-xs font-pixel">+</span>
@@ -223,7 +232,7 @@ export const GameSelectionView: React.FC<GameSelectionViewProps> = ({
         </div>
 
         {/* ================= GAME SELECTION CATALOG ================= */}
-        <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5 sm:gap-3 flex-1 min-h-0">
+        <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-2.5 flex-1 min-h-0">
           {GAMES_CATALOG.map((game) => {
             const isAlreadyDrafted = playlist.includes(game.id);
             const draftedRoundIndex = isAlreadyDrafted ? playlist.indexOf(game.id) + 1 : null;
@@ -232,7 +241,7 @@ export const GameSelectionView: React.FC<GameSelectionViewProps> = ({
             return (
               <div
                 key={game.id}
-                className={`group flex flex-col justify-between p-2.5 sm:p-3 border-2 sm:border-3 border-ink shadow-pixel transition-all duration-200 relative ${
+                className={`group flex flex-col justify-between p-2 sm:p-2.5 border-2 sm:border-3 border-ink shadow-pixel transition-all duration-200 relative ${
                   isAlreadyDrafted
                     ? isNight
                       ? 'bg-slate-900/60 text-slate-400 border-slate-700 opacity-60'
@@ -247,9 +256,9 @@ export const GameSelectionView: React.FC<GameSelectionViewProps> = ({
                 }`}
               >
                 {/* Header Badge */}
-                <div className="flex items-center justify-between mb-1.5">
+                <div className="flex items-center justify-between mb-1">
                   <div className="transform group-hover:scale-105 group-hover:-rotate-2 transition-transform duration-200 origin-center">
-                    <GamePixelIcon gameId={game.id} size={32} />
+                    <GamePixelIcon gameId={game.id} size={30} />
                   </div>
                   <span
                     className={`text-[9px] font-mono px-2 py-0.5 border border-ink shadow-pixel-sm font-bold uppercase ${

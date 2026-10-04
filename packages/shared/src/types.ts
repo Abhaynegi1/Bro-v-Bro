@@ -262,6 +262,40 @@ export type ChessMove =
       action: 'CLAIM_TIMEOUT';
     };
 
+export interface FlagDuelQuestion {
+  questionIndex: number;
+  countryCode: string; // ISO 2-letter code for the flag image
+  options: string[]; // 4 country names
+}
+
+export interface FlagDuelPlayerState {
+  lives: number; // starts at 3
+  score: number; // starts at 0, first to 3 points wins
+  lastSelected: string | null;
+  lastAnswerCorrect: boolean | null;
+  isEliminated: boolean;
+}
+
+export interface FlagDuelState {
+  playerIds: [string, string];
+  currentQuestionIndex: number;
+  currentFlag: FlagDuelQuestion;
+  targetCountryName?: string; // Masked when sanitized
+  playerStates: {
+    [playerId: string]: FlagDuelPlayerState;
+  };
+  status: 'IN_PROGRESS' | 'FINISHED';
+  winnerPlayerId: string | null;
+  loserPlayerId: string | null;
+  summary?: string;
+  roundWinnerId?: string | null;
+}
+
+export interface FlagDuelMove {
+  action: 'GUESS';
+  country: string;
+}
+
 export interface ActiveGameData {
   gameId: string;
   state: any;
