@@ -71,10 +71,10 @@ export const PixelDraftAtmosphere: React.FC<PixelDraftAtmosphereProps> = ({
       </div>
 
       {/* ================= LEFT SIDE ARCADE DECOR (DESKTOP) ================= */}
-      <div className="hidden 2xl:flex flex-col items-center justify-end absolute left-4 bottom-16 pointer-events-none z-0 select-none opacity-90 transition-opacity">
+      <div className="hidden xl:flex flex-col items-center justify-end absolute left-3 sm:left-5 bottom-[44px] pointer-events-none z-10 select-none opacity-95 transition-opacity">
         {/* Hanging Game Controller */}
-        <div className="flex flex-col items-center mb-6">
-          <div className="w-[2px] h-20 bg-ink" />
+        <div className="flex flex-col items-center mb-5">
+          <div className="w-[2px] h-16 bg-ink" />
           <svg width="44" height="28" viewBox="0 0 22 14" style={{ shapeRendering: 'crispEdges' }}>
             <rect x="2" y="2" width="18" height="10" fill="#18243A" />
             <rect x="1" y="4" width="20" height="6" fill="#18243A" />
@@ -126,16 +126,16 @@ export const PixelDraftAtmosphere: React.FC<PixelDraftAtmosphereProps> = ({
       </div>
 
       {/* ================= RIGHT SIDE ARCADE DECOR (DESKTOP) ================= */}
-      <div className="hidden 2xl:flex flex-col items-center justify-end absolute right-4 bottom-16 pointer-events-none z-0 select-none opacity-90 transition-opacity">
-        <div className="flex flex-col items-center mb-4">
-          <div className="w-[2px] h-14 bg-ink" />
+      <div className="hidden xl:flex flex-col items-center justify-end absolute right-3 sm:right-5 bottom-[44px] pointer-events-none z-10 select-none opacity-95 transition-opacity">
+        <div className="flex flex-col items-center mb-3">
+          <div className="w-[2px] h-12 bg-ink" />
           <svg width="40" height="24" viewBox="0 0 20 12" style={{ shapeRendering: 'crispEdges' }}>
             <polygon points="10,1 2,10 18,10" fill="#18243A" />
             <rect x="8" y="10" width="4" height="2" fill="#F4D35E" />
           </svg>
         </div>
 
-        <div className="mb-3 px-3 py-1.5 bg-[#18243A] text-cartridgeYellow border-2 border-ink shadow-pixel font-arcade text-[10px] tracking-wider font-bold">
+        <div className="mb-2 px-3 py-1 bg-[#18243A] text-cartridgeYellow border-2 border-ink shadow-pixel font-arcade text-[10px] tracking-wider font-bold">
           👑 BETTER BRO
         </div>
 
@@ -165,42 +165,42 @@ export const PixelDraftAtmosphere: React.FC<PixelDraftAtmosphereProps> = ({
       </div>
 
       {/* ================= MAIN DRAFT CHILDREN CONTENT ================= */}
-      <div className="relative z-10 flex-1 flex flex-col">
+      <div className="relative z-10 flex-1 flex flex-col min-h-0">
         {children}
       </div>
 
       {/* ================= RETRO BOTTOM ARCADE TICKER MARQUEE ================= */}
-      <footer className="w-full bg-[#0A0F1D] text-white border-t-2 border-ink relative z-20 flex-shrink-0 select-none shadow-pixel">
+      <footer className="w-full h-[46px] bg-[#0A0F1D] text-white border-t-4 border-ink relative z-20 flex-shrink-0 select-none shadow-pixel flex flex-col justify-between">
         {/* Striped / Checkered Pixel Accent Ribbon */}
         <div
-          className="w-full h-1"
+          className="w-full h-1.5"
           style={{
             background: 'repeating-linear-gradient(90deg, #E84B4B 0, #E84B4B 8px, #F4D35E 8px, #F4D35E 16px, #42B8C7 16px, #42B8C7 24px, #18243A 24px, #18243A 32px)',
           }}
         />
 
-        <div className="max-w-6xl mx-auto px-3 py-1 flex items-center justify-between text-[11px] font-arcade">
+        <div className="max-w-6xl mx-auto px-4 w-full flex-1 flex items-center justify-between text-xs font-arcade">
           {/* Left: Pixel Logo & Insert Coin */}
-          <div className="flex items-center gap-2">
-            <span className="text-arcadeRed font-bold">🕹️</span>
-            <span className="font-pixel text-[10px] tracking-wider hidden sm:inline">BRO [v] BRO</span>
-            <span className="hidden md:inline text-white/40 text-[9px]">•</span>
-            <span className="text-cartridgeYellow text-[9px] tracking-widest uppercase font-bold animate-pulse">
+          <div className="flex items-center gap-2.5">
+            <span className="text-arcadeRed font-bold text-sm">🕹️</span>
+            <span className="font-pixel text-[11px] tracking-wider hidden sm:inline text-white">BRO [v] BRO</span>
+            <span className="hidden md:inline text-white/40 text-[10px]">•</span>
+            <span className="text-cartridgeYellow text-[10px] tracking-widest uppercase font-bold animate-pulse">
               ★ INSERT COIN • PLAY • REPEAT ★
             </span>
           </div>
 
           {/* Right: 1P vs 2P Heart Counters */}
-          <div className="flex items-center gap-4 text-[10px]">
+          <div className="flex items-center gap-5 text-[11px]">
             {/* Player 1 Hearts */}
-            <div className="flex items-center gap-1">
+            <div className="flex items-center gap-1.5">
               <span className="font-bold text-arcadeRed">1P</span>
-              <span className="text-white/80 font-mono text-[9px] hidden sm:inline truncate max-w-[60px]">
+              <span className="text-white/80 font-mono text-[10px] hidden sm:inline truncate max-w-[70px]">
                 {playerA?.name || 'HOST'}
               </span>
-              <div className="flex items-center gap-0.5 text-arcadeRed text-xs">
+              <div className="flex items-center gap-1 text-arcadeRed text-sm">
                 {Array.from({ length: targetWins }).map((_, i) => (
-                  <span key={i} className={i < scoreA ? 'text-arcadeRed' : 'text-slate-600 opacity-50'}>
+                  <span key={i} className={i < scoreA ? 'text-arcadeRed' : 'text-slate-600 opacity-40'}>
                     ♥
                   </span>
                 ))}
@@ -210,14 +210,14 @@ export const PixelDraftAtmosphere: React.FC<PixelDraftAtmosphereProps> = ({
             <span className="text-white/40">|</span>
 
             {/* Player 2 Hearts */}
-            <div className="flex items-center gap-1">
+            <div className="flex items-center gap-1.5">
               <span className="font-bold text-crtCyan">2P</span>
-              <span className="text-white/80 font-mono text-[9px] hidden sm:inline truncate max-w-[60px]">
+              <span className="text-white/80 font-mono text-[10px] hidden sm:inline truncate max-w-[70px]">
                 {playerB?.name || 'GUEST'}
               </span>
-              <div className="flex items-center gap-0.5 text-crtCyan text-xs">
+              <div className="flex items-center gap-1 text-crtCyan text-sm">
                 {Array.from({ length: targetWins }).map((_, i) => (
-                  <span key={i} className={i < scoreB ? 'text-crtCyan' : 'text-slate-600 opacity-50'}>
+                  <span key={i} className={i < scoreB ? 'text-crtCyan' : 'text-slate-600 opacity-40'}>
                     ♥
                   </span>
                 ))}
