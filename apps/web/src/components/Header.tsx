@@ -80,19 +80,6 @@ export const Header: React.FC<HeaderProps> = ({
             {isNight ? 'DAY' : 'NIGHT'}
           </button>
         )}
-
-        {/* PROMINENT EXIT BUTTON */}
-        {onLeave && (
-          <button
-            type="button"
-            onClick={onLeave}
-            className="px-3 py-1.5 sm:px-4 sm:py-1.5 bg-arcadeRed hover:bg-[#D32F2F] text-white border-2 border-black font-pixel text-xs sm:text-sm uppercase tracking-wider shadow-pixel-sm hover:scale-105 active:scale-95 transition-all flex items-center gap-1.5 font-bold"
-            title="Leave Room"
-          >
-            <span>✕</span>
-            <span>EXIT</span>
-          </button>
-        )}
       </div>
     </header>
   );
