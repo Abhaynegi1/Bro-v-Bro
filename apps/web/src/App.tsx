@@ -212,8 +212,7 @@ export const App: React.FC = () => {
   const isScrollableView =
     currentView === 'how-to-play' ||
     Boolean(permalinkMatchId) ||
-    roomState?.status === 'MATCH_COMPLETE' ||
-    roomState?.status === 'SELECTING_GAME';
+    roomState?.status === 'MATCH_COMPLETE';
 
   return (
     <div
@@ -223,12 +222,7 @@ export const App: React.FC = () => {
           : 'h-screen overflow-hidden flex flex-col'
       }`}
       style={{
-        backgroundColor:
-          theme === 'night'
-            ? '#0D193A'
-            : roomState?.status === 'SELECTING_GAME'
-            ? '#F4EBD0'
-            : '#72B6F4',
+        backgroundColor: theme === 'night' ? '#0D193A' : '#72B6F4',
       }}
     >
       {/* Show top Header: Universal Match Header during match series, Lobby Header otherwise */}

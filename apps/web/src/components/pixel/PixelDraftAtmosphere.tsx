@@ -21,41 +21,53 @@ export const PixelDraftAtmosphere: React.FC<PixelDraftAtmosphereProps> = ({
   const scoreB = match?.scores.playerB ?? 0;
 
   return (
-    <div className="w-full flex-1 flex flex-col justify-between relative overflow-hidden min-h-full">
+    <div className="w-full h-full flex flex-col justify-between relative overflow-hidden">
       {/* ================= FLOATING RETRO SKY CLOUDS ================= */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden z-0 select-none">
         <div
-          className="absolute top-[4%] left-[-8%] opacity-70"
-          style={{ animation: 'cloud-float 65s linear infinite' }}
+          className="absolute top-[2%] left-[-4%] opacity-90 drop-shadow-sm"
+          style={{ animation: 'cloud-float 55s linear infinite' }}
         >
-          <svg width="150" height="58" viewBox="0 0 28 11" style={{ shapeRendering: 'crispEdges' }}>
+          <svg width="180" height="70" viewBox="0 0 28 11" style={{ shapeRendering: 'crispEdges' }}>
             <path
               d="M 6 4 h 16 v 1 h 4 v 1 h 2 v 4 h -26 v -4 h 2 v -1 h 2 v -1 z M 10 2 h 8 v 2 h -8 z M 14 0 h 4 v 2 h -4 z"
-              fill={isNight ? '#1E2C4F' : '#FFFFFF'}
+              fill={isNight ? '#273461' : '#FFFFFF'}
             />
           </svg>
         </div>
 
         <div
-          className="absolute top-[18%] left-[55%] opacity-60 hidden md:block"
-          style={{ animation: 'cloud-float 80s linear infinite', animationDelay: '-30s' }}
+          className="absolute top-[7%] left-[45%] opacity-85 drop-shadow-sm"
+          style={{ animation: 'cloud-float 70s linear infinite', animationDelay: '-22s' }}
         >
-          <svg width="120" height="46" viewBox="0 0 28 11" style={{ shapeRendering: 'crispEdges' }}>
+          <svg width="150" height="58" viewBox="0 0 28 11" style={{ shapeRendering: 'crispEdges' }}>
             <path
               d="M 6 4 h 16 v 1 h 4 v 1 h 2 v 4 h -26 v -4 h 2 v -1 h 2 v -1 z M 10 2 h 8 v 2 h -8 z"
-              fill={isNight ? '#172340' : '#FFFFFF'}
+              fill={isNight ? '#202C50' : '#FFFFFF'}
             />
           </svg>
         </div>
 
-        {/* Ambient Pixel Sparkles '+' and '★' */}
-        <span className="absolute top-[8%] left-[10%] text-ink/30 text-lg font-pixel animate-pulse">+</span>
-        <span className="absolute top-[22%] left-[18%] text-cartridgeYellow text-sm font-pixel animate-pulse" style={{ animationDelay: '0.8s' }}>✦</span>
-        <span className="absolute top-[12%] right-[12%] text-ink/30 text-lg font-pixel animate-pulse" style={{ animationDelay: '1.2s' }}>+</span>
-        <span className="absolute top-[26%] right-[20%] text-pixelPink text-xs font-pixel animate-pulse" style={{ animationDelay: '0.5s' }}>♥</span>
-        <span className="absolute top-[50%] left-[5%] text-cartridgeYellow text-xs font-pixel animate-pulse" style={{ animationDelay: '1.5s' }}>★</span>
-        <span className="absolute top-[65%] right-[6%] text-crtCyan text-sm font-pixel animate-pulse" style={{ animationDelay: '0.9s' }}>✦</span>
-        <span className="absolute top-[40%] right-[4%] text-ink/30 text-base font-pixel">+</span>
+        <div
+          className="absolute top-[18%] left-[78%] opacity-80 hidden sm:block drop-shadow-sm"
+          style={{ animation: 'cloud-float 60s linear infinite', animationDelay: '-40s' }}
+        >
+          <svg width="130" height="50" viewBox="0 0 28 11" style={{ shapeRendering: 'crispEdges' }}>
+            <path
+              d="M 6 4 h 16 v 1 h 4 v 1 h 2 v 4 h -26 v -4 h 2 v -1 h 2 v -1 z M 10 2 h 8 v 2 h -8 z"
+              fill={isNight ? '#1B2544' : '#FFFFFF'}
+            />
+          </svg>
+        </div>
+
+        {/* Ambient Retro Pixel Sparkles '+' and '★' popping against the sky */}
+        <span className="absolute top-[5%] left-[8%] text-white text-lg font-pixel animate-pulse drop-shadow">+</span>
+        <span className="absolute top-[16%] left-[16%] text-cartridgeYellow text-sm font-pixel animate-pulse drop-shadow" style={{ animationDelay: '0.8s' }}>✦</span>
+        <span className="absolute top-[7%] right-[10%] text-white text-lg font-pixel animate-pulse drop-shadow" style={{ animationDelay: '1.2s' }}>+</span>
+        <span className="absolute top-[20%] right-[18%] text-pixelPink text-xs font-pixel animate-pulse drop-shadow" style={{ animationDelay: '0.5s' }}>♥</span>
+        <span className="absolute top-[45%] left-[4%] text-cartridgeYellow text-xs font-pixel animate-pulse drop-shadow" style={{ animationDelay: '1.5s' }}>★</span>
+        <span className="absolute top-[58%] right-[5%] text-white text-sm font-pixel animate-pulse drop-shadow" style={{ animationDelay: '0.9s' }}>✦</span>
+        <span className="absolute top-[34%] right-[3%] text-white/90 text-base font-pixel drop-shadow">+</span>
       </div>
 
       {/* ================= LEFT SIDE ARCADE DECOR (DESKTOP) ================= */}
@@ -158,35 +170,35 @@ export const PixelDraftAtmosphere: React.FC<PixelDraftAtmosphereProps> = ({
       </div>
 
       {/* ================= RETRO BOTTOM ARCADE TICKER MARQUEE ================= */}
-      <footer className="w-full bg-[#0A0F1D] text-white border-t-4 border-ink relative z-20 flex-shrink-0 select-none shadow-pixel-lg">
+      <footer className="w-full bg-[#0A0F1D] text-white border-t-2 border-ink relative z-20 flex-shrink-0 select-none shadow-pixel">
         {/* Striped / Checkered Pixel Accent Ribbon */}
         <div
-          className="w-full h-1.5"
+          className="w-full h-1"
           style={{
             background: 'repeating-linear-gradient(90deg, #E84B4B 0, #E84B4B 8px, #F4D35E 8px, #F4D35E 16px, #42B8C7 16px, #42B8C7 24px, #18243A 24px, #18243A 32px)',
           }}
         />
 
-        <div className="max-w-6xl mx-auto px-4 py-2.5 flex items-center justify-between text-xs font-arcade">
+        <div className="max-w-6xl mx-auto px-3 py-1 flex items-center justify-between text-[11px] font-arcade">
           {/* Left: Pixel Logo & Insert Coin */}
           <div className="flex items-center gap-2">
             <span className="text-arcadeRed font-bold">🕹️</span>
-            <span className="font-pixel text-[11px] tracking-wider hidden sm:inline">BRO [v] BRO</span>
-            <span className="hidden md:inline text-white/50 text-[10px]">•</span>
-            <span className="text-cartridgeYellow text-[10px] tracking-widest uppercase font-bold animate-pulse">
+            <span className="font-pixel text-[10px] tracking-wider hidden sm:inline">BRO [v] BRO</span>
+            <span className="hidden md:inline text-white/40 text-[9px]">•</span>
+            <span className="text-cartridgeYellow text-[9px] tracking-widest uppercase font-bold animate-pulse">
               ★ INSERT COIN • PLAY • REPEAT ★
             </span>
           </div>
 
           {/* Right: 1P vs 2P Heart Counters */}
-          <div className="flex items-center gap-4 sm:gap-6 text-[11px]">
+          <div className="flex items-center gap-4 text-[10px]">
             {/* Player 1 Hearts */}
-            <div className="flex items-center gap-1.5">
+            <div className="flex items-center gap-1">
               <span className="font-bold text-arcadeRed">1P</span>
-              <span className="text-white/80 font-mono text-[10px] hidden sm:inline truncate max-w-[60px]">
+              <span className="text-white/80 font-mono text-[9px] hidden sm:inline truncate max-w-[60px]">
                 {playerA?.name || 'HOST'}
               </span>
-              <div className="flex items-center gap-0.5 text-arcadeRed">
+              <div className="flex items-center gap-0.5 text-arcadeRed text-xs">
                 {Array.from({ length: targetWins }).map((_, i) => (
                   <span key={i} className={i < scoreA ? 'text-arcadeRed' : 'text-slate-600 opacity-50'}>
                     ♥
@@ -198,12 +210,12 @@ export const PixelDraftAtmosphere: React.FC<PixelDraftAtmosphereProps> = ({
             <span className="text-white/40">|</span>
 
             {/* Player 2 Hearts */}
-            <div className="flex items-center gap-1.5">
+            <div className="flex items-center gap-1">
               <span className="font-bold text-crtCyan">2P</span>
-              <span className="text-white/80 font-mono text-[10px] hidden sm:inline truncate max-w-[60px]">
+              <span className="text-white/80 font-mono text-[9px] hidden sm:inline truncate max-w-[60px]">
                 {playerB?.name || 'GUEST'}
               </span>
-              <div className="flex items-center gap-0.5 text-crtCyan">
+              <div className="flex items-center gap-0.5 text-crtCyan text-xs">
                 {Array.from({ length: targetWins }).map((_, i) => (
                   <span key={i} className={i < scoreB ? 'text-crtCyan' : 'text-slate-600 opacity-50'}>
                     ♥
