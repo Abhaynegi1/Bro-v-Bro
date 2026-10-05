@@ -5,7 +5,7 @@ import type {
   MoveContext,
   GameResult,
 } from '@bvb/shared';
-import { TYPING_TEXT_SAMPLES, generateMonkeyTypeText } from '@bvb/shared';
+import { generateMonkeyTypeText } from '@bvb/shared';
 
 export class TypingRaceEngine implements GameDefinition<TypingRaceState, TypingRaceMove> {
   public readonly id = 'typing-race';
@@ -15,12 +15,8 @@ export class TypingRaceEngine implements GameDefinition<TypingRaceState, TypingR
   public readonly minPlayers = 2 as const;
   public readonly maxPlayers = 2 as const;
 
-  public createInitialState(playerIds: [string, string], sampleIndex?: number): TypingRaceState {
-    const sample =
-      typeof sampleIndex === 'number' && sampleIndex >= 0 && sampleIndex < TYPING_TEXT_SAMPLES.length
-        ? TYPING_TEXT_SAMPLES[sampleIndex]
-        : generateMonkeyTypeText(25);
-
+  public createInitialState(playerIds: [string, string], wordCount = 25): TypingRaceState {
+    const sample = generateMonkeyTypeText(wordCount);
     const countdownDurationMs = 3500;
     const startTime = Date.now() + countdownDurationMs;
 
