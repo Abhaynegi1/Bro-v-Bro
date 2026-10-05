@@ -5,6 +5,7 @@ import { wordleEngine } from './wordle.js';
 import { minesweeperEngine } from './minesweeper.js';
 import { chessEngine } from './chess.js';
 import { flagDuelEngine } from './flag-duel.js';
+import { typingRaceEngine } from './typing-race.js';
 import type { GameDefinition } from '@bvb/shared';
 
 export const gameRegistry: Record<string, GameDefinition<any, any>> = {
@@ -15,6 +16,7 @@ export const gameRegistry: Record<string, GameDefinition<any, any>> = {
   [minesweeperEngine.id]: minesweeperEngine,
   [chessEngine.id]: chessEngine,
   [flagDuelEngine.id]: flagDuelEngine,
+  [typingRaceEngine.id]: typingRaceEngine,
 };
 
 export function getGameEngine(gameId: string): GameDefinition<any, any> | null {
@@ -28,4 +30,5 @@ export * from './wordle.js';
 export * from './minesweeper.js';
 export * from './chess.js';
 export * from './flag-duel.js';
+export * from './typing-race.js';
 

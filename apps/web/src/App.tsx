@@ -14,6 +14,7 @@ import { WordleGame } from './components/games/WordleGame';
 import { MinesweeperGame } from './components/games/MinesweeperGame';
 import { ChessGame } from './components/games/ChessGame';
 import { FlagDuelGame } from './components/games/FlagDuelGame';
+import { TypingRaceGame } from './components/games/TypingRaceGame';
 import { RoundResultModal } from './components/RoundResultModal';
 import { MatchCompleteView } from './components/MatchCompleteView';
 import { MatchPermalinkView } from './components/MatchPermalinkView';
@@ -352,6 +353,14 @@ export const App: React.FC = () => {
               />
             ) : activeGame.gameId === 'flag-duel' ? (
               <FlagDuelGame
+                roomState={roomState}
+                gameState={activeGame.state}
+                myPlayerId={playerId || ''}
+                onSendMove={sendMove}
+                theme={theme}
+              />
+            ) : activeGame.gameId === 'typing-race' ? (
+              <TypingRaceGame
                 roomState={roomState}
                 gameState={activeGame.state}
                 myPlayerId={playerId || ''}

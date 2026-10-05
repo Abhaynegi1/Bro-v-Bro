@@ -113,3 +113,13 @@ export const FlagDuelMoveSchema = z.object({
 });
 
 export type FlagDuelMoveInput = z.infer<typeof FlagDuelMoveSchema>;
+
+export const TypingRaceMoveSchema = z.object({
+  action: z.literal('PROGRESS'),
+  charIndex: z.number().int().min(0),
+  mistakesCount: z.number().int().min(0).default(0),
+  accuracy: z.number().min(0).max(100).default(100),
+  wpm: z.number().min(0).max(400).default(0),
+});
+
+export type TypingRaceMoveInput = z.infer<typeof TypingRaceMoveSchema>;

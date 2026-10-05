@@ -11,6 +11,7 @@ const GAME_NAMES: Record<string, string> = {
   'minesweeper': 'Minefield Battle',
   'chess': 'Speed Chess',
   'flag-duel': 'Flag Duel',
+  'typing-race': 'Type Racer',
 };
 
 interface RoundResultModalProps {

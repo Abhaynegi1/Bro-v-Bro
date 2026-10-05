@@ -14,6 +14,7 @@ const GAME_ICON_MAP: Record<string, string> = {
   'minesweeper': '/icons/minesweeper.png',
   'chess': '/icons/chess.png',
   'flag-duel': '/icons/flag-duel.png',
+  'typing-race': '/icons/typing-race.png',
 };
 
 export const GamePixelIcon: React.FC<GamePixelIconProps> = ({

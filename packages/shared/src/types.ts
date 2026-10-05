@@ -296,6 +296,40 @@ export interface FlagDuelMove {
   country: string;
 }
 
+export interface TypingRacePlayerState {
+  charIndex: number;
+  wpm: number;
+  accuracy: number;
+  progress: number; // 0 to 100
+  completed: boolean;
+  finishTimeMs: number | null;
+  mistakesCount: number;
+}
+
+export interface TypingRaceState {
+  playerIds: [string, string];
+  text: string;
+  title: string;
+  author?: string;
+  startTime: number;
+  countdownDurationMs: number;
+  playerStates: {
+    [playerId: string]: TypingRacePlayerState;
+  };
+  status: 'COUNTDOWN' | 'RACING' | 'FINISHED';
+  winnerPlayerId: string | null;
+  loserPlayerId: string | null;
+  summary?: string;
+}
+
+export interface TypingRaceMove {
+  action: 'PROGRESS';
+  charIndex: number;
+  mistakesCount: number;
+  accuracy: number;
+  wpm: number;
+}
+
 export interface ActiveGameData {
   gameId: string;
   state: any;

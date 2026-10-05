@@ -85,6 +85,15 @@ const GAMES_CATALOG: GameCard[] = [
     isAvailable: true,
     accentColor: 'border-amber-500 text-amber-500',
   },
+  {
+    id: 'typing-race',
+    title: 'TYPE RACER',
+    category: 'KEYBOARD DRAG RACE',
+    description: 'High-octane 1v1 drag race! Hammer your keyboard to accelerate your turbo pixel racer to the checkered flag.',
+    duration: '~45 SEC',
+    isAvailable: true,
+    accentColor: 'border-cyan-400 text-cyan-400',
+  },
 ];
 
 export const GameSelectionView: React.FC<GameSelectionViewProps> = ({
