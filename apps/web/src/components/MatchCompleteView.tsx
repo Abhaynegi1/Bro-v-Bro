@@ -244,45 +244,72 @@ export const MatchCompleteView: React.FC<MatchCompleteViewProps> = ({
         </div>
 
         {/* 1 Clean Minimal Paragraph */}
-        <div className="my-4 p-4 bg-amber-500/10 border-2 border-dashed border-cartridgeYellow text-xs sm:text-sm font-mono leading-relaxed">
-          <p className="italic text-gray-800 dark:text-gray-200">
+        <div className="my-4 p-4 bg-amber-500/15 border-2 border-dashed border-amber-600 dark:border-cartridgeYellow text-xs sm:text-sm font-mono leading-relaxed">
+          <p className={`italic font-medium ${isNight ? 'text-slate-100' : 'text-slate-900'}`}>
             &ldquo;I, <strong className="text-arcadeRed font-bold uppercase">[{surrenderDoc.loserName}]</strong>, hereby declare that{' '}
-            <strong className="text-gameBoyGreen font-bold uppercase">[{surrenderDoc.winnerName}]</strong> is the superior gamer than me. Having suffered a decisive defeat of {surrenderDoc.scoreWinner} to {surrenderDoc.scoreLoser} in Bro v Bro, I openly concede that I was fairly outplayed with zero excuses, zero lag, and full respect to the better player.&rdquo;
+            <strong className="text-emerald-700 dark:text-gameBoyGreen font-bold uppercase">[{surrenderDoc.winnerName}]</strong> is the superior gamer than me. Having suffered a decisive defeat of {surrenderDoc.scoreWinner} to {surrenderDoc.scoreLoser} in Bro v Bro, I openly concede that I was fairly outplayed with zero excuses, zero lag, and full respect to the better player.&rdquo;
           </p>
-          <div className={`mt-2 text-[11px] font-bold uppercase ${isNight ? 'text-cartridgeYellow' : 'text-amber-800'}`}>
-            — {surrenderDoc.loserName}{surrenderDoc.isSigned ? ' (Signed)' : ' (Awaiting Signature)'}
+          <div className={`mt-2 text-[11px] font-bold uppercase ${isNight ? 'text-cartridgeYellow' : 'text-amber-900'}`}>
+            — {surrenderDoc.loserName}{surrenderDoc.isSigned ? ' (Signed & Sealed)' : ' (Awaiting Signature)'}
           </div>
         </div>
 
         {/* Interactive Buttons */}
         <div className="flex flex-wrap items-center gap-3">
-          <button
-            onClick={() => setShowSurrenderModal(true)}
-            className="flex-1 sm:flex-initial px-5 py-3 bg-arcadeRed text-white font-arcade text-xs tracking-wider border-2 border-ink shadow-pixel hover:bg-red-600 font-bold transition-all flex items-center justify-center gap-2"
-          >
-            <span>✍️</span>
-            <span>{surrenderDoc.isSigned ? 'VIEW & PRINT DECLARATION' : 'SIGN DECLARATION'}</span>
-          </button>
+          {surrenderDoc.isSigned ? (
+            <>
+              <button
+                onClick={() => setShowSurrenderModal(true)}
+                className="flex-1 sm:flex-initial px-5 py-3 bg-arcadeRed text-white font-arcade text-xs tracking-wider border-2 border-ink shadow-pixel hover:bg-red-600 font-bold transition-all flex items-center justify-center gap-2"
+              >
+                <span>📜</span>
+                <span>VIEW &amp; PRINT DECLARATION</span>
+              </button>
 
-          <button
-            onClick={handleQuickDownloadPng}
-            disabled={isDownloadingPng}
-            className="px-4 py-3 bg-cartridgeYellow text-ink font-arcade text-xs tracking-wider border-2 border-ink shadow-pixel hover:bg-yellow-300 font-bold transition-all flex items-center justify-center gap-1.5"
-            title="Download PNG image"
-          >
-            <span>📸</span>
-            <span>{isDownloadingPng ? 'SAVING...' : 'PNG'}</span>
-          </button>
+              <button
+                onClick={handleQuickDownloadPng}
+                disabled={isDownloadingPng}
+                className="px-4 py-3 bg-cartridgeYellow text-ink font-arcade text-xs tracking-wider border-2 border-ink shadow-pixel hover:bg-yellow-300 font-bold transition-all flex items-center justify-center gap-1.5"
+                title="Download PNG image"
+              >
+                <span>📸</span>
+                <span>{isDownloadingPng ? 'SAVING...' : 'PNG'}</span>
+              </button>
 
-          <button
-            onClick={handleQuickDownloadPdf}
-            disabled={isDownloadingPdf}
-            className="px-4 py-3 bg-gameBoyGreen text-ink font-arcade text-xs tracking-wider border-2 border-ink shadow-pixel hover:bg-emerald-400 font-bold transition-all flex items-center justify-center gap-1.5"
-            title="Download PDF document"
-          >
-            <span>📄</span>
-            <span>{isDownloadingPdf ? 'SAVING...' : 'PDF'}</span>
-          </button>
+              <button
+                onClick={handleQuickDownloadPdf}
+                disabled={isDownloadingPdf}
+                className="px-4 py-3 bg-gameBoyGreen text-ink font-arcade text-xs tracking-wider border-2 border-ink shadow-pixel hover:bg-emerald-400 font-bold transition-all flex items-center justify-center gap-1.5"
+                title="Download PDF document"
+              >
+                <span>📄</span>
+                <span>{isDownloadingPdf ? 'SAVING...' : 'PDF'}</span>
+              </button>
+            </>
+          ) : iAmLoser ? (
+            <button
+              onClick={() => setShowSurrenderModal(true)}
+              className="flex-1 sm:flex-initial px-6 py-3.5 bg-arcadeRed text-white font-arcade text-xs sm:text-sm tracking-wider border-2 border-ink shadow-pixel hover:bg-red-600 font-bold transition-all flex items-center justify-center gap-2 animate-bounce"
+            >
+              <span>✍️</span>
+              <span>SIGN SURRENDER DECLARATION</span>
+            </button>
+          ) : (
+            <>
+              <div className="flex-1 sm:flex-initial px-4 py-2.5 bg-amber-200/60 dark:bg-slate-900 border-2 border-ink text-slate-900 dark:text-slate-100 font-mono text-xs font-bold flex items-center gap-2">
+                <span className="animate-pulse">⏳</span>
+                <span>Awaiting [{surrenderDoc.loserName}]&apos;s signature to unlock official download</span>
+              </div>
+
+              <button
+                onClick={() => setShowSurrenderModal(true)}
+                className="px-4 py-2.5 bg-paper text-ink font-arcade text-xs tracking-wider border-2 border-ink shadow-pixel hover:bg-stone-200 font-bold transition-all flex items-center gap-1.5"
+              >
+                <span>👁️</span>
+                <span>PREVIEW</span>
+              </button>
+            </>
+          )}
         </div>
       </div>
 
@@ -368,7 +395,13 @@ export const MatchCompleteView: React.FC<MatchCompleteViewProps> = ({
           className="flex-1 sm:flex-initial sm:px-7 py-3.5 bg-paper text-ink font-arcade text-xs sm:text-sm tracking-wider border-2 border-ink shadow-pixel hover:bg-stone-100 hover:translate-x-[-1px] hover:translate-y-[-1px] active:translate-x-[1px] active:translate-y-[1px] transition-all font-bold flex items-center justify-center gap-2"
         >
           <span>📜</span>
-          <span>SURRENDER DECREE (PDF/PNG)</span>
+          <span>
+            {surrenderDoc.isSigned
+              ? 'SURRENDER DECREE (PDF/PNG)'
+              : iAmLoser
+              ? 'SIGN SURRENDER DECREE'
+              : 'SURRENDER DECREE (PENDING)'}
+          </span>
         </button>
 
         <button

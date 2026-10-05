@@ -31,13 +31,12 @@ export const SurrenderCertificateModal: React.FC<SurrenderCertificateModalProps>
   const [signatureDataUrl, setSignatureDataUrl] = useState<string | null>(
     documentData.signatureDataUrl || null
   );
-  const [allowAnyoneToSign, setAllowAnyoneToSign] = useState<boolean>(false);
 
   const [isExportingPng, setIsExportingPng] = useState(false);
   const [isExportingPdf, setIsExportingPdf] = useState(false);
   const [statusMessage, setStatusMessage] = useState<string | null>(null);
 
-  const canSign = !isSigned && (isLoser || allowAnyoneToSign);
+  const canSign = !isSigned && isLoser;
 
   const dateStr = documentData.signedAt
     ? new Date(documentData.signedAt).toLocaleDateString('en-US', {
@@ -309,56 +308,60 @@ export const SurrenderCertificateModal: React.FC<SurrenderCertificateModalProps>
             </div>
           ) : !isSigned ? (
             <div
-              className={`w-full max-w-2xl mt-4 p-3 border-2 border-ink text-center ${
-                isNight ? 'bg-slate-900 text-paper' : 'bg-white text-ink'
+              className={`w-full max-w-2xl mt-4 p-4 border-2 border-ink text-center ${
+                isNight ? 'bg-slate-900 text-paper' : 'bg-amber-50 text-ink'
               }`}
             >
-              <span className={`font-arcade text-xs font-bold animate-pulse ${isNight ? 'text-cartridgeYellow' : 'text-amber-800'}`}>
-                ⏳ WAITING FOR [{documentData.loserName.toUpperCase()}] TO SIGN...
-              </span>
-              <div className="mt-2">
-                <button
-                  onClick={() => setAllowAnyoneToSign(true)}
-                  className="px-3 py-1 bg-stone-200 dark:bg-slate-800 text-ink dark:text-paper font-mono text-[10px] border border-ink/40 hover:bg-stone-300"
-                >
-                  ⚡ Sign on this screen (Testing / Local Mode)
-                </button>
+              <div className="flex items-center justify-center gap-2">
+                <span className="text-base">⏳</span>
+                <span className={`font-arcade text-xs font-bold animate-pulse ${isNight ? 'text-cartridgeYellow' : 'text-amber-900'}`}>
+                  AWAITING [{documentData.loserName.toUpperCase()}]&apos;S SIGNATURE...
+                </span>
               </div>
+              <p className="font-mono text-xs text-slate-600 dark:text-slate-400 mt-1">
+                Only the defeated player can sign the confession. Official downloads will unlock immediately once sealed.
+              </p>
             </div>
           ) : (
-            <div className="w-full max-w-2xl mt-4 p-2 bg-emerald-100 dark:bg-emerald-950/60 border border-gameBoyGreen text-emerald-800 dark:text-emerald-300 font-mono text-xs font-bold text-center">
+            <div className="w-full max-w-2xl mt-4 p-2.5 bg-emerald-100 dark:bg-emerald-950/60 border border-gameBoyGreen text-emerald-800 dark:text-emerald-300 font-mono text-xs font-bold text-center">
               ✅ DECLARATION SIGNED &amp; SEALED.
             </div>
           )}
 
-          {/* ACTION BUTTONS */}
-          <div className="w-full max-w-2xl mt-5 flex flex-wrap gap-3 justify-center">
-            <button
-              onClick={handleDownloadPng}
-              disabled={isExportingPng}
-              className="flex-1 min-w-[160px] py-3 px-4 bg-cartridgeYellow text-ink font-arcade text-xs tracking-wider border-2 border-ink shadow-pixel hover:bg-yellow-300 disabled:opacity-50 transition-all font-bold flex items-center justify-center gap-2"
-            >
-              <span>📸</span>
-              <span>{isExportingPng ? 'SAVING...' : 'DOWNLOAD PNG'}</span>
-            </button>
+          {/* ACTION BUTTONS (LOCKED UNTIL SIGNED) */}
+          {isSigned ? (
+            <div className="w-full max-w-2xl mt-5 flex flex-wrap gap-3 justify-center">
+              <button
+                onClick={handleDownloadPng}
+                disabled={isExportingPng}
+                className="flex-1 min-w-[160px] py-3 px-4 bg-cartridgeYellow text-ink font-arcade text-xs tracking-wider border-2 border-ink shadow-pixel hover:bg-yellow-300 disabled:opacity-50 transition-all font-bold flex items-center justify-center gap-2"
+              >
+                <span>📸</span>
+                <span>{isExportingPng ? 'SAVING...' : 'DOWNLOAD PNG'}</span>
+              </button>
 
-            <button
-              onClick={handleDownloadPdf}
-              disabled={isExportingPdf}
-              className="flex-1 min-w-[160px] py-3 px-4 bg-gameBoyGreen text-ink font-arcade text-xs tracking-wider border-2 border-ink shadow-pixel hover:bg-emerald-400 disabled:opacity-50 transition-all font-bold flex items-center justify-center gap-2"
-            >
-              <span>📄</span>
-              <span>{isExportingPdf ? 'SAVING...' : 'DOWNLOAD PDF'}</span>
-            </button>
+              <button
+                onClick={handleDownloadPdf}
+                disabled={isExportingPdf}
+                className="flex-1 min-w-[160px] py-3 px-4 bg-gameBoyGreen text-ink font-arcade text-xs tracking-wider border-2 border-ink shadow-pixel hover:bg-emerald-400 disabled:opacity-50 transition-all font-bold flex items-center justify-center gap-2"
+              >
+                <span>📄</span>
+                <span>{isExportingPdf ? 'SAVING...' : 'DOWNLOAD PDF'}</span>
+              </button>
 
-            <button
-              onClick={handlePrint}
-              className="py-3 px-4 bg-darkNavy text-paper font-arcade text-xs tracking-wider border-2 border-ink shadow-pixel hover:bg-slate-700 transition-all font-bold flex items-center justify-center gap-2"
-            >
-              <span>🖨️</span>
-              <span>PRINT</span>
-            </button>
-          </div>
+              <button
+                onClick={handlePrint}
+                className="py-3 px-4 bg-darkNavy text-paper font-arcade text-xs tracking-wider border-2 border-ink shadow-pixel hover:bg-slate-700 transition-all font-bold flex items-center justify-center gap-2"
+              >
+                <span>🖨️</span>
+                <span>PRINT</span>
+              </button>
+            </div>
+          ) : (
+            <div className="w-full max-w-2xl mt-4 p-3 bg-stone-100 dark:bg-slate-900 border-2 border-dashed border-ink/40 text-center font-mono text-xs text-slate-700 dark:text-slate-300">
+              🔒 <strong>Downloads Locked:</strong> The certificate will be available to download in PNG &amp; PDF as soon as {documentData.loserName} signs.
+            </div>
+          )}
         </div>
       </div>
     </div>
