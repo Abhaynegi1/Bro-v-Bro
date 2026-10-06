@@ -5,6 +5,7 @@ import { PixelCharacter } from './pixel/PixelCharacter';
 import { SurrenderCertificateModal } from './SurrenderCertificateModal';
 import { GamePixelIcon } from './game-icons/GamePixelIcon';
 import type { SurrenderDocument } from '@bvb/shared';
+import { API_BASE_URL } from '../utils/api';
 
 interface MatchDbData {
   id: string;
@@ -50,7 +51,7 @@ export const MatchPermalinkView: React.FC<MatchPermalinkViewProps> = ({
     setIsLoading(true);
     setError(null);
 
-    fetch(`/api/matches/${encodeURIComponent(matchId)}`)
+    fetch(`${API_BASE_URL}/api/matches/${encodeURIComponent(matchId)}`)
       .then((res) => {
         if (!res.ok) {
           throw new Error(

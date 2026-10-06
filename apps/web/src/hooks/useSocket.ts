@@ -23,8 +23,8 @@ export function useSocket({ roomCode, playerId, sessionToken, onPlayerJoined }: 
       return;
     }
 
-    // Connect to backend (via Vite proxy or direct)
-    const socket = io({
+    // Connect to backend (direct server URL or via Vite proxy / same-origin)
+    const socket = io(import.meta.env.VITE_SERVER_URL || undefined, {
       auth: {
         roomCode,
         playerId,

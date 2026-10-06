@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import type { RoomState } from '@bvb/shared';
 import { useSocket } from './hooks/useSocket';
+import { API_BASE_URL } from './utils/api';
 import { Header } from './components/Header';
 import { UniversalMatchHeader } from './components/UniversalMatchHeader';
 import { LandingView } from './components/LandingView';
@@ -116,7 +117,7 @@ export const App: React.FC = () => {
     setErrorMessage(null);
 
     try {
-      const res = await fetch('/api/rooms', {
+      const res = await fetch(`${API_BASE_URL}/api/rooms`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ hostName, targetWins }),
@@ -144,7 +145,7 @@ export const App: React.FC = () => {
     setErrorMessage(null);
 
     try {
-      const res = await fetch(`/api/rooms/${code}/join`, {
+      const res = await fetch(`${API_BASE_URL}/api/rooms/${code}/join`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ guestName }),
