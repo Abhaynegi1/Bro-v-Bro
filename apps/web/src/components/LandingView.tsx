@@ -28,8 +28,19 @@ export const LandingView: React.FC<LandingViewProps> = ({
   const [targetWins, setTargetWins] = useState<number>(3);
   const [joinCode, setJoinCode] = useState('');
   const [guestName, setGuestName] = useState('');
+  const [slowLoading, setSlowLoading] = useState(false);
 
   const isNight = theme === 'night';
+
+  useEffect(() => {
+    let timer: ReturnType<typeof setTimeout>;
+    if (isLoading) {
+      timer = setTimeout(() => setSlowLoading(true), 2500);
+    } else {
+      setSlowLoading(false);
+    }
+    return () => clearTimeout(timer);
+  }, [isLoading]);
 
   // Handle initial modal passed from parent (e.g. from How To Play page)
   useEffect(() => {
@@ -383,8 +394,13 @@ export const LandingView: React.FC<LandingViewProps> = ({
                   disabled={isLoading || !hostName.trim()}
                   className="w-full justify-center py-3.5"
                 >
-                  {isLoading ? 'STARTING...' : 'START ROOM'}
+                  {isLoading ? (slowLoading ? 'WAKING UP SERVER...' : 'STARTING...') : 'START ROOM'}
                 </PixelButton>
+                {slowLoading && (
+                  <p className="font-mono font-bold text-[11px] text-[#2563EB] animate-pulse text-center mt-2.5">
+                    ⚡ Waking up game server from sleep... please wait a moment
+                  </p>
+                )}
               </div>
             </form>
           </div>
@@ -447,8 +463,13 @@ export const LandingView: React.FC<LandingViewProps> = ({
                   disabled={isLoading || !joinCode.trim() || !guestName.trim()}
                   className="w-full justify-center py-3.5"
                 >
-                  {isLoading ? 'JOINING...' : 'JOIN BATTLE'}
+                  {isLoading ? (slowLoading ? 'WAKING UP SERVER...' : 'JOINING...') : 'JOIN BATTLE'}
                 </PixelButton>
+                {slowLoading && (
+                  <p className="font-mono font-bold text-[11px] text-[#2563EB] animate-pulse text-center mt-2.5">
+                    ⚡ Waking up game server from sleep... please wait a moment
+                  </p>
+                )}
               </div>
             </form>
           </div>

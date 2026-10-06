@@ -61,6 +61,11 @@ export const App: React.FC = () => {
     return () => window.removeEventListener('popstate', onPopState);
   }, []);
 
+  // Pre-warm backend server container as soon as the page loads
+  useEffect(() => {
+    fetch(`${API_BASE_URL}/api/health`, { method: 'GET' }).catch(() => {});
+  }, []);
+
   const handleClosePermalink = () => {
     setPermalinkMatchId(null);
     window.history.pushState({}, '', '/');
