@@ -3,6 +3,42 @@ import { SOCKET_EVENTS, SocketAuthSchema } from '@bvb/shared';
 import { roomManager } from './room-manager.js';
 
 export function setupSocketServer(io: SocketIOServer) {
+  const broadcastRoomAndGame = (code: string) => {
+    const room = roomManager.getInternalRoom(code);
+    if (!room) return;
+
+    const playerA = room.players.playerA;
+    const playerB = room.players.playerB;
+
+    if (playerA?.socketId) {
+      const roomA = roomManager.sanitizeRoom(room, playerA.id);
+      io.to(playerA.socketId).emit(SOCKET_EVENTS.ROOM_STATE, roomA);
+      if (roomA.activeGame) {
+        io.to(playerA.socketId).emit(SOCKET_EVENTS.GAME_STATE, roomA.activeGame);
+      }
+    }
+
+    if (playerB?.socketId) {
+      const roomB = roomManager.sanitizeRoom(room, playerB.id);
+      io.to(playerB.socketId).emit(SOCKET_EVENTS.ROOM_STATE, roomB);
+      if (roomB.activeGame) {
+        io.to(playerB.socketId).emit(SOCKET_EVENTS.GAME_STATE, roomB.activeGame);
+      }
+    }
+  };
+
+  roomManager.setOnRoomUpdated((code: string, isForfeit?: boolean) => {
+    broadcastRoomAndGame(code);
+    if (isForfeit) {
+      const room = roomManager.getInternalRoom(code);
+      if (room && room.currentMatch) {
+        io.to(`room:${code}`).emit(SOCKET_EVENTS.MATCH_COMPLETE, {
+          match: room.currentMatch,
+        });
+      }
+    }
+  });
+
   io.use((socket, next) => {
     const authResult = SocketAuthSchema.safeParse(socket.handshake.auth);
     if (!authResult.success) {
@@ -31,30 +67,6 @@ export function setupSocketServer(io: SocketIOServer) {
 
     // Join Socket.IO room channel
     socket.join(roomChannel);
-
-    const broadcastRoomAndGame = (code: string) => {
-      const room = roomManager.getInternalRoom(code);
-      if (!room) return;
-
-      const playerA = room.players.playerA;
-      const playerB = room.players.playerB;
-
-      if (playerA?.socketId) {
-        const roomA = roomManager.sanitizeRoom(room, playerA.id);
-        io.to(playerA.socketId).emit(SOCKET_EVENTS.ROOM_STATE, roomA);
-        if (roomA.activeGame) {
-          io.to(playerA.socketId).emit(SOCKET_EVENTS.GAME_STATE, roomA.activeGame);
-        }
-      }
-
-      if (playerB?.socketId) {
-        const roomB = roomManager.sanitizeRoom(room, playerB.id);
-        io.to(playerB.socketId).emit(SOCKET_EVENTS.ROOM_STATE, roomB);
-        if (roomB.activeGame) {
-          io.to(playerB.socketId).emit(SOCKET_EVENTS.GAME_STATE, roomB.activeGame);
-        }
-      }
-    };
 
     const broadcastGameStart = (code: string) => {
       const room = roomManager.getInternalRoom(code);

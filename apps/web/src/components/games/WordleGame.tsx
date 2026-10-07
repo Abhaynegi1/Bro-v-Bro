@@ -4,6 +4,7 @@ import { isValidWord } from '@bvb/shared';
 import confetti from 'canvas-confetti';
 import { PixelCharacter } from '../pixel/PixelCharacter';
 import { GamePixelIcon } from '../game-icons/GamePixelIcon';
+import { soundFx } from '../../utils/audio';
 
 interface WordleGameProps {
   roomState: RoomState;
@@ -70,6 +71,7 @@ export const WordleGame: React.FC<WordleGameProps> = ({
 
   // Trigger shake animation with a toast message
   const triggerError = useCallback((msg: string) => {
+    soundFx.play('buzzer');
     setIsShaking(true);
     setErrorMessage(msg);
     setTimeout(() => setIsShaking(false), 380);
@@ -82,6 +84,7 @@ export const WordleGame: React.FC<WordleGameProps> = ({
       if (!canType) return;
 
       if (char === 'BACK' || char === 'BACKSPACE') {
+        soundFx.play('click');
         setCurrentInput((prev) => prev.slice(0, -1));
         return;
       }
@@ -98,12 +101,14 @@ export const WordleGame: React.FC<WordleGameProps> = ({
           return;
         }
 
+        soundFx.play('move');
         onSendMove({ action: 'GUESS', guess: upperGuess });
         setCurrentInput('');
         return;
       }
 
       if (/^[A-Z]$/.test(char) && currentInput.length < 5) {
+        soundFx.play('click');
         setCurrentInput((prev) => prev + char);
       }
     },

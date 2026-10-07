@@ -4,6 +4,7 @@ import confetti from 'canvas-confetti';
 import { PixelCharacter } from './pixel/PixelCharacter';
 import { SurrenderCertificateModal } from './SurrenderCertificateModal';
 import { GamePixelIcon } from './game-icons/GamePixelIcon';
+import { soundFx } from '../utils/audio';
 import {
   downloadCertificateAsPng,
   downloadCertificateAsPdf,
@@ -59,15 +60,20 @@ export const MatchCompleteView: React.FC<MatchCompleteViewProps> = ({
     isSigned: false,
   };
 
-  // Victory Confetti
+  // Victory Confetti & Celebratory Sound
   useEffect(() => {
-    confetti({
-      particleCount: 120,
-      spread: 90,
-      origin: { y: 0.5 },
-      colors: ['#EF4444', '#FBBF24', '#3B82F6', '#10B981'],
-    });
-  }, []);
+    if (iWon) {
+      soundFx.play('matchWin');
+      confetti({
+        particleCount: 120,
+        spread: 90,
+        origin: { y: 0.5 },
+        colors: ['#EF4444', '#FBBF24', '#3B82F6', '#10B981'],
+      });
+    } else {
+      soundFx.play('buzzer');
+    }
+  }, [iWon]);
 
   const handleCopyShareLink = () => {
     if (!match?.id) return;

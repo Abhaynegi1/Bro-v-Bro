@@ -8,6 +8,21 @@
     color: #171A1F;
     font-family: 'Space Mono', monospace;
     image-rendering: auto;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+    overscroll-behavior-y: none;
+  }
+
+  /* Eliminate 300ms mobile touch delay and accidental double-tap zoom */
+  button,
+  input,
+  select,
+  textarea,
+  a,
+  [role="button"],
+  .btn-retro {
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
   }
 }
 

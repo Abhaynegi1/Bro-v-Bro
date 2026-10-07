@@ -79,4 +79,70 @@ describe('Room Manager Lifecycle', () => {
     assert.strictEqual(pick3.room.status, 'IN_GAME');
     assert.deepStrictEqual(pick3.room.currentMatch?.gamePlaylist, ['tic-tac-toe', 'reaction-test', 'connect-four']);
   });
+
+  it('initiates 30-second disconnect pause and unpauses when player reconnects', () => {
+    const { room, playerId: hostId, sessionToken: hostToken } = roomManager.createRoom('HostBro', 2);
+    const { playerId: guestId, sessionToken: guestToken } = roomManager.joinRoom(room.code, 'GuestBro');
+
+    roomManager.authenticateSocket(room.code, hostId, hostToken, 'sock_h1');
+    roomManager.authenticateSocket(room.code, guestId, guestToken, 'sock_g1');
+
+    roomManager.startMatch(room.code, hostId);
+    roomManager.selectGame(room.code, hostId, 'tic-tac-toe');
+    roomManager.selectGame(room.code, guestId, 'connect-four');
+    roomManager.selectGame(room.code, hostId, 'reaction-test');
+
+    const internalBefore = roomManager.getInternalRoom(room.code);
+    assert.strictEqual(internalBefore?.status, 'IN_GAME');
+
+    // Guest socket disconnects mid-game
+    const disResult = roomManager.handleSocketDisconnect('sock_g1');
+    assert.ok(disResult);
+    assert.strictEqual(disResult.disconnectedPlayerId, guestId);
+    assert.ok(disResult.room.disconnectPause, 'Room must have disconnectPause state');
+    assert.strictEqual(disResult.room.disconnectPause?.disconnectedPlayerId, guestId);
+
+    // Moves should be blocked during disconnect pause
+    const moveAttempt = roomManager.handleMove(room.code, hostId, { cellIndex: 0 });
+    assert.strictEqual(moveAttempt.success, false);
+    assert.strictEqual(moveAttempt.reason, 'MATCH_PAUSED_DISCONNECT');
+
+    // Guest reconnects with new socket ID within grace period
+    const reAuth = roomManager.authenticateSocket(room.code, guestId, guestToken, 'sock_g2');
+    assert.ok(reAuth);
+
+    const internalAfter = roomManager.getInternalRoom(room.code);
+    assert.strictEqual(internalAfter?.disconnectPause, null, 'disconnectPause should be cleared on reconnect');
+    assert.strictEqual(internalAfter?.players.playerB?.isConnected, true);
+
+    // Moves should now succeed again
+    const moveResumed = roomManager.handleMove(room.code, hostId, { cellIndex: 0 });
+    assert.strictEqual(moveResumed.success, true);
+  });
+
+  it('awards victory by forfeit if 30-second disconnect timer expires', () => {
+    const { room, playerId: hostId, sessionToken: hostToken } = roomManager.createRoom('HostBro', 2);
+    const { playerId: guestId, sessionToken: guestToken } = roomManager.joinRoom(room.code, 'GuestBro');
+
+    roomManager.authenticateSocket(room.code, hostId, hostToken, 'sock_hf');
+    roomManager.authenticateSocket(room.code, guestId, guestToken, 'sock_gf');
+
+    roomManager.startMatch(room.code, hostId);
+    roomManager.selectGame(room.code, hostId, 'tic-tac-toe');
+    roomManager.selectGame(room.code, guestId, 'connect-four');
+    roomManager.selectGame(room.code, hostId, 'reaction-test');
+
+    // Guest disconnects
+    roomManager.handleSocketDisconnect('sock_gf');
+
+    // Simulate 30s timer expiry
+    roomManager.handleDisconnectExpiry(room.code, guestId);
+
+    const completed = roomManager.getInternalRoom(room.code);
+    assert.strictEqual(completed?.status, 'MATCH_COMPLETE');
+    assert.strictEqual(completed?.currentMatch?.seriesWinnerId, hostId);
+    assert.strictEqual(completed?.currentMatch?.rounds[0]?.reason, 'FORFEIT');
+    assert.ok(completed?.currentMatch?.surrenderDocument);
+    assert.strictEqual(completed?.currentMatch?.surrenderDocument?.loserPlayerId, guestId);
+  });
 });

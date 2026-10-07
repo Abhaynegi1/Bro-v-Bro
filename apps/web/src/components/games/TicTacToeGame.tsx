@@ -3,6 +3,7 @@ import type { RoomState, TicTacToeState, TicTacToeMove, GameResult } from '@bvb/
 import confetti from 'canvas-confetti';
 import { PixelCharacter } from '../pixel/PixelCharacter';
 import { GamePixelIcon } from '../game-icons/GamePixelIcon';
+import { soundFx } from '../../utils/audio';
 
 interface TicTacToeGameProps {
   roomState: RoomState;
@@ -57,6 +58,7 @@ export const TicTacToeGame: React.FC<TicTacToeGameProps> = ({
 
   const handleCellClick = (cellIndex: number) => {
     if (!isMyTurn || gameState.board[cellIndex] !== null) return;
+    soundFx.play('move');
     onSendMove({ cellIndex });
   };
 

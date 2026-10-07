@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import type { RoomState, GameResult, ReactionTestState } from '@bvb/shared';
+import confetti from 'canvas-confetti';
 import { PixelCharacter } from './pixel/PixelCharacter';
 import { GamePixelIcon } from './game-icons/GamePixelIcon';
+import { soundFx } from '../utils/audio';
 
 const GAME_NAMES: Record<string, string> = {
   'tic-tac-toe': 'Tic-Tac-Toe',
@@ -40,6 +42,20 @@ export const RoundResultModal: React.FC<RoundResultModalProps> = ({
 
   const winner = playerA?.id === winnerPlayerId ? playerA : playerB?.id === winnerPlayerId ? playerB : null;
   const iWon = winnerPlayerId === myPlayerId;
+
+  useEffect(() => {
+    if (iWon) {
+      soundFx.play('roundWin');
+      confetti({
+        particleCount: 65,
+        spread: 65,
+        origin: { y: 0.6 },
+        colors: ['#EF4444', '#F59E0B', '#10B981', '#3B82F6'],
+      });
+    } else if (!isDraw && winnerPlayerId) {
+      soundFx.play('buzzer');
+    }
+  }, [iWon, isDraw, winnerPlayerId]);
   const nextPickerId = roomState.selectingPlayerId || match?.nextPickerPlayerId;
   const nextPicker = playerA?.id === nextPickerId ? playerA : playerB;
 
@@ -390,7 +406,10 @@ export const RoundResultModal: React.FC<RoundResultModalProps> = ({
 
         {/* CTA Button */}
         <button
-          onClick={onNextRound}
+          onClick={() => {
+            soundFx.play('click');
+            onNextRound();
+          }}
           className="w-full py-3.5 px-6 bg-arcadeRed text-white font-arcade text-xs sm:text-sm tracking-widest border-2 border-ink shadow-pixel hover:bg-red-600 hover:translate-x-[-1px] hover:translate-y-[-1px] active:translate-x-[1px] active:translate-y-[1px] transition-all font-bold"
         >
           {nextGameName

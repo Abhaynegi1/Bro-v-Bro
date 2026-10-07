@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState, useCallback } from 'react';
 import type { RoomState, TypingRaceState, TypingRaceMove } from '@bvb/shared';
 import { PixelCharacter } from '../pixel/PixelCharacter';
 import { GamePixelIcon } from '../game-icons/GamePixelIcon';
+import { soundFx } from '../../utils/audio';
 
 interface TypingRaceGameProps {
   roomState: RoomState;
@@ -14,7 +15,15 @@ interface TypingRaceGameProps {
 // Zero-dependency sound effects synthesizer using Web Audio API
 class RaceSoundSynth {
   private ctx: AudioContext | null = null;
-  public enabled = true;
+  public localEnabled = true;
+
+  public get enabled(): boolean {
+    return !soundFx.getMuted() && this.localEnabled;
+  }
+
+  public set enabled(val: boolean) {
+    this.localEnabled = val;
+  }
 
   private init() {
     if (!this.ctx && typeof window !== 'undefined') {

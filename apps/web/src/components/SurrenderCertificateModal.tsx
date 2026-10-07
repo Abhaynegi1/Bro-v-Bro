@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import type { SurrenderDocument } from '@bvb/shared';
 import confetti from 'canvas-confetti';
 import { SignaturePad } from './SignaturePad';
+import { soundFx } from '../utils/audio';
 import {
   downloadCertificateAsPng,
   downloadCertificateAsPdf,
@@ -55,6 +56,8 @@ export const SurrenderCertificateModal: React.FC<SurrenderCertificateModalProps>
       alert('Please draw your signature in the box before sealing the declaration!');
       return;
     }
+
+    soundFx.play('stamp');
 
     onSignSurrender({
       signatureDataUrl,

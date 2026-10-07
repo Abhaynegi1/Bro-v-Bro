@@ -335,6 +335,13 @@ export interface ActiveGameData {
   state: any;
 }
 
+export interface DisconnectPauseState {
+  disconnectedPlayerId: string;
+  disconnectedPlayerName: string;
+  pausedAt: number;
+  expiresAt: number;
+}
+
 export interface RoomState {
   id: string;
   code: string;
@@ -346,6 +353,7 @@ export interface RoomState {
   currentMatch: MatchState | null;
   activeGame: ActiveGameData | null;
   selectingPlayerId?: string | null;
+  disconnectPause?: DisconnectPauseState | null;
   createdAt: number;
 }
 

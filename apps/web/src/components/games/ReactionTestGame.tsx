@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import type { RoomState, ReactionTestState, ReactionTestMove } from '@bvb/shared';
 import confetti from 'canvas-confetti';
 import { GamePixelIcon } from '../game-icons/GamePixelIcon';
+import { soundFx } from '../../utils/audio';
 
 interface ReactionTestGameProps {
   roomState: RoomState;
@@ -41,10 +42,12 @@ export const ReactionTestGame: React.FC<ReactionTestGameProps> = ({
       const now = Date.now();
       if (now >= gameState.triggerAt) {
         setIsGreen(true);
+        soundFx.play('countdownGo');
       } else {
         const remaining = gameState.triggerAt - now;
         timerRef.current = window.setTimeout(() => {
           setIsGreen(true);
+          soundFx.play('countdownGo');
         }, remaining);
       }
     };
@@ -71,6 +74,7 @@ export const ReactionTestGame: React.FC<ReactionTestGameProps> = ({
   const handleClick = () => {
     if (isFinished || localClicked || (myResult && myResult.reactionMs !== null)) return;
     setLocalClicked(true);
+    soundFx.play('click');
     onSendMove({ action: 'CLICK' });
   };
 

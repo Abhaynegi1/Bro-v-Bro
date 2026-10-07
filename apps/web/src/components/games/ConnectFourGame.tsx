@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import type { RoomState, ConnectFourState, ConnectFourMove } from '@bvb/shared';
 import confetti from 'canvas-confetti';
 import { GamePixelIcon } from '../game-icons/GamePixelIcon';
+import { soundFx } from '../../utils/audio';
 
 interface ConnectFourGameProps {
   roomState: RoomState;
@@ -51,6 +52,7 @@ export const ConnectFourGame: React.FC<ConnectFourGameProps> = ({
     if (!isMyTurn || isFinished) return;
     // Check if column is full (top row is row 0)
     if (gameState.board[0][col] !== null) return;
+    soundFx.play('move');
     onSendMove({ column: col });
   };
 

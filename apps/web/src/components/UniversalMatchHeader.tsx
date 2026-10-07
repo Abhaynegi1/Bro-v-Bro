@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import type { RoomState } from '@bvb/shared';
 import { PixelCharacter } from './pixel/PixelCharacter';
+import { useSound } from '../hooks/useSound';
 
 interface UniversalMatchHeaderProps {
   roomState: RoomState;
@@ -18,6 +19,7 @@ export const UniversalMatchHeader: React.FC<UniversalMatchHeaderProps> = ({
   onToggleTheme,
 }) => {
   const isNight = theme === 'night';
+  const { isMuted, toggleSound } = useSound();
   const match = roomState.currentMatch;
   const playerA = roomState.players.playerA;
   const playerB = roomState.players.playerB;
@@ -30,6 +32,29 @@ export const UniversalMatchHeader: React.FC<UniversalMatchHeaderProps> = ({
   const scoreA = match?.scores.playerA ?? 0;
   const scoreB = match?.scores.playerB ?? 0;
   const roundNum = match?.currentRoundNumber ?? 1;
+
+  const [popScoreA, setPopScoreA] = useState(false);
+  const [popScoreB, setPopScoreB] = useState(false);
+  const prevScoreA = useRef(scoreA);
+  const prevScoreB = useRef(scoreB);
+
+  useEffect(() => {
+    if (scoreA !== prevScoreA.current) {
+      prevScoreA.current = scoreA;
+      setPopScoreA(true);
+      const timer = setTimeout(() => setPopScoreA(false), 700);
+      return () => clearTimeout(timer);
+    }
+  }, [scoreA]);
+
+  useEffect(() => {
+    if (scoreB !== prevScoreB.current) {
+      prevScoreB.current = scoreB;
+      setPopScoreB(true);
+      const timer = setTimeout(() => setPopScoreB(false), 700);
+      return () => clearTimeout(timer);
+    }
+  }, [scoreB]);
 
   const isPlayerA = myPlayerId === playerA?.id;
   const isPlayerB = myPlayerId === playerB?.id;
@@ -84,8 +109,8 @@ export const UniversalMatchHeader: React.FC<UniversalMatchHeaderProps> = ({
         <div className="flex flex-col items-center">
           <div className="flex items-center gap-3">
             <div
-              className={`font-arcade text-lg sm:text-2xl px-2.5 py-0.5 border-2 border-ink shadow-pixel font-bold tracking-widest ${
-                isNight ? 'bg-ink text-cartridgeYellow' : 'bg-paper text-ink'
+              className={`font-arcade text-lg sm:text-2xl px-2.5 py-0.5 border-2 border-ink shadow-pixel font-bold tracking-widest transition-all duration-300 ${
+                popScoreA ? 'scale-125 bg-arcadeRed text-white ring-2 ring-cartridgeYellow' : isNight ? 'bg-ink text-cartridgeYellow' : 'bg-paper text-ink'
               }`}
             >
               {String(scoreA).padStart(2, '0')}
@@ -105,8 +130,8 @@ export const UniversalMatchHeader: React.FC<UniversalMatchHeaderProps> = ({
             </div>
 
             <div
-              className={`font-arcade text-lg sm:text-2xl px-2.5 py-0.5 border-2 border-ink shadow-pixel font-bold tracking-widest ${
-                isNight ? 'bg-ink text-cartridgeYellow' : 'bg-paper text-ink'
+              className={`font-arcade text-lg sm:text-2xl px-2.5 py-0.5 border-2 border-ink shadow-pixel font-bold tracking-widest transition-all duration-300 ${
+                popScoreB ? 'scale-125 bg-arcadeBlue text-white ring-2 ring-cartridgeYellow' : isNight ? 'bg-ink text-cartridgeYellow' : 'bg-paper text-ink'
               }`}
             >
               {String(scoreB).padStart(2, '0')}
@@ -135,8 +160,8 @@ export const UniversalMatchHeader: React.FC<UniversalMatchHeaderProps> = ({
               {Array.from({ length: targetWins }).map((_, i) => (
                 <span
                   key={i}
-                  className={`text-xs ${
-                    i < scoreB ? (isNight ? 'text-cartridgeYellow font-bold' : 'text-amber-700 font-bold') : isNight ? 'text-slate-600' : 'text-stone-400'
+                  className={`text-xs transition-transform duration-300 ${
+                    i < scoreB ? (isNight ? 'text-cartridgeYellow font-bold scale-110' : 'text-amber-700 font-bold scale-110') : isNight ? 'text-slate-600' : 'text-stone-400'
                   }`}
                 >
                   ★
@@ -156,6 +181,17 @@ export const UniversalMatchHeader: React.FC<UniversalMatchHeaderProps> = ({
 
           {/* Quick Header Controls */}
           <div className="flex items-center gap-1.5 ml-2 border-l-2 border-ink pl-3">
+            <button
+              onClick={toggleSound}
+              title={isMuted ? 'Unmute Sound' : 'Mute Sound'}
+              aria-label={isMuted ? 'Unmute Sound' : 'Mute Sound'}
+              className={`w-7 h-7 flex items-center justify-center border-2 border-ink font-arcade text-xs shadow-pixel hover:translate-x-[-1px] hover:translate-y-[-1px] transition-transform ${
+                isNight ? 'bg-slate-700 text-white' : 'bg-amber-100 text-ink'
+              }`}
+            >
+              {isMuted ? '🔇' : '🔊'}
+            </button>
+
             <button
               onClick={onToggleTheme}
               title={`Switch to ${isNight ? 'Day' : 'Night'} Mode`}

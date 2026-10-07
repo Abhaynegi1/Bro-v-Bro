@@ -1,5 +1,13 @@
 import { customAlphabet } from 'nanoid';
-import type { RoomState, RoomStatus, PlayerSlot, MatchState, ActiveGameData, GameResult } from '@bvb/shared';
+import type {
+  RoomState,
+  RoomStatus,
+  PlayerSlot,
+  MatchState,
+  ActiveGameData,
+  GameResult,
+  DisconnectPauseState,
+} from '@bvb/shared';
 import { getGameEngine } from './games/index.js';
 import { saveMatchResult } from './db/index.js';
 
@@ -24,6 +32,7 @@ export interface InternalRoom {
   currentMatch: MatchState | null;
   activeGame: ActiveGameData | null;
   selectingPlayerId?: string | null;
+  disconnectPause?: DisconnectPauseState | null;
   createdAt: number;
   updatedAt: number;
 }
@@ -31,6 +40,12 @@ export interface InternalRoom {
 export class RoomManager {
   private roomsByCode = new Map<string, InternalRoom>();
   private socketToPlayer = new Map<string, { code: string; playerId: string }>();
+  private disconnectTimers = new Map<string, NodeJS.Timeout>();
+  private onRoomUpdatedCallback?: (code: string, isForfeit?: boolean) => void;
+
+  public setOnRoomUpdated(cb: (code: string, isForfeit?: boolean) => void) {
+    this.onRoomUpdatedCallback = cb;
+  }
 
   public createRoom(hostName: string, targetWins: number = 3): {
     room: RoomState;
@@ -175,6 +190,15 @@ export class RoomManager {
       return null;
     }
 
+    // If this player was disconnected and caused a pause, unpause gracefully!
+    if (room.disconnectPause && room.disconnectPause.disconnectedPlayerId === playerId) {
+      if (this.disconnectTimers.has(room.code)) {
+        clearTimeout(this.disconnectTimers.get(room.code)!);
+        this.disconnectTimers.delete(room.code);
+      }
+      room.disconnectPause = null;
+    }
+
     targetPlayer.isConnected = true;
     targetPlayer.socketId = socketId;
     targetPlayer.lastSeenAt = Date.now();
@@ -203,6 +227,32 @@ export class RoomManager {
       foundPlayer.socketId = null;
       foundPlayer.lastSeenAt = Date.now();
       room.updatedAt = Date.now();
+
+      // Trigger 30-second disconnect pause if an active match is in progress
+      const isMatchActive = Boolean(
+        room.currentMatch &&
+        room.currentMatch.status === 'IN_PROGRESS' &&
+        ['IN_GAME', 'SELECTING_GAME', 'ROUND_COMPLETE'].includes(room.status)
+      );
+
+      if (isMatchActive) {
+        room.disconnectPause = {
+          disconnectedPlayerId: foundPlayer.id,
+          disconnectedPlayerName: foundPlayer.name,
+          pausedAt: Date.now(),
+          expiresAt: Date.now() + 30000,
+        };
+
+        if (this.disconnectTimers.has(room.code)) {
+          clearTimeout(this.disconnectTimers.get(room.code)!);
+        }
+
+        const timer = setTimeout(() => {
+          this.handleDisconnectExpiry(room.code, foundPlayer.id);
+        }, 30000);
+        this.disconnectTimers.set(room.code, timer);
+      }
+
       return {
         room: this.sanitizeRoom(room),
         disconnectedPlayerId: foundPlayer.id,
@@ -210,6 +260,67 @@ export class RoomManager {
     }
 
     return null;
+  }
+
+  public handleDisconnectExpiry(code: string, disconnectedPlayerId: string): void {
+    this.disconnectTimers.delete(code);
+    const room = this.roomsByCode.get(code.toUpperCase());
+    if (!room || !room.currentMatch || room.currentMatch.status !== 'IN_PROGRESS') return;
+
+    const disconnectedPlayer =
+      room.players.playerA?.id === disconnectedPlayerId
+        ? room.players.playerA
+        : room.players.playerB?.id === disconnectedPlayerId
+        ? room.players.playerB
+        : null;
+
+    if (!disconnectedPlayer || disconnectedPlayer.isConnected) return;
+
+    const winnerPlayer =
+      room.players.playerA?.id === disconnectedPlayerId
+        ? room.players.playerB
+        : room.players.playerA;
+
+    if (!winnerPlayer) return;
+
+    room.currentMatch.status = 'COMPLETED';
+    room.currentMatch.seriesWinnerId = winnerPlayer.id;
+    room.status = 'MATCH_COMPLETE';
+    room.disconnectPause = null;
+
+    const targetGameId = room.activeGame?.gameId || 'forfeit';
+    room.currentMatch.rounds.push({
+      roundNumber: room.currentMatch.currentRoundNumber,
+      gameId: targetGameId,
+      winnerPlayerId: winnerPlayer.id,
+      loserPlayerId: disconnectedPlayer.id,
+      result: 'WIN',
+      reason: 'FORFEIT',
+      durationMs: 30000,
+      summary: `${disconnectedPlayer.name} disconnected. Match awarded to ${winnerPlayer.name} by forfeit (30s reconnect timeout expired).`,
+    });
+
+    if (winnerPlayer.id === room.players.playerA?.id) {
+      room.currentMatch.scores.playerA++;
+    } else {
+      room.currentMatch.scores.playerB++;
+    }
+
+    room.currentMatch.surrenderDocument = {
+      id: `DECREE-${Math.random().toString(36).substring(2, 8).toUpperCase()}`,
+      loserPlayerId: disconnectedPlayer.id,
+      winnerPlayerId: winnerPlayer.id,
+      loserName: disconnectedPlayer.name,
+      winnerName: winnerPlayer.name,
+      scoreWinner: Math.max(room.currentMatch.scores.playerA, room.currentMatch.scores.playerB),
+      scoreLoser: Math.min(room.currentMatch.scores.playerA, room.currentMatch.scores.playerB),
+      confessionClause: 'I disconnected in the heat of battle and hereby forfeit all honor.',
+      isSigned: false,
+    };
+
+    room.updatedAt = Date.now();
+    this.persistCompletedMatch(room);
+    this.onRoomUpdatedCallback?.(room.code, true);
   }
 
   public toggleReady(code: string, playerId: string): RoomState | null {
@@ -259,6 +370,7 @@ export class RoomManager {
       currentMatch: room.currentMatch,
       activeGame,
       selectingPlayerId: room.selectingPlayerId || null,
+      disconnectPause: room.disconnectPause || null,
       createdAt: room.createdAt,
     };
   }
@@ -395,6 +507,7 @@ export class RoomManager {
   } {
     const room = this.roomsByCode.get(code.toUpperCase());
     if (!room) return { success: false, reason: 'ROOM_NOT_FOUND' };
+    if (room.disconnectPause) return { success: false, reason: 'MATCH_PAUSED_DISCONNECT' };
     if (room.status !== 'IN_GAME' || !room.activeGame) return { success: false, reason: 'NOT_IN_GAME' };
 
     const engine = getGameEngine(room.activeGame.gameId);
@@ -559,6 +672,12 @@ export class RoomManager {
   public rematch(code: string, _requesterPlayerId: string): RoomState | null {
     const room = this.roomsByCode.get(code.toUpperCase());
     if (!room || !room.currentMatch || !room.players.playerA) return null;
+
+    if (this.disconnectTimers.has(room.code)) {
+      clearTimeout(this.disconnectTimers.get(room.code)!);
+      this.disconnectTimers.delete(room.code);
+    }
+    room.disconnectPause = null;
 
     const targetWins =
       room.currentMatch.seriesCondition.type === 'FIRST_TO_N'

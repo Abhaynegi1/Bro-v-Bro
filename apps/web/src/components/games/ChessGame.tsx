@@ -5,6 +5,7 @@ import confetti from 'canvas-confetti';
 import { ChessPieceIcon } from './ChessPieceIcon';
 import { Flag, Clock, Crown, ShieldAlert, CheckCircle2 } from 'lucide-react';
 import { GamePixelIcon } from '../game-icons/GamePixelIcon';
+import { soundFx } from '../../utils/audio';
 
 interface ChessGameProps {
   roomState: RoomState;
@@ -222,6 +223,7 @@ export const ChessGame: React.FC<ChessGameProps> = ({
       if (selectedSquare === square) {
         // Deselect
         setSelectedSquare(null);
+        soundFx.play('click');
         return;
       }
 
@@ -230,10 +232,12 @@ export const ChessGame: React.FC<ChessGameProps> = ({
         // Check for promotion (Pawn moving to rank 8 or rank 1)
         if (targetMove.piece === 'p' && (square.endsWith('8') || square.endsWith('1'))) {
           setPendingPromotion({ from: selectedSquare, to: square });
+          soundFx.play('click');
           return;
         }
 
         // Send normal move
+        soundFx.play('move');
         onSendMove({ action: 'MOVE', from: selectedSquare, to: square });
         setSelectedSquare(null);
         return;
@@ -243,6 +247,7 @@ export const ChessGame: React.FC<ChessGameProps> = ({
     // Try selecting piece on clicked square
     const piece = chess.get(square as any);
     if (piece && piece.color === myColor) {
+      soundFx.play('click');
       setSelectedSquare(square);
     } else {
       setSelectedSquare(null);

@@ -8,6 +8,7 @@ import type {
 import confetti from 'canvas-confetti';
 import { PixelCharacter } from '../pixel/PixelCharacter';
 import { GamePixelIcon } from '../game-icons/GamePixelIcon';
+import { soundFx } from '../../utils/audio';
 
 interface MinesweeperGameProps {
   roomState: RoomState;
@@ -75,6 +76,7 @@ export const MinesweeperGame: React.FC<MinesweeperGameProps> = ({
   const handleCellClick = (row: number, col: number) => {
     if (!canPlay) return;
 
+    soundFx.play('move');
     if (clickMode === 'FLAG') {
       onSendMove({ action: 'FLAG', row, col });
     } else {
@@ -85,6 +87,7 @@ export const MinesweeperGame: React.FC<MinesweeperGameProps> = ({
   const handleContextMenu = (e: React.MouseEvent, row: number, col: number) => {
     e.preventDefault();
     if (!canPlay) return;
+    soundFx.play('move');
     onSendMove({ action: 'FLAG', row, col });
   };
 

@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import type { RoomState, FlagDuelState, FlagDuelMove } from '@bvb/shared';
+import confetti from 'canvas-confetti';
 import { PixelCharacter } from '../pixel/PixelCharacter';
 import { GamePixelIcon } from '../game-icons/GamePixelIcon';
+import { soundFx } from '../../utils/audio';
 
 interface FlagDuelGameProps {
   roomState: RoomState;
@@ -44,13 +46,29 @@ export const FlagDuelGame: React.FC<FlagDuelGameProps> = ({
   const [hasImageError, setHasImageError] = useState(false);
   const [feedbackEffect, setFeedbackEffect] = useState<'correct' | 'wrong' | null>(null);
 
+  const iWon = gameState.status === 'FINISHED' && gameState.winnerPlayerId === myPlayerId;
+
+  // Victory Confetti
+  useEffect(() => {
+    if (iWon) {
+      confetti({
+        particleCount: 80,
+        spread: 70,
+        origin: { y: 0.6 },
+        colors: ['#EF4444', '#10B981', '#F59E0B', '#3B82F6'],
+      });
+    }
+  }, [iWon]);
+
   // Trigger brief feedback flash when answer changes
   useEffect(() => {
     if (myState.lastAnswerCorrect === true) {
+      soundFx.play('move');
       setFeedbackEffect('correct');
       const timer = setTimeout(() => setFeedbackEffect(null), 1200);
       return () => clearTimeout(timer);
     } else if (myState.lastAnswerCorrect === false) {
+      soundFx.play('buzzer');
       setFeedbackEffect('wrong');
       const timer = setTimeout(() => setFeedbackEffect(null), 1200);
       return () => clearTimeout(timer);
@@ -82,6 +100,7 @@ export const FlagDuelGame: React.FC<FlagDuelGameProps> = ({
     if (gameState.status === 'FINISHED' || myState.isEliminated || myState.lastSelected !== null) {
       return;
     }
+    soundFx.play('click');
     onSendMove({
       action: 'GUESS',
       country,

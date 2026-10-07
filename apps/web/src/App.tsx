@@ -19,6 +19,7 @@ import { TypingRaceGame } from './components/games/TypingRaceGame';
 import { RoundResultModal } from './components/RoundResultModal';
 import { MatchCompleteView } from './components/MatchCompleteView';
 import { MatchPermalinkView } from './components/MatchPermalinkView';
+import { DisconnectPauseOverlay } from './components/DisconnectPauseOverlay';
 
 const STORAGE_KEYS = {
   ROOM_CODE: 'bvb_room_code',
@@ -226,8 +227,8 @@ export const App: React.FC = () => {
     <div
       className={`w-full text-ink font-mono relative selection:bg-arcadeRed selection:text-white transition-colors duration-700 ${
         isScrollableView
-          ? 'min-h-screen overflow-y-auto flex flex-col'
-          : 'h-screen overflow-hidden flex flex-col'
+          ? 'min-h-screen min-h-[100dvh] overflow-y-auto flex flex-col'
+          : 'h-screen h-[100dvh] overflow-hidden flex flex-col'
       }`}
       style={{
         backgroundColor: theme === 'night' ? '#0D193A' : '#72B6F4',
@@ -262,6 +263,23 @@ export const App: React.FC = () => {
         <div className="fixed top-14 left-1/2 -translate-x-1/2 z-50 px-5 py-2.5 bg-darkNavy text-paper border-2 border-ink shadow-pixel font-arcade text-xs tracking-wider animate-pixel-idle">
           {notification}
         </div>
+      )}
+
+      {/* Connection Lost Banner */}
+      {roomCode && !isConnected && (
+        <div className="fixed top-14 left-1/2 -translate-x-1/2 z-50 px-4 py-2 bg-arcadeRed text-white border-2 border-ink shadow-pixel font-arcade text-xs tracking-wider animate-pulse flex items-center gap-2">
+          <span>⚠️</span>
+          <span>CONNECTING TO ARENA SERVER...</span>
+        </div>
+      )}
+
+      {/* Disconnect Grace Period Pause Overlay */}
+      {roomState && (
+        <DisconnectPauseOverlay
+          disconnectPause={roomState.disconnectPause || null}
+          myPlayerId={playerId || ''}
+          theme={theme}
+        />
       )}
 
       <main

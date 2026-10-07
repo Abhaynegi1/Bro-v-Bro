@@ -1,4 +1,5 @@
 import React from 'react';
+import { useSound } from '../hooks/useSound';
 
 interface HeaderProps {
   roomCode?: string | null;
@@ -21,6 +22,7 @@ export const Header: React.FC<HeaderProps> = ({
   onToggleTheme,
 }) => {
   const isNight = theme === 'night';
+  const { isMuted, toggleSound } = useSound();
 
   return (
     <header className="w-full bg-[#0A0F1D] text-white px-5 sm:px-10 py-3 flex items-center justify-between border-b-2 border-black z-30 flex-shrink-0 sticky top-0 shadow-md select-none">
@@ -69,6 +71,17 @@ export const Header: React.FC<HeaderProps> = ({
             HOW TO PLAY
           </button>
         )}
+
+        {/* Sound FX Mute Toggle */}
+        <button
+          type="button"
+          onClick={toggleSound}
+          title={isMuted ? 'Unmute Arcade Sound FX' : 'Mute Arcade Sound FX'}
+          aria-label={isMuted ? 'Unmute Sound' : 'Mute Sound'}
+          className="flex items-center justify-center w-8 h-8 bg-[#121B35] hover:bg-[#1C2A52] text-white border-2 border-white/30 text-xs shadow-pixel-sm hover:scale-105 active:scale-95 transition-transform"
+        >
+          {isMuted ? '🔇' : '🔊'}
+        </button>
 
         {/* Night / Day Toggle Button */}
         {onToggleTheme && (
