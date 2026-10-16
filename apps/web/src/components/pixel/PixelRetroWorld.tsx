@@ -9,7 +9,7 @@ export const PixelRetroWorld: React.FC<PixelRetroWorldProps> = ({ theme }) => {
   const isNight = theme === 'night';
 
   return (
-    <div className="w-full relative h-[320px] sm:h-[400px] md:h-[460px] lg:h-[500px] overflow-hidden select-none pointer-events-none mt-auto flex-shrink-0">
+    <div className="w-full relative h-[180px] xs:h-[220px] sm:h-[340px] md:h-[440px] lg:h-[480px] overflow-hidden select-none pointer-events-none mt-auto flex-shrink-0">
       {/* ================= BACKGROUND SKY STARS (NIGHT ONLY) ================= */}
       {isNight && (
         <div className="absolute inset-0">
@@ -72,23 +72,11 @@ export const PixelRetroWorld: React.FC<PixelRetroWorldProps> = ({ theme }) => {
         </svg>
       </div>
 
-      <div
-        className="absolute top-[28%] left-[75%] opacity-75 transition-opacity duration-700 hidden sm:block"
-        style={{ animation: 'cloud-float 60s linear infinite', animationDelay: '-40s' }}
-      >
-        <svg width="115" height="44" viewBox="0 0 28 11" style={{ shapeRendering: 'crispEdges' }}>
-          <path
-            d="M 6 4 h 16 v 1 h 4 v 1 h 2 v 4 h -26 v -4 h 2 v -1 h 2 v -1 z M 10 2 h 8 v 2 h -8 z"
-            fill={isNight ? '#1B2544' : '#FFFFFF'}
-          />
-        </svg>
-      </div>
-
       {/* ================= LAYERED MOUNTAINS (TALLER & FULL WIDTH) ================= */}
-      <div className="absolute bottom-[120px] sm:bottom-[150px] md:bottom-[180px] w-full">
+      <div className="absolute bottom-[70px] xs:bottom-[85px] sm:bottom-[130px] md:bottom-[160px] w-full">
         <svg
           viewBox="0 0 800 110"
-          className="w-full h-[90px] sm:h-[110px] md:h-[130px]"
+          className="w-full h-[60px] xs:h-[75px] sm:h-[110px] md:h-[130px]"
           preserveAspectRatio="none"
           style={{ shapeRendering: 'crispEdges' }}
         >
@@ -106,12 +94,11 @@ export const PixelRetroWorld: React.FC<PixelRetroWorldProps> = ({ theme }) => {
       </div>
 
       {/* ================= CHARACTERS, ARCADE & SCENERY (LARGE & PROMINENT) ================= */}
-      <div className="absolute bottom-[118px] sm:bottom-[148px] md:bottom-[178px] w-full flex items-end justify-center px-4 sm:px-12 z-10">
-        <div className="w-full max-w-6xl flex items-end justify-between">
+      <div className="absolute bottom-[68px] xs:bottom-[83px] sm:bottom-[128px] md:bottom-[158px] w-full flex items-end justify-center px-2 xs:px-4 sm:px-12 z-10">
+        <div className="w-full max-w-6xl flex items-end justify-center md:justify-between gap-3 xs:gap-6 sm:gap-10">
           
-          {/* Left Trees Group */}
-          <div className="flex items-end gap-3 sm:gap-6">
-            {/* Outer Left Tree */}
+          {/* Left Trees Group (Visible on md+) */}
+          <div className="hidden md:flex items-end gap-3 sm:gap-6">
             <svg
               width="80"
               height="115"
@@ -128,31 +115,27 @@ export const PixelRetroWorld: React.FC<PixelRetroWorldProps> = ({ theme }) => {
               <rect x="6" y="11" width="4" height="11" fill={isNight ? '#4A2A14' : '#784323'} />
               <rect x="5" y="20" width="6" height="2" fill={isNight ? '#381F0E' : '#5C3319'} />
             </svg>
+          </div>
 
-            {/* Flowers */}
-            <div className="hidden sm:flex items-end gap-2 pb-1">
-              <div className="w-2 h-4 bg-gameboyGreen relative">
-                <div className="w-3.5 h-3.5 bg-arcadeRed absolute -top-3 -left-1" />
-              </div>
-              <div className="w-2 h-3 bg-gameboyGreen relative">
-                <div className="w-3 h-3 bg-cartridgeYellow absolute -top-2.5 -left-0.5" />
-              </div>
+          {/* Bro 01 (Left Challenger) */}
+          <div className="flex flex-col items-center">
+            <div className="block sm:hidden">
+              <PixelCharacter type="bro1" size={56} pose="ready" />
+            </div>
+            <div className="hidden sm:block md:hidden">
+              <PixelCharacter type="bro1" size={85} pose="ready" />
+            </div>
+            <div className="hidden md:block">
+              <PixelCharacter type="bro1" size={120} pose="ready" />
             </div>
           </div>
 
-          {/* Bro 01 (Left Challenger - Large Size) */}
-          <div className="flex flex-col items-center">
-            <PixelCharacter type="bro1" size={120} pose="ready" />
-          </div>
-
-          {/* Center Arcade Machine (Scaled Up) */}
-          <div className="flex flex-col items-center mx-2 sm:mx-8">
+          {/* Center Arcade Machine (Responsive) */}
+          <div className="flex flex-col items-center mx-1 xs:mx-3 sm:mx-8">
             <svg
-              width="130"
-              height="165"
               viewBox="0 0 32 40"
               style={{ shapeRendering: 'crispEdges' }}
-              className="drop-shadow-lg sm:w-[155px] sm:h-[195px]"
+              className="drop-shadow-lg w-[70px] h-[88px] xs:w-[90px] xs:h-[114px] sm:w-[130px] sm:h-[165px] md:w-[155px] md:h-[195px]"
             >
               {/* Cabinet Body */}
               <rect x="4" y="6" width="24" height="34" fill="#121829" stroke="#000000" strokeWidth="1" />
@@ -196,22 +179,21 @@ export const PixelRetroWorld: React.FC<PixelRetroWorldProps> = ({ theme }) => {
             </svg>
           </div>
 
-          {/* Bro 02 (Right Challenger - Large Size) */}
+          {/* Bro 02 (Right Challenger) */}
           <div className="flex flex-col items-center">
-            <PixelCharacter type="bro2" size={120} pose="waiting" />
+            <div className="block sm:hidden">
+              <PixelCharacter type="bro2" size={56} pose="waiting" />
+            </div>
+            <div className="hidden sm:block md:hidden">
+              <PixelCharacter type="bro2" size={85} pose="waiting" />
+            </div>
+            <div className="hidden md:block">
+              <PixelCharacter type="bro2" size={120} pose="waiting" />
+            </div>
           </div>
 
-          {/* Right Trees Group */}
-          <div className="flex items-end gap-3 sm:gap-6">
-            <div className="hidden sm:flex items-end gap-2 pb-1">
-              <div className="w-2 h-3 bg-gameboyGreen relative">
-                <div className="w-3 h-3 bg-white absolute -top-2.5 -left-0.5" />
-              </div>
-              <div className="w-2 h-4 bg-gameboyGreen relative">
-                <div className="w-3.5 h-3.5 bg-pixelPink absolute -top-3 -left-1" />
-              </div>
-            </div>
-
+          {/* Right Trees Group (Visible on md+) */}
+          <div className="hidden md:flex items-end gap-3 sm:gap-6">
             <svg
               width="80"
               height="115"
@@ -224,6 +206,7 @@ export const PixelRetroWorld: React.FC<PixelRetroWorldProps> = ({ theme }) => {
               <rect x="1" y="5" width="14" height="4" fill={isNight ? '#225B28' : '#49A238'} />
               <rect x="3" y="9" width="10" height="2" fill={isNight ? '#225B28' : '#49A238'} />
               <rect x="4" y="3" width="2" height="1" fill={isNight ? '#2F7537' : '#69BA54'} />
+              <rect x="2" y="6" width="3" height="1" fill={isNight ? '#2F7537' : '#69BA54'} />
               <rect x="6" y="11" width="4" height="11" fill={isNight ? '#4A2A14' : '#784323'} />
               <rect x="5" y="20" width="6" height="2" fill={isNight ? '#381F0E' : '#5C3319'} />
             </svg>
@@ -232,18 +215,18 @@ export const PixelRetroWorld: React.FC<PixelRetroWorldProps> = ({ theme }) => {
       </div>
 
       {/* ================= PLATFORM GROUND: GRASS + DIRT LAYER (TO BOTTOM EDGE) ================= */}
-      <div className="absolute bottom-0 w-full h-[120px] sm:h-[150px] md:h-[180px]">
+      <div className="absolute bottom-0 w-full h-[70px] xs:h-[85px] sm:h-[130px] md:h-[160px]">
         {/* Grass Top */}
         <div
-          className="w-full h-[24px] relative transition-colors duration-500"
+          className="w-full h-[16px] sm:h-[24px] relative transition-colors duration-500"
           style={{ backgroundColor: isNight ? '#235830' : '#4CA12F' }}
         >
           {/* Jagged blades spanning full width */}
-          <div className="absolute -top-[7px] left-0 w-full overflow-hidden flex">
+          <div className="absolute -top-[5px] sm:-top-[7px] left-0 w-full overflow-hidden flex">
             {Array.from({ length: 180 }).map((_, i) => (
               <div
                 key={i}
-                className="w-3 h-3 flex-shrink-0 transition-colors duration-500"
+                className="w-2.5 sm:w-3 h-2.5 sm:h-3 flex-shrink-0 transition-colors duration-500"
                 style={{
                   backgroundColor: isNight ? '#235830' : '#4CA12F',
                   clipPath: i % 2 === 0 ? 'polygon(50% 0%, 0% 100%, 100% 100%)' : 'polygon(30% 20%, 0% 100%, 100% 100%)',
@@ -253,14 +236,14 @@ export const PixelRetroWorld: React.FC<PixelRetroWorldProps> = ({ theme }) => {
           </div>
           {/* Grass root shadow */}
           <div
-            className="absolute bottom-0 left-0 w-full h-[5px] opacity-40 transition-colors duration-500"
+            className="absolute bottom-0 left-0 w-full h-[4px] sm:h-[5px] opacity-40 transition-colors duration-500"
             style={{ backgroundColor: isNight ? '#173D21' : '#2D6B19' }}
           />
         </div>
 
         {/* Dirt Texture (Reaches Bottom Edge) */}
         <div
-          className="w-full h-[96px] sm:h-[126px] md:h-[156px] relative transition-colors duration-500"
+          className="w-full h-[54px] xs:h-[69px] sm:h-[106px] md:h-[136px] relative transition-colors duration-500"
           style={{
             backgroundColor: isNight ? '#3D2513' : '#8B5A2B',
             backgroundImage: `
@@ -273,15 +256,11 @@ export const PixelRetroWorld: React.FC<PixelRetroWorldProps> = ({ theme }) => {
         >
           {/* Horizontal strata lines */}
           <div
-            className="w-full h-[2px] absolute top-[28px] opacity-35"
+            className="w-full h-[2px] absolute top-[20px] sm:top-[28px] opacity-35"
             style={{ backgroundColor: isNight ? '#1A0E06' : '#573314' }}
           />
           <div
-            className="w-full h-[2px] absolute top-[60px] opacity-35"
-            style={{ backgroundColor: isNight ? '#1A0E06' : '#573314' }}
-          />
-          <div
-            className="w-full h-[2px] absolute top-[95px] opacity-35"
+            className="w-full h-[2px] absolute top-[40px] sm:top-[60px] opacity-35"
             style={{ backgroundColor: isNight ? '#1A0E06' : '#573314' }}
           />
         </div>

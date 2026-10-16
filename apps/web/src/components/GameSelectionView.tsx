@@ -125,7 +125,7 @@ export const GameSelectionView: React.FC<GameSelectionViewProps> = ({
 
   return (
     <PixelDraftAtmosphere theme={theme} roomState={roomState}>
-      <div className="flex-1 flex flex-col items-center justify-between p-2 sm:p-3 md:p-4 w-full max-w-6xl mx-auto select-none relative z-10 min-h-0">
+      <div className="flex-1 flex flex-col items-center justify-start sm:justify-between p-2 sm:p-3 md:p-4 pb-8 sm:pb-4 w-full max-w-6xl mx-auto select-none relative z-10 min-h-0">
         {/* Retro 1v1 Gauntlet Tag */}
         <div className="flex items-center justify-center gap-2 mb-1 sm:mb-1.5">
           <span className="text-white/60 text-xs font-pixel">+</span>

@@ -79,25 +79,25 @@ export const ReactionTestGame: React.FC<ReactionTestGameProps> = ({
   };
 
   return (
-    <div className="flex-1 flex flex-col items-center justify-center p-4 max-w-4xl mx-auto w-full select-none">
+    <div className="flex-1 flex flex-col items-center justify-start sm:justify-center p-2.5 sm:p-4 max-w-4xl mx-auto w-full select-none">
       {/* Game Title & Rule */}
-      <div className="text-center mb-4">
-        <h2 className={`font-arcade text-lg sm:text-2xl tracking-wider font-bold drop-shadow-pixel flex items-center justify-center gap-2.5 ${isNight ? 'text-cartridgeYellow' : 'text-ink'}`}>
-          <GamePixelIcon gameId="reaction-test" size={26} className="flex-shrink-0" />
+      <div className="text-center mb-2.5 sm:mb-4">
+        <h2 className={`font-arcade text-base sm:text-2xl tracking-wider font-bold drop-shadow-pixel flex items-center justify-center gap-2 sm:gap-2.5 ${isNight ? 'text-cartridgeYellow' : 'text-ink'}`}>
+          <GamePixelIcon gameId="reaction-test" size={22} className="flex-shrink-0" />
           <span>REFLEX DUEL</span>
-          <GamePixelIcon gameId="reaction-test" size={26} className="flex-shrink-0" />
+          <GamePixelIcon gameId="reaction-test" size={22} className="flex-shrink-0" />
         </h2>
-        <p className={`font-mono text-xs sm:text-sm mt-1 ${isNight ? 'text-slate-300' : 'text-stone-700'}`}>
+        <p className={`font-mono text-[11px] sm:text-sm mt-0.5 sm:mt-1 ${isNight ? 'text-slate-300' : 'text-stone-700'}`}>
           {isGreen
-            ? '🔥 GREEN! CLICK AS FAST AS YOU CAN!'
-            : '⚠️ DO NOT CLICK YET! Wait for the screen to turn GREEN...'}
+            ? '🔥 GREEN! TAP AS FAST AS YOU CAN!'
+            : '⚠️ DO NOT TAP YET! Wait for the screen to turn GREEN...'}
         </p>
       </div>
 
       {/* Main Reflex Interactive Cabinet / Canvas */}
       <div
         onClick={handleClick}
-        className={`w-full max-w-2xl h-80 sm:h-96 rounded-lg border-4 border-ink shadow-pixel flex flex-col items-center justify-center cursor-pointer transition-all duration-150 relative overflow-hidden ${
+        className={`w-full max-w-2xl h-64 xs:h-72 sm:h-96 rounded-lg border-3 sm:border-4 border-ink shadow-pixel flex flex-col items-center justify-center cursor-pointer transition-all duration-150 relative overflow-hidden ${
           isFinished
             ? iWon
               ? 'bg-emerald-600 text-white'
@@ -120,24 +120,24 @@ export const ReactionTestGame: React.FC<ReactionTestGameProps> = ({
         />
 
         {/* Center Display State */}
-        <div className="relative z-10 flex flex-col items-center p-6 text-center">
+        <div className="relative z-10 flex flex-col items-center p-4 sm:p-6 text-center">
           {isFinished ? (
-            <div className="space-y-3">
-              <div className="text-5xl sm:text-6xl animate-bounce">
+            <div className="space-y-2 sm:space-y-3">
+              <div className="text-4xl sm:text-6xl animate-bounce">
                 {iWon ? '🏆' : '💀'}
               </div>
-              <h3 className="font-arcade text-xl sm:text-3xl font-bold tracking-wider">
+              <h3 className="font-arcade text-lg sm:text-3xl font-bold tracking-wider">
                 {iWon ? 'QUICKDRAW VICTORY!' : 'YOU GOT OUTDRAWN!'}
               </h3>
-              <p className="font-mono text-sm sm:text-base font-bold">
+              <p className="font-mono text-xs sm:text-base font-bold">
                 {gameState.summary || (iWon ? 'Faster reflex time!' : 'Better luck next time!')}
               </p>
 
               {/* Stats Breakdown */}
-              <div className="flex items-center justify-center gap-6 mt-4 p-3 bg-black/40 border-2 border-white/20 rounded font-mono text-xs sm:text-sm">
+              <div className="flex items-center justify-center gap-3 sm:gap-6 mt-3 sm:mt-4 p-2 sm:p-3 bg-black/40 border-2 border-white/20 rounded font-mono text-xs sm:text-sm">
                 <div>
-                  <span className="opacity-75 block text-[10px] uppercase font-bold">YOU:</span>
-                  <span className="font-arcade text-cartridgeYellow text-sm">
+                  <span className="opacity-75 block text-[9px] sm:text-[10px] uppercase font-bold">YOU:</span>
+                  <span className="font-arcade text-cartridgeYellow text-xs sm:text-sm">
                     {myResult?.earlyClick
                       ? 'FALSE START'
                       : myResult?.reactionMs !== null && myResult?.reactionMs !== undefined
@@ -145,12 +145,12 @@ export const ReactionTestGame: React.FC<ReactionTestGameProps> = ({
                       : 'NO CLICK'}
                   </span>
                 </div>
-                <div className="border-l border-white/30 h-8" />
+                <div className="border-l border-white/30 h-6 sm:h-8" />
                 <div>
-                  <span className="opacity-75 block text-[10px] uppercase font-bold">
+                  <span className="opacity-75 block text-[9px] sm:text-[10px] uppercase font-bold">
                     {opponent?.name || 'OPPONENT'}:
                   </span>
-                  <span className="font-arcade text-cartridgeYellow text-sm">
+                  <span className="font-arcade text-cartridgeYellow text-xs sm:text-sm">
                     {opponentResult?.earlyClick
                       ? 'FALSE START'
                       : opponentResult?.reactionMs !== null && opponentResult?.reactionMs !== undefined
@@ -161,25 +161,25 @@ export const ReactionTestGame: React.FC<ReactionTestGameProps> = ({
               </div>
             </div>
           ) : isGreen ? (
-            <div className="space-y-4">
-              <div className="text-6xl sm:text-7xl animate-ping">⚡</div>
-              <h3 className="font-arcade text-2xl sm:text-4xl font-bold tracking-widest text-white drop-shadow-md">
-                CLICK NOW!!
+            <div className="space-y-2 sm:space-y-4">
+              <div className="text-5xl sm:text-7xl animate-ping">⚡</div>
+              <h3 className="font-arcade text-xl sm:text-4xl font-bold tracking-widest text-white drop-shadow-md">
+                TAP NOW!!
               </h3>
-              <p className="font-arcade text-xs tracking-wider text-yellow-200">
+              <p className="font-arcade text-[10px] sm:text-xs tracking-wider text-yellow-200">
                 HIT ANYWHERE ON THE SCREEN!
               </p>
             </div>
           ) : (
-            <div className="space-y-4">
-              <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full border-4 border-ink shadow-pixel bg-arcadeRed mx-auto animate-pulse flex items-center justify-center">
-                <span className="text-2xl text-white">✋</span>
+            <div className="space-y-2 sm:space-y-4">
+              <div className="w-12 h-12 sm:w-20 sm:h-20 rounded-full border-3 sm:border-4 border-ink shadow-pixel bg-arcadeRed mx-auto animate-pulse flex items-center justify-center">
+                <span className="text-xl sm:text-2xl text-white">✋</span>
               </div>
-              <h3 className="font-arcade text-xl sm:text-3xl font-bold tracking-widest">
+              <h3 className="font-arcade text-base sm:text-3xl font-bold tracking-widest">
                 WAIT FOR GREEN...
               </h3>
-              <p className="font-mono text-xs opacity-75">
-                (Clicking before green triggers a False Start!)
+              <p className="font-mono text-[10px] sm:text-xs opacity-75">
+                (Tapping before green triggers a False Start!)
               </p>
             </div>
           )}

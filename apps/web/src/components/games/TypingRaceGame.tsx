@@ -167,6 +167,8 @@ export const TypingRaceGame: React.FC<TypingRaceGameProps> = ({
   const [soundEnabled, setSoundEnabled] = useState(true);
   const [countdownNum, setCountdownNum] = useState<number | 'GO' | null>(null);
   const [localWpm, setLocalWpm] = useState(0);
+  const [inputValue, setInputValue] = useState('');
+  const [isInputFocused, setIsInputFocused] = useState(false);
 
   const inputRef = useRef<HTMLInputElement | null>(null);
   const passageContainerRef = useRef<HTMLDivElement | null>(null);
@@ -272,54 +274,82 @@ export const TypingRaceGame: React.FC<TypingRaceGameProps> = ({
     [gameState.startTime, onSendMove]
   );
 
-  // Handle typing input
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    const now = Date.now();
-    // Cannot type during countdown or when finished
-    if (now < gameState.startTime || gameState.status === 'FINISHED' || localCharIndex >= gameState.text.length) {
-      return;
-    }
+  // Process typed character from physical or virtual mobile keyboard
+  const processTypedChar = useCallback(
+    (char: string) => {
+      const now = Date.now();
+      // Cannot type during countdown or when finished
+      if (now < gameState.startTime || gameState.status === 'FINISHED' || localCharIndex >= gameState.text.length) {
+        return;
+      }
 
+      if (char === 'Backspace') {
+        if (currentErrorChar !== null) {
+          setCurrentErrorChar(null);
+        }
+        return;
+      }
+
+      if (char.length === 1) {
+        const targetChar = gameState.text[localCharIndex];
+
+        if (currentErrorChar !== null) {
+          // Must backspace or correct error before progressing
+          soundSynth.playMistake();
+          return;
+        }
+
+        if (char === targetChar) {
+          // Correct character typed!
+          soundSynth.playKeyClick();
+          const nextIndex = localCharIndex + 1;
+          setLocalCharIndex(nextIndex);
+          setCurrentErrorChar(null);
+
+          const isFinished = nextIndex >= gameState.text.length;
+          sendProgress(nextIndex, mistakesCount, isFinished);
+        } else {
+          // Mistake!
+          soundSynth.playMistake();
+          setCurrentErrorChar(char);
+          const newMistakes = mistakesCount + 1;
+          setMistakesCount(newMistakes);
+          sendProgress(localCharIndex, newMistakes, false);
+        }
+      }
+    },
+    [currentErrorChar, gameState.startTime, gameState.status, gameState.text, localCharIndex, mistakesCount, sendProgress]
+  );
+
+  // Handle physical keyboard input
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     // Ignore special control keys
     if (e.ctrlKey || e.metaKey || e.altKey) {
       return;
     }
 
     if (e.key === 'Backspace') {
-      if (currentErrorChar !== null) {
-        setCurrentErrorChar(null);
-      }
+      processTypedChar('Backspace');
       return;
     }
 
-    // Single printable character check
-    if (e.key.length === 1) {
-      const targetChar = gameState.text[localCharIndex];
-
-      if (currentErrorChar !== null) {
-        // Must backspace or correct error before progressing
-        soundSynth.playMistake();
-        return;
-      }
-
-      if (e.key === targetChar) {
-        // Correct character typed!
-        soundSynth.playKeyClick();
-        const nextIndex = localCharIndex + 1;
-        setLocalCharIndex(nextIndex);
-        setCurrentErrorChar(null);
-
-        const isFinished = nextIndex >= gameState.text.length;
-        sendProgress(nextIndex, mistakesCount, isFinished);
-      } else {
-        // Mistake!
-        soundSynth.playMistake();
-        setCurrentErrorChar(e.key);
-        const newMistakes = mistakesCount + 1;
-        setMistakesCount(newMistakes);
-        sendProgress(localCharIndex, newMistakes, false);
-      }
+    if (e.key && e.key.length === 1 && e.key !== 'Unidentified') {
+      processTypedChar(e.key);
     }
+  };
+
+  // Handle virtual mobile keyboard input via onChange
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = e.target.value;
+    if (!val) {
+      processTypedChar('Backspace');
+      setInputValue('');
+      return;
+    }
+
+    const lastChar = val[val.length - 1];
+    processTypedChar(lastChar);
+    setInputValue('');
   };
 
   const textLength = gameState.text.length;
@@ -357,10 +387,12 @@ export const TypingRaceGame: React.FC<TypingRaceGameProps> = ({
         autoComplete="off"
         autoCorrect="off"
         spellCheck="false"
-        value=""
-        onChange={() => {}}
+        value={inputValue}
+        onChange={handleInputChange}
         onKeyDown={handleKeyDown}
-        className="opacity-0 pointer-events-none fixed top-0 left-0 w-1 h-1"
+        onFocus={() => setIsInputFocused(true)}
+        onBlur={() => setIsInputFocused(false)}
+        className="opacity-0 fixed top-0 left-0 w-8 h-8 pointer-events-auto z-0"
         aria-label="Typing input stream"
       />
 
@@ -630,28 +662,47 @@ export const TypingRaceGame: React.FC<TypingRaceGameProps> = ({
         </div>
       </div>
 
+      {/* Mobile Keyboard Trigger Prompt */}
+      {!isFinished && isRacing && (
+        <button
+          type="button"
+          onClick={(e) => {
+            e.stopPropagation();
+            focusInput();
+          }}
+          className={`w-full sm:hidden py-1 px-2.5 mb-1.5 font-pixel text-[10px] font-bold border-2 border-ink shadow-pixel flex items-center justify-center gap-1.5 transition-all flex-shrink-0 ${
+            isInputFocused
+              ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500'
+              : 'bg-arcadeRed text-white animate-bounce'
+          }`}
+        >
+          <span>📱</span>
+          <span>{isInputFocused ? 'KEYBOARD ACTIVE — TYPE NOW!' : 'TAP HERE TO OPEN KEYBOARD'}</span>
+        </button>
+      )}
+
       {/* ================= INTERACTIVE PASSAGE DISPLAY (ARCADE TERMINAL) ================= */}
       <div
         ref={passageContainerRef}
-        className="w-full flex-1 min-h-[140px] max-h-[220px] p-3 sm:p-4 border-3 sm:border-4 border-ink shadow-pixel rounded-lg relative cursor-text bg-[#0b1329] text-white flex flex-col justify-between overflow-y-auto"
+        className="w-full flex-1 min-h-[120px] max-h-[190px] sm:min-h-[140px] sm:max-h-[220px] p-2.5 sm:p-4 border-2 sm:border-4 border-ink shadow-pixel rounded-lg relative cursor-text bg-[#0b1329] text-white flex flex-col justify-between overflow-y-auto"
       >
         {/* Synchronized Countdown Overlay */}
         {countdownNum !== null && (
           <div className="absolute inset-0 bg-[#070b19]/90 backdrop-blur-sm z-30 flex flex-col items-center justify-center pointer-events-none animate-fadeIn">
             {/* Traffic Light Signal */}
-            <div className="flex items-center gap-3 p-2 sm:p-2.5 bg-black/80 border-2 border-slate-700 rounded-full mb-2 shadow-pixel">
+            <div className="flex items-center gap-2 sm:gap-3 p-1.5 sm:p-2.5 bg-black/80 border-2 border-slate-700 rounded-full mb-1.5 sm:mb-2 shadow-pixel">
               <div
-                className={`w-3.5 h-3.5 rounded-full transition-all ${
+                className={`w-3 h-3 sm:w-3.5 sm:h-3.5 rounded-full transition-all ${
                   countdownNum === 3 ? 'bg-red-500 shadow-[0_0_12px_#ef4444]' : 'bg-red-950'
                 }`}
               />
               <div
-                className={`w-3.5 h-3.5 rounded-full transition-all ${
+                className={`w-3 h-3 sm:w-3.5 sm:h-3.5 rounded-full transition-all ${
                   countdownNum === 2 ? 'bg-yellow-500 shadow-[0_0_12px_#eab308]' : 'bg-yellow-950'
                 }`}
               />
               <div
-                className={`w-3.5 h-3.5 rounded-full transition-all ${
+                className={`w-3 h-3 sm:w-3.5 sm:h-3.5 rounded-full transition-all ${
                   countdownNum === 1 || countdownNum === 'GO'
                     ? 'bg-emerald-500 shadow-[0_0_12px_#10b981]'
                     : 'bg-emerald-950'
@@ -659,10 +710,10 @@ export const TypingRaceGame: React.FC<TypingRaceGameProps> = ({
               />
             </div>
 
-            <div className="font-pixel text-3xl sm:text-5xl text-cyan-400 tracking-widest drop-shadow-[0_4px_8px_rgba(6,182,212,0.8)] animate-pulse">
+            <div className="font-pixel text-2xl sm:text-5xl text-cyan-400 tracking-widest drop-shadow-[0_4px_8px_rgba(6,182,212,0.8)] animate-pulse">
               {countdownNum === 'GO' ? 'RACE!' : countdownNum}
             </div>
-            <div className="text-[11px] font-mono text-slate-300 mt-1">
+            <div className="text-[10px] sm:text-[11px] font-mono text-slate-300 mt-0.5 sm:mt-1">
               Ready fingers on keyboard!
             </div>
           </div>
@@ -670,14 +721,14 @@ export const TypingRaceGame: React.FC<TypingRaceGameProps> = ({
 
         {/* Finished / Victory Banner */}
         {gameState.status === 'FINISHED' && (
-          <div className="absolute inset-0 bg-[#070b19]/90 backdrop-blur-sm z-30 flex flex-col items-center justify-center p-3 text-center animate-fadeIn">
-            <div className="font-pixel text-xl sm:text-3xl text-yellow-400 mb-1.5 drop-shadow-md">
+          <div className="absolute inset-0 bg-[#070b19]/90 backdrop-blur-sm z-30 flex flex-col items-center justify-center p-2.5 sm:p-3 text-center animate-fadeIn">
+            <div className="font-pixel text-lg sm:text-3xl text-yellow-400 mb-1 sm:mb-1.5 drop-shadow-md">
               {isWinner ? '🏆 CHECKERED FLAG VICTORY!' : '🏁 RACE COMPLETE!'}
             </div>
             <div className="text-xs sm:text-sm font-mono text-cyan-300 max-w-md">
               {gameState.summary || 'Spectacular battle on the track!'}
             </div>
-            <div className="mt-2.5 flex items-center gap-3 text-[11px] font-mono text-slate-200 bg-slate-900/90 px-3 py-1.5 border border-slate-700 rounded shadow-pixel">
+            <div className="mt-2 sm:mt-2.5 flex items-center gap-2 sm:gap-3 text-[10px] sm:text-[11px] font-mono text-slate-200 bg-slate-900/90 px-2 sm:px-3 py-1 sm:py-1.5 border border-slate-700 rounded shadow-pixel">
               <div>Your Speed: <strong className="text-cyan-400">{localWpm || myState.wpm} WPM</strong></div>
               <div>•</div>
               <div>Accuracy: <strong className="text-emerald-400">{myState.accuracy}%</strong></div>
@@ -686,7 +737,7 @@ export const TypingRaceGame: React.FC<TypingRaceGameProps> = ({
         )}
 
         {/* Passage Text Rendering */}
-        <div className="font-mono text-base sm:text-lg lg:text-xl leading-relaxed tracking-wide select-none">
+        <div className="font-mono text-sm sm:text-lg lg:text-xl leading-relaxed tracking-wide select-none">
           {gameState.text.split('').map((char, index) => {
             const isTyped = index < localCharIndex;
             const isCurrent = index === localCharIndex;

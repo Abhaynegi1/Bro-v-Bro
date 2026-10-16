@@ -283,21 +283,21 @@ export const WordleGame: React.FC<WordleGameProps> = ({
       </div>
 
       {/* Duel Arena: Split Grids */}
-      <div className="w-full max-w-4xl flex items-center justify-center gap-4 sm:gap-8 md:gap-12 mb-3">
+      <div className="w-full max-w-4xl flex items-center justify-center gap-2 xs:gap-3 sm:gap-8 md:gap-12 mb-2 sm:mb-3">
         {/* PLAYER'S BOARD (Primary Focus) */}
         <div className="flex flex-col items-center">
-          <div className="flex items-center gap-2 mb-1.5">
-            <PixelCharacter type={myPlayer?.isHost ? 'bro1' : 'bro2'} size={24} />
-            <span className={`font-arcade text-xs sm:text-sm font-bold tracking-wide ${isNight ? 'text-white' : 'text-ink'}`}>
+          <div className="flex items-center gap-1.5 sm:gap-2 mb-1 sm:mb-1.5">
+            <PixelCharacter type={myPlayer?.isHost ? 'bro1' : 'bro2'} size={20} className="sm:w-6 sm:h-6" />
+            <span className={`font-arcade text-[10px] xs:text-xs sm:text-sm font-bold tracking-wide truncate max-w-[90px] xs:max-w-[120px] sm:max-w-none ${isNight ? 'text-white' : 'text-ink'}`}>
               {myPlayer?.name || 'YOU'} (YOU)
             </span>
-            <span className="text-[10px] font-mono px-1.5 py-0.2 bg-gameBoyGreen text-ink font-bold border border-ink">
-              ACTIVE
+            <span className="text-[9px] sm:text-[10px] font-mono px-1 sm:px-1.5 py-0.2 bg-gameBoyGreen text-ink font-bold border border-ink">
+              YOU
             </span>
           </div>
 
           <div
-            className={`flex flex-col gap-1.5 p-3 sm:p-4 border-4 border-ink shadow-pixel transition-transform ${
+            className={`flex flex-col gap-1 sm:gap-1.5 p-1.5 xs:p-2 sm:p-4 border-2 sm:border-4 border-ink shadow-pixel transition-transform ${
               isShaking ? 'animate-wordle-shake' : ''
             } ${isNight ? 'bg-[#18243A]' : 'bg-[#FBF6E9]'}`}
           >
@@ -306,7 +306,7 @@ export const WordleGame: React.FC<WordleGameProps> = ({
               const isCurrentRow = rowIndex === myState.guesses.length && canType;
 
               return (
-                <div key={rowIndex} className="flex gap-1.5">
+                <div key={rowIndex} className="flex gap-1 sm:gap-1.5">
                   {Array.from({ length: 5 }).map((_, colIndex) => {
                     let letter = '';
                     let tileState: WordleLetterState | undefined = undefined;
@@ -323,7 +323,7 @@ export const WordleGame: React.FC<WordleGameProps> = ({
                     return (
                       <div
                         key={colIndex}
-                        className={`w-11 h-11 sm:w-13 sm:h-13 md:w-14 md:h-14 border-2 flex items-center justify-center font-arcade text-base sm:text-xl font-bold uppercase transition-all ${
+                        className={`w-7 h-7 xs:w-8 xs:h-8 sm:w-13 sm:h-13 md:w-14 md:h-14 border sm:border-2 flex items-center justify-center font-arcade text-xs xs:text-sm sm:text-xl font-bold uppercase transition-all ${
                           isPop ? 'animate-wordle-pop' : ''
                         } ${getTileStyle(tileState)}`}
                       >
@@ -338,34 +338,34 @@ export const WordleGame: React.FC<WordleGameProps> = ({
         </div>
 
         {/* CENTER VS ENERGY COLUMN */}
-        <div className="hidden sm:flex flex-col items-center justify-center opacity-80 px-1">
-          <span className="text-xl animate-bounce">⚡</span>
-          <span className="font-arcade text-arcadeRed text-base sm:text-lg font-bold my-2 tracking-wider">
+        <div className="hidden xs:flex flex-col items-center justify-center opacity-80 px-0.5 sm:px-1">
+          <span className="text-sm sm:text-xl animate-bounce">⚡</span>
+          <span className="font-arcade text-arcadeRed text-xs sm:text-lg font-bold my-1 sm:my-2 tracking-wider">
             VS
           </span>
-          <span className="text-xl animate-bounce">⚡</span>
+          <span className="text-sm sm:text-xl animate-bounce">⚡</span>
         </div>
 
         {/* OPPONENT'S LIVE GHOST BOARD (Live progress spectator) */}
         <div className="flex flex-col items-center">
-          <div className="flex items-center gap-2 mb-1.5">
-            <PixelCharacter type={opponentPlayer?.isHost ? 'bro1' : 'bro2'} size={24} />
-            <span className="font-arcade text-xs sm:text-sm font-bold tracking-wide opacity-80">
-              {opponentPlayer?.name || 'OPPONENT'}
+          <div className="flex items-center gap-1 sm:gap-2 mb-1 sm:mb-1.5">
+            <PixelCharacter type={opponentPlayer?.isHost ? 'bro1' : 'bro2'} size={18} className="sm:w-6 sm:h-6" />
+            <span className="font-arcade text-[10px] xs:text-xs sm:text-sm font-bold tracking-wide opacity-80 truncate max-w-[70px] xs:max-w-[100px] sm:max-w-none">
+              {opponentPlayer?.name || 'RIVAL'}
             </span>
             {opponentState?.hasWon ? (
-              <span className="text-[10px] bg-[#22C55E] text-white px-1.5 py-0.2 font-arcade font-bold border border-ink">
-                WINNER
+              <span className="text-[8px] sm:text-[10px] bg-[#22C55E] text-white px-1 sm:px-1.5 py-0.2 font-arcade font-bold border border-ink">
+                WON
               </span>
             ) : (
-              <span className="text-[10px] font-mono px-1.5 py-0.2 bg-slate-700 text-slate-200 border border-ink/40">
+              <span className="text-[8px] sm:text-[10px] font-mono px-1 sm:px-1.5 py-0.2 bg-slate-700 text-slate-200 border border-ink/40">
                 RADAR
               </span>
             )}
           </div>
 
           <div
-            className={`flex flex-col gap-1.5 p-3 sm:p-4 border-4 border-dashed border-ink/40 shadow-pixel-sm ${
+            className={`flex flex-col gap-1 sm:gap-1.5 p-1.5 xs:p-2 sm:p-4 border-2 sm:border-4 border-dashed border-ink/40 shadow-pixel-sm ${
               isNight ? 'bg-[#18243A]/70' : 'bg-[#EAE4D2]'
             }`}
           >
@@ -373,7 +373,7 @@ export const WordleGame: React.FC<WordleGameProps> = ({
               const oppGuess = opponentState?.guesses[rowIndex];
 
               return (
-                <div key={rowIndex} className="flex gap-1.5">
+                <div key={rowIndex} className="flex gap-1 sm:gap-1.5">
                   {Array.from({ length: 5 }).map((_, colIndex) => {
                     let letter = '';
                     let tileState: WordleLetterState | undefined = undefined;
@@ -386,7 +386,7 @@ export const WordleGame: React.FC<WordleGameProps> = ({
                     return (
                       <div
                         key={colIndex}
-                        className={`w-8 h-8 sm:w-10 sm:h-10 md:w-11 md:h-11 border-2 flex items-center justify-center font-arcade text-xs sm:text-sm font-bold uppercase transition-all ${getTileStyle(
+                        className={`w-4 h-4 xs:w-5 xs:h-5 sm:w-10 sm:h-10 md:w-11 md:h-11 border flex items-center justify-center font-arcade text-[8px] xs:text-[10px] sm:text-sm font-bold uppercase transition-all ${getTileStyle(
                           tileState
                         )} ${!oppGuess ? 'opacity-35' : ''}`}
                       >
@@ -398,16 +398,16 @@ export const WordleGame: React.FC<WordleGameProps> = ({
               );
             })}
           </div>
-          <span className="font-mono text-[10px] text-stone-500 mt-1 font-bold">
-            Live Spectator Radar
+          <span className="font-mono text-[9px] sm:text-[10px] text-stone-500 mt-1 font-bold">
+            Live Spectator
           </span>
         </div>
       </div>
 
       {/* On-Screen Pixel Keyboard */}
-      <div className="w-full max-w-xl flex flex-col gap-1.5 px-2">
+      <div className="w-full max-w-xl flex flex-col gap-1 sm:gap-1.5 px-1 sm:px-2">
         {KEYBOARD_ROWS.map((row, rowIdx) => (
-          <div key={rowIdx} className="flex justify-center gap-1 sm:gap-1.5">
+          <div key={rowIdx} className="flex justify-center gap-0.5 sm:gap-1.5">
             {row.map((key) => {
               const isActionKey = key === 'ENTER' || key === 'BACK';
 
@@ -416,8 +416,8 @@ export const WordleGame: React.FC<WordleGameProps> = ({
                   key={key}
                   onClick={() => handleKeyInput(key)}
                   disabled={!canType}
-                  className={`border-2 font-arcade font-bold text-xs sm:text-sm h-8 sm:h-9 transition-transform active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed ${
-                    isActionKey ? 'px-2.5 sm:px-4 text-[10px] sm:text-xs' : 'flex-1 max-w-[42px]'
+                  className={`border font-arcade font-bold text-[10px] xs:text-xs sm:text-sm h-7 xs:h-8 sm:h-9 transition-transform active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed ${
+                    isActionKey ? 'px-1 xs:px-2 sm:px-4 text-[8px] xs:text-[10px] sm:text-xs' : 'flex-1 max-w-[34px] xs:max-w-[42px]'
                   } ${getKeyStyle(key)}`}
                 >
                   {key === 'BACK' ? '⌫' : key}

@@ -130,21 +130,21 @@ export const MinesweeperGame: React.FC<MinesweeperGameProps> = ({
     <div className="flex-1 flex flex-col items-center justify-between p-3 sm:p-5 w-full max-w-4xl mx-auto select-none">
       {/* Header Banner */}
       <div
-        className={`w-full max-w-2xl p-3 sm:p-4 mb-3 border-4 border-ink shadow-pixel text-center transition-colors relative ${
+        className={`w-full max-w-2xl p-2.5 sm:p-4 mb-2 sm:mb-3 border-2 sm:border-4 border-ink shadow-pixel text-center transition-colors relative ${
           isNight ? 'bg-[#18243A] text-paper' : 'bg-paper text-ink'
         }`}
       >
-        <div className="flex items-center justify-between px-2 mb-1.5">
-          <span className={`font-arcade text-[10px] sm:text-xs font-bold flex items-center gap-2 ${isNight ? 'text-cartridgeYellow' : 'text-amber-800'}`}>
-            <GamePixelIcon gameId="minesweeper" size={22} className="flex-shrink-0" />
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-1.5 sm:gap-0 px-1 sm:px-2 mb-1.5">
+          <span className={`font-arcade text-[10px] sm:text-xs font-bold flex items-center gap-1.5 sm:gap-2 ${isNight ? 'text-cartridgeYellow' : 'text-amber-800'}`}>
+            <GamePixelIcon gameId="minesweeper" size={20} className="flex-shrink-0" />
             <span>MINEFIELD SPEED RACE</span>
           </span>
-          <div className="flex items-center gap-2">
-            <span className="font-mono text-[10px] sm:text-xs font-bold px-2 py-0.5 border border-ink bg-ink text-cartridgeYellow">
-              🚩 {remainingMines} MINES LEFT
+          <div className="flex flex-wrap items-center justify-center gap-1.5 sm:gap-2">
+            <span className="font-mono text-[9px] sm:text-xs font-bold px-1.5 sm:px-2 py-0.5 border border-ink bg-ink text-cartridgeYellow">
+              🚩 {remainingMines} MINES
             </span>
-            <span className="font-mono text-[10px] sm:text-xs font-bold px-2 py-0.5 border border-ink bg-ink text-white">
-              ⛏️ {myState.revealedCount}/{gameState.totalSafeCells} CLEARED
+            <span className="font-mono text-[9px] sm:text-xs font-bold px-1.5 sm:px-2 py-0.5 border border-ink bg-ink text-white">
+              ⛏️ {myState.revealedCount}/{gameState.totalSafeCells}
             </span>
           </div>
         </div>
@@ -152,42 +152,42 @@ export const MinesweeperGame: React.FC<MinesweeperGameProps> = ({
         {/* Dynamic Status Headline */}
         {iWon ? (
           <div>
-            <h2 className="font-arcade text-base sm:text-xl text-[#22C55E] font-bold tracking-wide animate-pulse">
+            <h2 className="font-arcade text-sm sm:text-xl text-[#22C55E] font-bold tracking-wide animate-pulse">
               🏆 FLAWLESS SWEEP! YOU WON THE RACE!
             </h2>
-            <p className="font-mono text-xs mt-0.5 opacity-90">{gameState.summary}</p>
+            <p className="font-mono text-[10px] sm:text-xs mt-0.5 opacity-90">{gameState.summary}</p>
           </div>
         ) : iLost ? (
           <div>
-            <h2 className="font-arcade text-base sm:text-xl text-arcadeRed font-bold tracking-wide">
+            <h2 className="font-arcade text-sm sm:text-xl text-arcadeRed font-bold tracking-wide">
               💀 BOOM! DEFEAT! {opponentPlayer?.name?.toUpperCase() || 'OPPONENT'} WINS!
             </h2>
-            <p className="font-mono text-xs mt-0.5 opacity-90">{gameState.summary}</p>
+            <p className="font-mono text-[10px] sm:text-xs mt-0.5 opacity-90">{gameState.summary}</p>
           </div>
         ) : isDraw ? (
           <div>
-            <h2 className={`font-arcade text-base sm:text-xl font-bold tracking-wide ${isNight ? 'text-cartridgeYellow' : 'text-amber-800'}`}>
+            <h2 className={`font-arcade text-sm sm:text-xl font-bold tracking-wide ${isNight ? 'text-cartridgeYellow' : 'text-amber-800'}`}>
               🤝 MINEFIELD DUEL CONCLUDED IN A DRAW!
             </h2>
-            <p className="font-mono text-xs mt-0.5 opacity-90">{gameState.summary}</p>
+            <p className="font-mono text-[10px] sm:text-xs mt-0.5 opacity-90">{gameState.summary}</p>
           </div>
         ) : (
           <div>
-            <h2 className="font-arcade text-sm sm:text-base text-ink dark:text-paper font-bold tracking-wide">
-              CLEAR 71 SAFE SECTORS WITHOUT STRIKING A MINE!
+            <h2 className="font-arcade text-xs sm:text-base text-ink dark:text-paper font-bold tracking-wide">
+              CLEAR 71 SAFE SECTORS!
             </h2>
-            <p className={`font-mono text-[11px] mt-0.5 ${isNight ? 'text-slate-300' : 'text-stone-600'}`}>
-              Left-click to DIG • Right-click (or toggle mode below) to place 🚩 FLAGS
+            <p className={`font-mono text-[10px] sm:text-[11px] mt-0.5 ${isNight ? 'text-slate-300' : 'text-stone-600'}`}>
+              Tap cell to DIG • Switch mode below to place 🚩 FLAGS
             </p>
           </div>
         )}
       </div>
 
       {/* Control Toggle Bar */}
-      <div className="flex items-center gap-3 mb-3">
+      <div className="w-full max-w-[340px] flex items-center justify-center gap-2 sm:gap-3 mb-2 sm:mb-3">
         <button
           onClick={() => setClickMode('DIG')}
-          className={`px-3 py-1.5 font-arcade text-xs tracking-wider border-2 border-ink shadow-pixel transition-all font-bold flex items-center gap-1.5 ${
+          className={`flex-1 py-1.5 sm:py-2 font-arcade text-[11px] sm:text-xs tracking-wider border-2 border-ink shadow-pixel transition-all font-bold flex items-center justify-center gap-1.5 ${
             clickMode === 'DIG'
               ? 'bg-arcadeRed text-white translate-x-[-1px] translate-y-[-1px]'
               : isNight
@@ -201,7 +201,7 @@ export const MinesweeperGame: React.FC<MinesweeperGameProps> = ({
 
         <button
           onClick={() => setClickMode('FLAG')}
-          className={`px-3 py-1.5 font-arcade text-xs tracking-wider border-2 border-ink shadow-pixel transition-all font-bold flex items-center gap-1.5 ${
+          className={`flex-1 py-1.5 sm:py-2 font-arcade text-[11px] sm:text-xs tracking-wider border-2 border-ink shadow-pixel transition-all font-bold flex items-center justify-center gap-1.5 ${
             clickMode === 'FLAG'
               ? 'bg-cartridgeYellow text-ink translate-x-[-1px] translate-y-[-1px]'
               : isNight
@@ -215,13 +215,13 @@ export const MinesweeperGame: React.FC<MinesweeperGameProps> = ({
       </div>
 
       {/* Duel Arena: Split Boards */}
-      <div className="w-full max-w-3xl flex flex-col md:flex-row items-center md:items-start justify-center gap-6 sm:gap-10">
+      <div className="w-full max-w-3xl flex flex-col md:flex-row items-center md:items-start justify-center gap-4 sm:gap-10">
         {/* PLAYER'S BOARD (Primary Focus) */}
         <div className="flex flex-col items-center">
-          <div className="flex items-center justify-between w-full max-w-[340px] px-1 mb-2">
-            <div className="flex items-center gap-2">
-              <PixelCharacter type={myPlayer?.isHost ? 'bro1' : 'bro2'} size={24} />
-              <span className="font-arcade text-xs font-bold tracking-wide">
+          <div className="flex items-center justify-between w-full max-w-[280px] xs:max-w-[320px] sm:max-w-[350px] px-1 mb-1.5">
+            <div className="flex items-center gap-1.5">
+              <PixelCharacter type={myPlayer?.isHost ? 'bro1' : 'bro2'} size={20} />
+              <span className="font-arcade text-[10px] xs:text-xs font-bold tracking-wide truncate max-w-[120px]">
                 {myPlayer?.name || 'YOU'} (YOU)
               </span>
             </div>
@@ -231,7 +231,7 @@ export const MinesweeperGame: React.FC<MinesweeperGameProps> = ({
           </div>
 
           {/* Progress Bar */}
-          <div className="w-full max-w-[340px] h-2 bg-stone-300 border border-ink mb-2 overflow-hidden">
+          <div className="w-full max-w-[280px] xs:max-w-[320px] sm:max-w-[350px] h-2 bg-stone-300 border border-ink mb-1.5 overflow-hidden">
             <div
               className="h-full bg-emerald-500 transition-all duration-300"
               style={{ width: `${myProgressPercent}%` }}
@@ -240,7 +240,7 @@ export const MinesweeperGame: React.FC<MinesweeperGameProps> = ({
 
           {/* 9x9 Minefield Grid */}
           <div
-            className={`grid grid-cols-9 gap-1 p-2 border-4 border-ink shadow-pixel ${
+            className={`grid grid-cols-9 gap-0.5 xs:gap-1 p-1.5 xs:p-2 border-2 sm:border-4 border-ink shadow-pixel ${
               isNight ? 'bg-[#121B2A]' : 'bg-[#E5DDC3]'
             }`}
           >
@@ -255,7 +255,7 @@ export const MinesweeperGame: React.FC<MinesweeperGameProps> = ({
                     onClick={() => handleCellClick(r, c)}
                     onContextMenu={(e) => handleContextMenu(e, r, c)}
                     disabled={!canPlay || isRevealed}
-                    className={`w-8 h-8 sm:w-9 sm:h-9 border flex items-center justify-center transition-all ${
+                    className={`w-7 h-7 xs:w-8 xs:h-8 sm:w-9 sm:h-9 border flex items-center justify-center text-xs xs:text-sm font-bold transition-all ${
                       isExploded
                         ? 'bg-red-600 text-white border-ink animate-pulse shadow-inner'
                         : isRevealed
@@ -277,10 +277,10 @@ export const MinesweeperGame: React.FC<MinesweeperGameProps> = ({
 
         {/* OPPONENT'S LIVE RADAR (Ghost Board) */}
         <div className="flex flex-col items-center">
-          <div className="flex items-center justify-between w-full max-w-[200px] px-1 mb-2">
+          <div className="flex items-center justify-between w-full max-w-[190px] px-1 mb-1.5">
             <div className="flex items-center gap-1.5">
-              <PixelCharacter type={opponentPlayer?.isHost ? 'bro1' : 'bro2'} size={20} />
-              <span className="font-arcade text-xs font-bold tracking-wide text-stone-500">
+              <PixelCharacter type={opponentPlayer?.isHost ? 'bro1' : 'bro2'} size={18} />
+              <span className="font-arcade text-[10px] xs:text-xs font-bold tracking-wide text-stone-500 truncate max-w-[90px]">
                 {opponentPlayer?.name || 'OPPONENT'}
               </span>
             </div>
@@ -290,7 +290,7 @@ export const MinesweeperGame: React.FC<MinesweeperGameProps> = ({
           </div>
 
           {/* Opponent Progress Bar */}
-          <div className="w-full max-w-[200px] h-2 bg-stone-300 border border-ink mb-2 overflow-hidden">
+          <div className="w-full max-w-[190px] h-1.5 sm:h-2 bg-stone-300 border border-ink mb-1.5 overflow-hidden">
             <div
               className="h-full bg-blue-500 transition-all duration-300"
               style={{ width: `${oppProgressPercent}%` }}
@@ -299,7 +299,7 @@ export const MinesweeperGame: React.FC<MinesweeperGameProps> = ({
 
           {/* Opponent's Mini 9x9 Radar */}
           <div
-            className={`grid grid-cols-9 gap-0.5 p-1.5 border-4 border-dashed border-ink/40 shadow-pixel-sm ${
+            className={`grid grid-cols-9 gap-0.5 p-1 sm:p-1.5 border-2 sm:border-4 border-dashed border-ink/40 shadow-pixel-sm ${
               isNight ? 'bg-[#18243A]/60' : 'bg-[#DCD5BD]'
             }`}
           >
@@ -311,7 +311,7 @@ export const MinesweeperGame: React.FC<MinesweeperGameProps> = ({
                 return (
                   <div
                     key={`opp-${r}-${c}`}
-                    className={`w-5 h-5 border flex items-center justify-center text-[10px] ${
+                    className={`w-4 h-4 xs:w-4.5 xs:h-4.5 sm:w-5 sm:h-5 border flex items-center justify-center text-[8px] xs:text-[10px] ${
                       isExploded
                         ? 'bg-red-500 text-white'
                         : isRevealed
@@ -331,8 +331,8 @@ export const MinesweeperGame: React.FC<MinesweeperGameProps> = ({
               })
             )}
           </div>
-          <span className="font-mono text-[10px] text-stone-500 mt-1">
-            Opponent's live mine sweeper radar
+          <span className="font-mono text-[9px] sm:text-[10px] text-stone-500 mt-1">
+            Opponent's live mine radar
           </span>
         </div>
       </div>

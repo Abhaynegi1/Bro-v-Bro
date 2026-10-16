@@ -55,7 +55,7 @@ export const WaitingRoomView: React.FC<WaitingRoomViewProps> = ({
   };
 
   return (
-    <div className="flex-1 flex flex-col items-center justify-center px-4 py-6 sm:py-8 max-w-2xl mx-auto w-full text-center select-none relative z-10">
+    <div className="flex-1 flex flex-col items-center justify-start sm:justify-center px-3 sm:px-4 py-3 sm:py-8 max-w-2xl mx-auto w-full text-center select-none relative z-10">
       {/* Background Floating Clouds (Day Mode) */}
       {!isNight && (
         <div className="absolute inset-0 pointer-events-none overflow-hidden -z-10">
@@ -117,13 +117,13 @@ export const WaitingRoomView: React.FC<WaitingRoomViewProps> = ({
           isNight
             ? 'bg-[#142247] border-2 border-[#4A68B1] shadow-[8px_8px_0px_#050A18]'
             : 'bg-[#0A0F1D] border-3 border-black shadow-pixel-lg'
-        } text-white p-5 sm:p-6 mb-6 relative`}
+        } text-white p-4 sm:p-6 mb-4 sm:mb-6 relative`}
       >
         <div className="flex items-center justify-between border-b border-white/20 pb-2 mb-3">
-          <span className="font-arcade text-xs text-cartridgeYellow tracking-widest uppercase font-bold">
+          <span className="font-arcade text-[10px] sm:text-xs text-cartridgeYellow tracking-widest uppercase font-bold">
             ARCADE LOBBY
           </span>
-          <span className="font-mono font-bold text-xs text-white/90 tracking-wider">
+          <span className="font-mono font-bold text-[10px] sm:text-xs text-white/90 tracking-wider">
             {roomState.currentMatch?.seriesCondition.type === 'FIRST_TO_N'
               ? `SERIES: FIRST TO ${roomState.currentMatch.seriesCondition.targetPoints}`
               : 'SERIES: MATCH PLAY'}
@@ -131,21 +131,22 @@ export const WaitingRoomView: React.FC<WaitingRoomViewProps> = ({
         </div>
 
         {/* Large Retro Room Code */}
-        <div className="my-2">
-          <div className="font-arcade text-[10px] text-white/70 uppercase mb-1">
+        <div className="my-1.5 sm:my-2">
+          <div className="font-arcade text-[9px] sm:text-[10px] text-white/70 uppercase mb-0.5 sm:mb-1">
             ROOM CODE
           </div>
-          <div className="font-pixel text-4xl sm:text-6xl text-white tracking-widest py-1 drop-shadow-[3px_3px_0px_#000000]">
+          <div className="font-pixel text-3xl xs:text-4xl sm:text-6xl text-white tracking-widest py-1 drop-shadow-[3px_3px_0px_#000000]">
             {roomState.code}
           </div>
         </div>
 
         {/* Quick Action Buttons for Code / Link */}
-        <div className="flex flex-wrap items-center justify-center gap-3 mt-3">
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-3 mt-3 w-full">
           <PixelButton
             variant="cream"
             size="sm"
             onClick={handleCopyCode}
+            className="w-full sm:w-auto"
           >
             {copiedCode ? '✓ CODE COPIED!' : 'COPY CODE'}
           </PixelButton>
@@ -154,6 +155,7 @@ export const WaitingRoomView: React.FC<WaitingRoomViewProps> = ({
             variant="cream"
             size="sm"
             onClick={handleCopyLink}
+            className="w-full sm:w-auto"
           >
             {copiedLink ? '✓ LINK COPIED!' : 'COPY INVITE LINK'}
           </PixelButton>
@@ -168,7 +170,7 @@ export const WaitingRoomView: React.FC<WaitingRoomViewProps> = ({
         </div>
 
         {/* ================= STAGE 1: BRO 01 (HOST) ================= */}
-        <div className="bg-[#FFFDF5] border-3 border-ink p-5 shadow-pixel flex flex-col items-center justify-between min-h-[230px]">
+        <div className="bg-[#FFFDF5] border-3 border-ink p-3.5 sm:p-5 shadow-pixel flex flex-col items-center justify-between min-h-[190px] sm:min-h-[230px]">
           <div className="w-full flex items-center justify-between border-b-2 border-ink/10 pb-1.5 mb-2">
             <span className="font-arcade text-xs text-darkNavy tracking-wider font-bold">
               {playerA?.id === myPlayerId ? '★ YOU (HOST)' : 'HOST'}
@@ -183,15 +185,24 @@ export const WaitingRoomView: React.FC<WaitingRoomViewProps> = ({
           </div>
 
           <div className="my-2 flex flex-col items-center">
-            <PixelCharacter
-              type="bro1"
-              size={85}
-              pose={playerA?.isReady ? 'ready' : 'idle'}
-            />
-            <div className="font-mono font-bold text-lg text-ink mt-3 uppercase tracking-wide">
+            <div className="block sm:hidden">
+              <PixelCharacter
+                type="bro1"
+                size={65}
+                pose={playerA?.isReady ? 'ready' : 'idle'}
+              />
+            </div>
+            <div className="hidden sm:block">
+              <PixelCharacter
+                type="bro1"
+                size={85}
+                pose={playerA?.isReady ? 'ready' : 'idle'}
+              />
+            </div>
+            <div className="font-mono font-bold text-base sm:text-lg text-ink mt-2 sm:mt-3 uppercase tracking-wide">
               {playerA?.name || 'BRO 01'}
             </div>
-            <div className="text-xs font-mono font-bold text-ink/60 mt-0.5">
+            <div className="text-[11px] sm:text-xs font-mono font-bold text-ink/60 mt-0.5">
               {playerA?.isConnected ? '● CONNECTED' : '○ OFFLINE'}
             </div>
           </div>
@@ -202,7 +213,7 @@ export const WaitingRoomView: React.FC<WaitingRoomViewProps> = ({
         </div>
 
         {/* ================= STAGE 2: BRO 02 (GUEST) ================= */}
-        <div className="bg-[#FFFDF5] border-3 border-ink p-5 shadow-pixel flex flex-col items-center justify-between min-h-[230px]">
+        <div className="bg-[#FFFDF5] border-3 border-ink p-3.5 sm:p-5 shadow-pixel flex flex-col items-center justify-between min-h-[190px] sm:min-h-[230px]">
           <div className="w-full flex items-center justify-between border-b-2 border-ink/10 pb-1.5 mb-2">
             <span className="font-arcade text-xs text-arcadeRed tracking-wider font-bold">
               {playerB?.id === myPlayerId ? '★ YOU (CHALLENGER)' : 'CHALLENGER'}
@@ -220,28 +231,37 @@ export const WaitingRoomView: React.FC<WaitingRoomViewProps> = ({
 
           {playerB ? (
             <div className="my-2 flex flex-col items-center">
-              <PixelCharacter
-                type="bro2"
-                size={85}
-                pose={playerB.isReady ? 'ready' : 'idle'}
-              />
-              <div className="font-mono font-bold text-lg text-ink mt-3 uppercase tracking-wide">
+              <div className="block sm:hidden">
+                <PixelCharacter
+                  type="bro2"
+                  size={65}
+                  pose={playerB.isReady ? 'ready' : 'idle'}
+                />
+              </div>
+              <div className="hidden sm:block">
+                <PixelCharacter
+                  type="bro2"
+                  size={85}
+                  pose={playerB.isReady ? 'ready' : 'idle'}
+                />
+              </div>
+              <div className="font-mono font-bold text-base sm:text-lg text-ink mt-2 sm:mt-3 uppercase tracking-wide">
                 {playerB.name}
               </div>
-              <div className="text-xs font-mono font-bold text-ink/60 mt-0.5">
+              <div className="text-[11px] sm:text-xs font-mono font-bold text-ink/60 mt-0.5">
                 {playerB.isConnected ? '● CONNECTED' : '○ OFFLINE'}
               </div>
             </div>
           ) : (
             /* Missing Bro State */
-            <div className="my-4 flex flex-col items-center justify-center flex-1">
-              <div className="w-12 h-16 border-2 border-dashed border-ink/40 flex items-center justify-center font-pixel text-xl text-ink/30 animate-pulse mb-3">
+            <div className="my-3 sm:my-4 flex flex-col items-center justify-center flex-1">
+              <div className="w-10 h-14 sm:w-12 sm:h-16 border-2 border-dashed border-ink/40 flex items-center justify-center font-pixel text-lg sm:text-xl text-ink/30 animate-pulse mb-2 sm:mb-3">
                 ?
               </div>
               <div className="font-arcade text-xs text-arcadeRed tracking-wider font-bold">
                 YOUR BRO IS MISSING.
               </div>
-              <div className="font-mono text-xs font-bold text-ink/60 mt-1 max-w-[200px]">
+              <div className="font-mono text-[11px] sm:text-xs font-bold text-ink/60 mt-1 max-w-[200px]">
                 SHARE CODE {roomState.code} TO SUMMON HIM.
               </div>
             </div>
@@ -259,9 +279,9 @@ export const WaitingRoomView: React.FC<WaitingRoomViewProps> = ({
           isNight
             ? 'bg-[#142247] text-white border-2 border-[#4A68B1] shadow-[4px_4px_0px_#050A18]'
             : 'bg-[#0A0F1D] text-white border-2 border-black shadow-pixel-sm'
-        } px-4 py-3 mb-6 text-center`}
+        } px-3 sm:px-4 py-2.5 sm:py-3 mb-4 sm:mb-6 text-center`}
       >
-        <span className="font-arcade text-xs tracking-wider font-bold">
+        <span className="font-arcade text-[11px] sm:text-xs tracking-wider font-bold">
           {!playerB
             ? 'WAITING FOR YOUR BRO...'
             : !bothReady
@@ -271,13 +291,13 @@ export const WaitingRoomView: React.FC<WaitingRoomViewProps> = ({
       </div>
 
       {/* Action Controls */}
-      <div className="w-full flex flex-col sm:flex-row items-center justify-center gap-4">
+      <div className="w-full flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4">
         {/* Ready Toggle */}
         <PixelButton
           variant={myPlayer?.isReady ? 'yellow' : 'navy'}
           size="lg"
           onClick={onToggleReady}
-          className="w-full sm:w-auto min-w-[200px]"
+          className="w-full sm:w-auto min-w-0 sm:min-w-[200px]"
         >
           {myPlayer?.isReady ? '✓ READY!' : 'READY UP'}
         </PixelButton>
@@ -289,12 +309,12 @@ export const WaitingRoomView: React.FC<WaitingRoomViewProps> = ({
             size="lg"
             disabled={!bothConnected || !bothReady}
             onClick={handleStart}
-            className="w-full sm:w-auto min-w-[200px]"
+            className="w-full sm:w-auto min-w-0 sm:min-w-[200px]"
           >
             START MATCH
           </PixelButton>
         ) : (
-          <div className="font-arcade text-xs text-ink/70 border-2 border-ink px-4 py-3 bg-[#FFFDF5] shadow-pixel-sm">
+          <div className="font-arcade text-xs text-ink/70 border-2 border-ink px-4 py-3 bg-[#FFFDF5] shadow-pixel-sm w-full sm:w-auto">
             WAITING FOR HOST TO START...
           </div>
         )}
@@ -304,7 +324,7 @@ export const WaitingRoomView: React.FC<WaitingRoomViewProps> = ({
       <button
         type="button"
         onClick={onLeaveRoom}
-        className="mt-6 px-6 py-2.5 bg-arcadeRed/90 hover:bg-arcadeRed text-white border-2 border-black font-pixel text-xs uppercase tracking-wider shadow-pixel transition-all hover:scale-105 active:scale-95 flex items-center justify-center gap-2"
+        className="mt-4 sm:mt-6 w-full sm:w-auto px-4 sm:px-6 py-2.5 bg-arcadeRed/90 hover:bg-arcadeRed text-white border-2 border-black font-pixel text-[11px] sm:text-xs uppercase tracking-wider shadow-pixel transition-all hover:scale-105 active:scale-95 flex items-center justify-center gap-2"
         title="Leave Room & Return to Arena"
       >
         <span>✕</span>

@@ -141,79 +141,79 @@ export const MatchCompleteView: React.FC<MatchCompleteViewProps> = ({
   };
 
   return (
-    <div className="flex-1 flex flex-col items-center justify-center p-4 sm:p-6 w-full max-w-4xl mx-auto select-none">
+    <div className="flex-1 flex flex-col items-center justify-center p-3 sm:p-6 w-full max-w-4xl mx-auto select-none">
       {/* Series Champion Hero Card */}
       <div
-        className={`w-full p-6 sm:p-8 border-4 border-ink shadow-pixel text-center transition-colors mb-6 ${
+        className={`w-full p-4 sm:p-8 border-3 sm:border-4 border-ink shadow-pixel text-center transition-colors mb-4 sm:mb-6 ${
           isNight ? 'bg-[#18243A] text-paper' : 'bg-paper text-ink'
         }`}
       >
-        <div className="flex flex-wrap items-center justify-center gap-2 mb-3">
-          <div className="inline-block px-3 py-1 bg-ink text-cartridgeYellow font-arcade text-xs tracking-wider border-2 border-ink font-bold">
+        <div className="flex flex-wrap items-center justify-center gap-1.5 sm:gap-2 mb-2 sm:mb-3">
+          <div className="inline-block px-2.5 sm:px-3 py-1 bg-ink text-cartridgeYellow font-arcade text-[10px] sm:text-xs tracking-wider border-2 border-ink font-bold">
             ★ SERIES CONCLUDED ★
           </div>
           {match?.id && (
-            <span className="px-2.5 py-1 bg-darkNavy text-paper border border-ink/40 font-mono text-[10px] tracking-wide">
+            <span className="px-2 py-0.5 sm:py-1 bg-darkNavy text-paper border border-ink/40 font-mono text-[9px] sm:text-[10px] tracking-wide">
               ARCHIVE: {match.id}
             </span>
           )}
         </div>
 
         {/* Podium Characters */}
-        <div className="flex items-center justify-center gap-8 sm:gap-12 my-4">
+        <div className="flex items-center justify-center gap-4 xs:gap-8 sm:gap-12 my-3 sm:my-4">
           <div className="flex flex-col items-center">
-            <span className="text-xl mb-1">👑</span>
+            <span className="text-lg sm:text-xl mb-1">👑</span>
             <PixelCharacter
               type={winner?.id === playerA?.id ? 'bro1' : 'bro2'}
               pose="celebrating"
-              size={64}
-              className="drop-shadow-pixel"
+              size={52}
+              className="sm:w-16 sm:h-16 drop-shadow-pixel"
             />
-            <span className={`font-arcade text-xs font-bold mt-2 truncate max-w-[120px] ${isNight ? 'text-cartridgeYellow' : 'text-amber-800'}`}>
+            <span className={`font-arcade text-[11px] sm:text-xs font-bold mt-1.5 sm:mt-2 truncate max-w-[90px] xs:max-w-[120px] ${isNight ? 'text-cartridgeYellow' : 'text-amber-800'}`}>
               {winner?.name || 'CHAMPION'}
             </span>
-            <span className="text-[10px] font-mono font-bold text-gameBoyGreen uppercase mt-0.5">
+            <span className="text-[9px] sm:text-[10px] font-mono font-bold text-gameBoyGreen uppercase mt-0.5">
               WINNER
             </span>
           </div>
 
-          <div className="text-2xl font-arcade text-arcadeRed font-bold">VS</div>
+          <div className="text-xl sm:text-2xl font-arcade text-arcadeRed font-bold">VS</div>
 
           <div className="flex flex-col items-center opacity-70">
-            <span className="text-xl mb-1 invisible">💀</span>
+            <span className="text-lg sm:text-xl mb-1 invisible">💀</span>
             <PixelCharacter
               type={loser?.id === playerA?.id ? 'bro1' : 'bro2'}
               pose="defeated"
-              size={56}
-              className="drop-shadow-pixel grayscale"
+              size={46}
+              className="sm:w-14 sm:h-14 drop-shadow-pixel grayscale"
             />
-            <span className="font-arcade text-xs font-bold mt-2 truncate max-w-[120px]">
+            <span className="font-arcade text-[11px] sm:text-xs font-bold mt-1.5 sm:mt-2 truncate max-w-[90px] xs:max-w-[120px]">
               {loser?.name || 'CHALLENGER'}
             </span>
-            <span className="text-[10px] font-mono font-bold text-arcadeRed uppercase mt-0.5">
+            <span className="text-[9px] sm:text-[10px] font-mono font-bold text-arcadeRed uppercase mt-0.5">
               DEFEATED
             </span>
           </div>
         </div>
 
-        <h1 className="font-arcade text-xl sm:text-3xl text-arcadeRed tracking-wider font-bold mt-2">
+        <h1 className="font-arcade text-lg sm:text-3xl text-arcadeRed tracking-wider font-bold mt-1.5 sm:mt-2">
           {iWon ? 'YOU ARE THE CHAMPION!' : `${winner?.name.toUpperCase()} CLAIMS THE CROWN!`}
         </h1>
 
         {/* Humorous Banter Tagline */}
-        <p className={`font-mono text-xs sm:text-sm max-w-xl mx-auto mt-2 font-bold ${isNight ? 'text-cartridgeYellow' : 'text-amber-900'}`}>
+        <p className={`font-mono text-[11px] sm:text-sm max-w-xl mx-auto mt-1.5 sm:mt-2 font-bold ${isNight ? 'text-cartridgeYellow' : 'text-amber-900'}`}>
           &ldquo;The winner becomes the better gamer for the next month, and the loser can&rsquo;t deny it.&rdquo;
         </p>
 
         {/* Final Series Score Banner */}
         <div
-          className={`mt-5 p-3 max-w-md mx-auto border-2 border-ink shadow-pixel flex items-center justify-around font-arcade text-lg sm:text-2xl ${
+          className={`mt-4 sm:mt-5 p-2 sm:p-3 max-w-md mx-auto border-2 border-ink shadow-pixel flex items-center justify-around font-arcade text-sm xs:text-base sm:text-2xl ${
             isNight ? 'bg-slate-900/90 text-cartridgeYellow' : 'bg-white text-ink'
           }`}
         >
-          <span>{playerA?.name}: {scoreA}</span>
-          <span className="text-arcadeRed text-base">FINAL</span>
-          <span>{playerB?.name}: {scoreB}</span>
+          <span className="truncate max-w-[95px] xs:max-w-[130px] sm:max-w-none">{playerA?.name}: {scoreA}</span>
+          <span className="text-arcadeRed text-xs sm:text-base font-bold mx-2">FINAL</span>
+          <span className="truncate max-w-[95px] xs:max-w-[130px] sm:max-w-none">{playerB?.name}: {scoreB}</span>
         </div>
       </div>
 

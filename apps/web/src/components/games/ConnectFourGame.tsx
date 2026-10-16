@@ -62,10 +62,10 @@ export const ConnectFourGame: React.FC<ConnectFourGameProps> = ({
   };
 
   return (
-    <div className="flex-1 flex flex-col items-center justify-center px-3 py-1.5 sm:py-2 max-w-3xl mx-auto w-full select-none h-full min-h-0">
+    <div className="flex-1 flex flex-col items-center justify-start sm:justify-center px-1.5 sm:px-3 py-1.5 sm:py-2 max-w-3xl mx-auto w-full select-none h-full min-h-0">
       {/* Turn Announcement Banner */}
       <div
-        className={`w-full max-w-xl py-1.5 px-3 mb-2 border-2 transition-all text-center shadow-pixel ${
+        className={`w-full max-w-xl py-1.5 px-2 sm:px-3 mb-1.5 sm:mb-2 border-2 transition-all text-center shadow-pixel ${
           isFinished
             ? iWon
               ? 'bg-gameBoyGreen text-ink border-ink font-bold'
@@ -79,9 +79,9 @@ export const ConnectFourGame: React.FC<ConnectFourGameProps> = ({
             : 'bg-paper text-ink border-ink'
         }`}
       >
-        <div className="flex items-center justify-center gap-2">
-          <GamePixelIcon gameId="connect-four" size={20} className="flex-shrink-0" />
-          <span className="font-arcade text-xs tracking-wider uppercase font-bold">
+        <div className="flex items-center justify-center gap-1.5 sm:gap-2">
+          <GamePixelIcon gameId="connect-four" size={18} className="flex-shrink-0" />
+          <span className="font-arcade text-[10px] sm:text-xs tracking-wider uppercase font-bold">
             {isFinished
               ? iWon
                 ? '★ 4-IN-A-ROW! YOU WON THIS BATTLE! ★'
@@ -96,40 +96,40 @@ export const ConnectFourGame: React.FC<ConnectFourGameProps> = ({
       </div>
 
       {/* Players Color Strip */}
-      <div className="w-full max-w-xl flex items-center justify-between px-2 mb-1.5 font-mono text-xs font-bold">
-        <div className="flex items-center gap-1.5">
-          <span className="w-3.5 h-3.5 rounded-full bg-arcadeRed border-2 border-ink inline-block shadow-sm" />
-          <span className={isNight ? 'text-slate-200' : 'text-stone-800'}>
+      <div className="w-full max-w-xl flex items-center justify-between px-1 sm:px-2 mb-1.5 font-mono text-[10px] sm:text-xs font-bold">
+        <div className="flex items-center gap-1 sm:gap-1.5">
+          <span className="w-3 h-3 sm:w-3.5 sm:h-3.5 rounded-full bg-arcadeRed border-2 border-ink inline-block shadow-sm" />
+          <span className={`truncate max-w-[90px] sm:max-w-none ${isNight ? 'text-slate-200' : 'text-stone-800'}`}>
             {playerA?.name || 'HOST'}: <span className="text-arcadeRed">RED</span>
           </span>
           {isRed && (
-            <span className="px-1.5 py-0.5 bg-arcadeRed text-white text-[9px] rounded font-arcade">
+            <span className="px-1 py-0.2 bg-arcadeRed text-white text-[8px] sm:text-[9px] rounded font-arcade">
               YOU
             </span>
           )}
         </div>
 
-        <div className="flex items-center gap-1.5">
+        <div className="flex items-center gap-1 sm:gap-1.5">
           {!isRed && (
-            <span className="px-1.5 py-0.5 bg-cartridgeYellow text-darkNavy text-[9px] rounded font-arcade font-bold border border-ink">
+            <span className="px-1 py-0.2 bg-cartridgeYellow text-darkNavy text-[8px] sm:text-[9px] rounded font-arcade font-bold border border-ink">
               YOU
             </span>
           )}
-          <span className={isNight ? 'text-slate-200' : 'text-stone-800'}>
+          <span className={`truncate max-w-[90px] sm:max-w-none ${isNight ? 'text-slate-200' : 'text-stone-800'}`}>
             {playerB?.name || 'GUEST'}: <span className={`font-bold ${isNight ? 'text-cartridgeYellow' : 'text-amber-700'}`}>YELLOW</span>
           </span>
-          <span className="w-3.5 h-3.5 rounded-full bg-cartridgeYellow border-2 border-ink inline-block shadow-sm" />
+          <span className="w-3 h-3 sm:w-3.5 sm:h-3.5 rounded-full bg-cartridgeYellow border-2 border-ink inline-block shadow-sm" />
         </div>
       </div>
 
       {/* Main Connect Four Cabinet */}
       <div
-        className={`p-2.5 sm:p-3.5 border-4 border-ink shadow-pixel relative rounded-lg ${
+        className={`p-1.5 xs:p-2.5 sm:p-3.5 border-3 sm:border-4 border-ink shadow-pixel relative rounded-lg ${
           isNight ? 'bg-[#142A63]' : 'bg-[#1C4EAA]'
         }`}
       >
         {/* Column Drop Buttons Header */}
-        <div className="grid grid-cols-7 gap-1.5 sm:gap-2 mb-1.5 px-1">
+        <div className="grid grid-cols-7 gap-1 sm:gap-2 mb-1 sm:mb-1.5 px-0.5 sm:px-1">
           {Array.from({ length: 7 }).map((_, col) => {
             const isFull = gameState.board[0][col] !== null;
             const canClick = isMyTurn && !isFull && !isFinished;
@@ -144,7 +144,7 @@ export const ConnectFourGame: React.FC<ConnectFourGameProps> = ({
                 onMouseLeave={() => setHoveredCol(null)}
                 disabled={!canClick}
                 title={isFull ? 'Column Full' : `Drop in Column ${col + 1}`}
-                className={`h-7 sm:h-8 flex items-center justify-center font-arcade text-xs border-2 border-ink transition-all rounded ${
+                className={`h-6 xs:h-7 sm:h-8 flex items-center justify-center font-arcade text-[10px] sm:text-xs border sm:border-2 border-ink transition-all rounded ${
                   isFull
                     ? 'bg-slate-700/60 text-slate-400 border-slate-600 cursor-not-allowed'
                     : canClick
@@ -152,7 +152,7 @@ export const ConnectFourGame: React.FC<ConnectFourGameProps> = ({
                       ? isRed
                         ? 'bg-arcadeRed text-white scale-105 shadow-pixel animate-bounce'
                         : 'bg-cartridgeYellow text-darkNavy scale-105 shadow-pixel animate-bounce'
-                      : 'bg-paper text-ink hover:bg-stone-200 shadow-sm'
+                      : 'bg-paper text-ink hover:bg-stone-200 shadow-sm active:scale-95'
                     : 'bg-paper/40 text-stone-400 opacity-60 cursor-default'
                 }`}
               >
@@ -164,7 +164,7 @@ export const ConnectFourGame: React.FC<ConnectFourGameProps> = ({
 
         {/* 7x6 Slots Grid */}
         <div
-          className="grid grid-cols-7 gap-1.5 sm:gap-2.5 bg-[#0A1D4A] p-2 sm:p-3 rounded border-2 border-black/40 shadow-inner"
+          className="grid grid-cols-7 gap-1 xs:gap-1.5 sm:gap-2.5 bg-[#0A1D4A] p-1.5 sm:p-3 rounded border-2 border-black/40 shadow-inner"
           onMouseLeave={() => setHoveredCol(null)}
         >
           {gameState.board.map((rowArr, rowIdx) =>
@@ -177,8 +177,8 @@ export const ConnectFourGame: React.FC<ConnectFourGameProps> = ({
                   key={`${rowIdx}-${colIdx}`}
                   onClick={() => handleColumnClick(colIdx)}
                   onMouseEnter={() => setHoveredCol(colIdx)}
-                  className={`w-9 h-9 sm:w-11 sm:h-11 md:w-12 md:h-12 rounded-full border-2 border-black/60 flex items-center justify-center relative transition-transform ${
-                    isMyTurn && !isFinished ? 'cursor-pointer' : 'cursor-default'
+                  className={`w-7 h-7 xs:w-8 xs:h-8 sm:w-11 sm:h-11 md:w-12 md:h-12 rounded-full border border-black/60 sm:border-2 flex items-center justify-center relative transition-transform ${
+                    isMyTurn && !isFinished ? 'cursor-pointer active:scale-95' : 'cursor-default'
                   } ${
                     cell === null
                       ? isColHovered && rowIdx === 5 // highlight target base slightly
@@ -189,19 +189,19 @@ export const ConnectFourGame: React.FC<ConnectFourGameProps> = ({
                       : 'bg-gradient-to-br from-[#FFE066] to-[#E6B800] shadow-[inset_-2px_-2px_4px_rgba(0,0,0,0.4),2px_2px_4px_rgba(0,0,0,0.3)]'
                   } ${
                     isWinning
-                      ? 'ring-4 ring-cartridgeYellow animate-pulse scale-105 z-10'
+                      ? 'ring-2 sm:ring-4 ring-cartridgeYellow animate-pulse scale-105 z-10'
                       : ''
                   }`}
                 >
                   {/* Winning star emblem */}
                   {isWinning && (
-                    <span className="font-arcade text-xs sm:text-base text-white drop-shadow-md animate-spin">
+                    <span className="font-arcade text-[10px] sm:text-base text-white drop-shadow-md animate-spin">
                       ★
                     </span>
                   )}
                   {/* Subtle token inner bevel */}
                   {cell !== null && !isWinning && (
-                    <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-full border border-white/30 pointer-events-none" />
+                    <div className="w-5 h-5 sm:w-8 sm:h-8 rounded-full border border-white/30 pointer-events-none" />
                   )}
                 </div>
               );

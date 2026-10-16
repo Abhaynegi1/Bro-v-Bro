@@ -78,21 +78,21 @@ export const LandingView: React.FC<LandingViewProps> = ({
   return (
     <div className="w-full h-full flex-1 flex flex-col justify-between relative overflow-hidden select-none">
       {/* ================= FULL-WIDTH TOP HEADER BAR ================= */}
-      <header className="w-full bg-[#0A0F1D] text-white px-5 sm:px-10 py-3 flex items-center justify-between border-b-2 border-black z-30 flex-shrink-0">
+      <header className="w-full bg-[#0A0F1D] text-white px-3 sm:px-10 py-2 sm:py-3 flex items-center justify-between border-b-2 border-black z-30 flex-shrink-0">
         {/* Left: Pixel Logo */}
-        <div className="flex items-center gap-1.5 font-pixel text-sm sm:text-base tracking-wider">
+        <div className="flex items-center gap-1 sm:gap-1.5 font-pixel text-xs sm:text-base tracking-wider">
           <span>BRO</span>
-          <span className="text-arcadeRed font-bold text-xs sm:text-sm">[v]</span>
+          <span className="text-arcadeRed font-bold text-[10px] sm:text-sm">[v]</span>
           <span>BRO</span>
         </div>
 
         {/* Right: HOW TO PLAY link & NIGHT/DAY button */}
-        <div className="flex items-center gap-5 sm:gap-7">
+        <div className="flex items-center gap-2.5 sm:gap-7">
           {onOpenHowToPlay && (
             <button
               type="button"
               onClick={onOpenHowToPlay}
-              className="font-pixel text-xs sm:text-sm text-white/90 hover:text-white uppercase tracking-wider hover:underline transition-all"
+              className="font-pixel text-[10px] sm:text-sm text-white/90 hover:text-white uppercase tracking-wider hover:underline transition-all"
             >
               HOW TO PLAY
             </button>
@@ -102,7 +102,7 @@ export const LandingView: React.FC<LandingViewProps> = ({
           <button
             type="button"
             onClick={onToggleTheme}
-            className="bg-white hover:bg-cream text-black font-pixel text-xs sm:text-sm px-4 py-1.5 border-2 border-white rounded shadow-sm hover:scale-105 active:scale-95 transition-transform uppercase tracking-wider font-bold"
+            className="bg-white hover:bg-cream text-black font-pixel text-[10px] sm:text-sm px-2.5 sm:px-4 py-1 sm:py-1.5 border-2 border-white rounded shadow-sm hover:scale-105 active:scale-95 transition-transform uppercase tracking-wider font-bold"
           >
             {isNight ? 'DAY' : 'NIGHT'}
           </button>
@@ -145,36 +145,35 @@ export const LandingView: React.FC<LandingViewProps> = ({
         )}
 
         {/* Upper Stage: HUD, Title, and Action Controls */}
-        <div className="w-full flex flex-col items-center z-20 pt-2 sm:pt-4">
+        <div className="w-full flex flex-col items-center z-20 pt-2 sm:pt-4 px-2">
           
           {/* Top HUD: P1 (Hearts) - GAUNTLET PILL - (Hearts) P2 */}
-          <div className="w-full max-w-6xl px-6 sm:px-12 flex items-center justify-between">
+          <div className="w-full max-w-6xl px-2 xs:px-4 sm:px-12 flex items-center justify-between gap-1">
             {/* P1 Hearts */}
             <div className="flex flex-col items-start">
-              <div className="flex items-center gap-2 font-pixel text-sm sm:text-base text-white drop-shadow">
+              <div className="flex items-center gap-1 sm:gap-2 font-pixel text-xs sm:text-base text-white drop-shadow">
                 <span className="font-bold">P1</span>
-                <div className="flex items-center gap-1.5">
+                <div className="flex items-center gap-0.5 sm:gap-1.5">
                   {[1, 2, 3].map((h) => (
-                    <svg key={h} width="20" height="18" viewBox="0 0 9 8" style={{ shapeRendering: 'crispEdges' }}>
+                    <svg key={h} className="w-3.5 h-3 sm:w-5 sm:h-4.5" viewBox="0 0 9 8" style={{ shapeRendering: 'crispEdges' }}>
                       <path d="M1 0 h3 v1 h1 v-1 h3 v2 h-1 v1 h-1 v1 h-1 v1 h-1 v1 h-1 v-1 h-1 v-1 h-1 v-1 h-1 v-2 h1 z" fill="#EF4444" />
                       <rect x="2" y="1" width="1" height="1" fill="#FFFFFF" />
                     </svg>
                   ))}
                 </div>
               </div>
-              <span className="text-xs text-white/90 font-pixel ml-8 leading-none">˘</span>
             </div>
 
             {/* Center Gauntlet Capsule */}
-            <div className="bg-white text-ink border-3 border-black px-5 py-1.5 sm:px-7 sm:py-2 rounded-full shadow-pixel font-pixel text-[10px] sm:text-xs md:text-sm font-bold tracking-wider uppercase">
-              + 1V1 ULTIMATE GAMER GAUNTLET +
+            <div className="bg-white text-ink border-2 sm:border-3 border-black px-2.5 py-1 sm:px-7 sm:py-2 rounded-full shadow-pixel font-pixel text-[9px] sm:text-xs md:text-sm font-bold tracking-wider uppercase whitespace-nowrap">
+              <span>+ 1V1 <span className="hidden xs:inline">ULTIMATE GAMER </span>GAUNTLET +</span>
             </div>
 
             {/* P2 Hearts */}
-            <div className="flex items-center gap-2 font-pixel text-sm sm:text-base text-white drop-shadow">
-              <div className="flex items-center gap-1.5">
+            <div className="flex items-center gap-1 sm:gap-2 font-pixel text-xs sm:text-base text-white drop-shadow">
+              <div className="flex items-center gap-0.5 sm:gap-1.5">
                 {[1, 2, 3].map((h) => (
-                  <svg key={h} width="20" height="18" viewBox="0 0 9 8" style={{ shapeRendering: 'crispEdges' }}>
+                  <svg key={h} className="w-3.5 h-3 sm:w-5 sm:h-4.5" viewBox="0 0 9 8" style={{ shapeRendering: 'crispEdges' }}>
                     <path d="M1 0 h3 v1 h1 v-1 h3 v2 h-1 v1 h-1 v1 h-1 v1 h-1 v1 h-1 v-1 h-1 v-1 h-1 v-1 h-1 v-2 h1 z" fill="#EF4444" />
                     <rect x="2" y="1" width="1" height="1" fill="#FFFFFF" />
                   </svg>
@@ -184,23 +183,21 @@ export const LandingView: React.FC<LandingViewProps> = ({
             </div>
           </div>
 
-          {/* Center Stage: Title + Sun/Moon + Tagline + Action Controls (Larger & Bolder) */}
-          <div className="w-full max-w-3xl mx-auto flex flex-col items-center text-center mt-3 sm:mt-6 px-4">
+          {/* Center Stage: Title + Sun/Moon + Tagline + Action Controls */}
+          <div className="w-full max-w-3xl mx-auto flex flex-col items-center text-center mt-2 xs:mt-3 sm:mt-6 px-3">
             
             {/* 3D BRO v BRO Pixel Title with Cute Sun/Moon */}
-            <div className="relative inline-flex items-center justify-center my-2">
-              <div className="flex items-center font-pixel text-5xl sm:text-6xl md:text-7xl lg:text-8xl tracking-normal">
+            <div className="relative inline-flex items-center justify-center my-1.5 xs:my-2">
+              <div className="flex items-center font-pixel text-3xl xs:text-4xl sm:text-6xl md:text-7xl lg:text-8xl tracking-normal">
                 {/* BRO (Orange 3D) */}
                 <span className="pixel-text-3d-gold">BRO</span>
 
                 {/* Pixel Heart with V cutout */}
-                <div className="mx-3 sm:mx-5 flex items-center">
+                <div className="mx-1.5 xs:mx-3 sm:mx-5 flex items-center">
                   <svg
-                    width="48"
-                    height="42"
                     viewBox="0 0 12 11"
                     style={{ shapeRendering: 'crispEdges' }}
-                    className="drop-shadow-lg sm:w-[60px] sm:h-[54px] md:w-[68px] md:h-[60px]"
+                    className="drop-shadow-lg w-7 h-6 xs:w-10 xs:h-9 sm:w-[60px] sm:h-[54px] md:w-[68px] md:h-[60px]"
                   >
                     <path
                       d="M 2 1 h 3 v 2 h 2 v -2 h 3 v 3 h -1 v 2 h -2 v 2 h -2 v 2 h -2 v -2 h -2 v -2 h -1 v -3 h 3 z"
@@ -219,10 +216,10 @@ export const LandingView: React.FC<LandingViewProps> = ({
               </div>
 
               {/* Sun (Day) or Moon (Night) positioned at top right of Title */}
-              <div className="absolute -top-4 -right-12 sm:-right-16 md:-right-20 animate-pixel-idle">
+              <div className="absolute -top-2 -right-6 xs:-top-3 xs:-right-8 sm:-top-4 sm:-right-16 md:-right-20 animate-pixel-idle">
                 {!isNight ? (
                   /* Cute Pixel Sun with smiling face */
-                  <svg width="48" height="48" viewBox="0 0 14 14" style={{ shapeRendering: 'crispEdges' }} className="sm:w-[60px] sm:h-[60px]">
+                  <svg viewBox="0 0 14 14" style={{ shapeRendering: 'crispEdges' }} className="w-7 h-7 xs:w-9 xs:h-9 sm:w-[60px] sm:h-[60px]">
                     <rect x="6" y="0" width="2" height="2" fill="#FCD34D" />
                     <rect x="6" y="12" width="2" height="2" fill="#FCD34D" />
                     <rect x="0" y="6" width="2" height="2" fill="#FCD34D" />
@@ -241,7 +238,7 @@ export const LandingView: React.FC<LandingViewProps> = ({
                   </svg>
                 ) : (
                   /* Cute Pixel Moon with smiling face */
-                  <svg width="48" height="48" viewBox="0 0 14 14" style={{ shapeRendering: 'crispEdges' }} className="sm:w-[60px] sm:h-[60px]">
+                  <svg viewBox="0 0 14 14" style={{ shapeRendering: 'crispEdges' }} className="w-7 h-7 xs:w-9 xs:h-9 sm:w-[60px] sm:h-[60px]">
                     <rect x="3" y="2" width="8" height="10" fill="#FEF08A" />
                     <rect x="2" y="3" width="10" height="8" fill="#FEF08A" />
                     <rect x="5" y="5" width="1" height="2" fill="#1E293B" />
@@ -257,41 +254,40 @@ export const LandingView: React.FC<LandingViewProps> = ({
             </div>
 
             {/* Tagline */}
-            <div className="space-y-1.5 mb-4 sm:mb-6">
+            <div className="space-y-1 mb-3 sm:mb-6">
               <p
-                className={`font-pixel text-xs sm:text-sm md:text-base tracking-wider transition-colors duration-500 ${
+                className={`font-pixel text-[10px] xs:text-xs sm:text-sm md:text-base tracking-wider transition-colors duration-500 ${
                   isNight ? 'text-[#F1F5F9] font-bold' : 'text-[#171A1F]'
                 }`}
               >
                 FIND OUT WHO'S THE REAL GAMER AMONG YOU.
               </p>
-              <p className="font-pixel text-base sm:text-lg md:text-2xl tracking-widest pixel-text-3d-red mt-1">
+              <p className="font-pixel text-sm xs:text-base sm:text-lg md:text-2xl tracking-widest pixel-text-3d-red mt-0.5 sm:mt-1">
                 SETTLE THE SCORE.
               </p>
             </div>
 
-
             {/* Error banner if any */}
             {errorMessage && (
-              <div className="w-full max-w-md mb-4 p-3 bg-[#FFF5F5] border-2 border-arcadeRed text-arcadeRed font-mono font-bold text-xs sm:text-sm shadow-pixel text-center">
+              <div className="w-full max-w-md mb-3 p-2.5 sm:p-3 bg-[#FFF5F5] border-2 border-arcadeRed text-arcadeRed font-mono font-bold text-xs sm:text-sm shadow-pixel text-center">
                 <span>⚠️ {errorMessage}</span>
               </div>
             )}
 
-            {/* Primary Action Controls: [CREATE ROOM] OR [CODE] [JOIN] (Enlarged) */}
-            <div className="flex items-center justify-center gap-4 sm:gap-6 my-2 z-20 flex-wrap">
+            {/* Primary Action Controls: Responsive Stacking on Mobile */}
+            <div className="flex items-center justify-center gap-2.5 sm:gap-6 my-1.5 sm:my-2 z-20 flex-col sm:flex-row w-full max-w-xs sm:max-w-none">
               {/* Green Create Room Button */}
               <button
                 type="button"
                 onClick={() => setActiveModal('create')}
-                className="px-7 py-3.5 sm:px-9 sm:py-4 md:px-11 md:py-4.5 bg-[#5BA538] hover:bg-[#4E932E] text-white border-3 border-black font-pixel text-sm sm:text-base md:text-lg tracking-wider uppercase shadow-pixel-lg transition-all hover:-translate-y-1 active:translate-y-0.5 active:shadow-sm"
+                className="w-full sm:w-auto px-6 py-3 sm:px-9 sm:py-4 md:px-11 md:py-4.5 bg-[#5BA538] hover:bg-[#4E932E] text-white border-3 border-black font-pixel text-xs sm:text-base md:text-lg tracking-wider uppercase shadow-pixel-lg transition-all hover:-translate-y-1 active:translate-y-0.5 active:shadow-sm"
               >
                 CREATE ROOM
               </button>
 
               {/* OR Text */}
               <span
-                className={`font-pixel text-sm sm:text-base font-bold transition-colors duration-500 mx-1 ${
+                className={`font-pixel text-xs sm:text-base font-bold transition-colors duration-500 my-0.5 sm:my-0 sm:mx-1 ${
                   isNight ? 'text-white' : 'text-[#171A1F]'
                 }`}
               >
@@ -299,7 +295,7 @@ export const LandingView: React.FC<LandingViewProps> = ({
               </span>
 
               {/* Joined CODE input + JOIN button */}
-              <div className="flex items-center border-3 border-black shadow-pixel-lg bg-white">
+              <div className="flex items-center border-3 border-black shadow-pixel-lg bg-white w-full sm:w-auto justify-center">
                 <input
                   type="text"
                   maxLength={6}
@@ -309,12 +305,12 @@ export const LandingView: React.FC<LandingViewProps> = ({
                   onKeyDown={(e) => {
                     if (e.key === 'Enter') handleQuickJoinClick();
                   }}
-                  className="w-28 sm:w-36 md:w-44 py-3.5 sm:py-4 md:py-4.5 px-4 font-pixel text-sm sm:text-base md:text-lg text-center uppercase text-ink outline-none bg-transparent placeholder:text-ink/30"
+                  className="w-full sm:w-36 md:w-44 py-3 sm:py-4 md:py-4.5 px-3 sm:px-4 font-pixel text-xs sm:text-base md:text-lg text-center uppercase text-ink outline-none bg-transparent placeholder:text-ink/30"
                 />
                 <button
                   type="button"
                   onClick={handleQuickJoinClick}
-                  className="px-6 py-3.5 sm:px-8 sm:py-4 md:px-10 md:py-4.5 bg-[#3E80ED] hover:bg-[#2563EB] text-white border-l-3 border-black font-pixel text-sm sm:text-base md:text-lg tracking-wider uppercase transition-colors"
+                  className="px-5 sm:px-8 md:px-10 py-3 sm:py-4 md:py-4.5 bg-[#3E80ED] hover:bg-[#2563EB] text-white border-l-3 border-black font-pixel text-xs sm:text-base md:text-lg tracking-wider uppercase transition-colors flex-shrink-0"
                 >
                   JOIN
                 </button>
@@ -329,8 +325,8 @@ export const LandingView: React.FC<LandingViewProps> = ({
 
       {/* ================= MODAL: CREATE ROOM ================= */}
       {activeModal === 'create' && (
-        <div className="fixed inset-0 bg-[#0A0F19]/75 z-50 flex items-center justify-center p-4">
-          <div className="w-full max-w-md bg-[#FFFDF5] text-ink border-3 border-ink p-6 sm:p-7 shadow-pixel-lg relative text-left">
+        <div className="fixed inset-0 bg-[#0A0F19]/75 z-50 flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
+          <div className="w-full max-w-md bg-[#FFFDF5] text-ink border-3 border-ink p-5 sm:p-7 shadow-pixel-lg relative text-left max-h-[90dvh] overflow-y-auto my-auto">
             <div className="flex items-center justify-between border-b-2 border-ink pb-3 mb-5">
               <span className="font-pixel text-sm text-darkNavy tracking-wider">CREATE ROOM</span>
               <button
@@ -409,8 +405,8 @@ export const LandingView: React.FC<LandingViewProps> = ({
 
       {/* ================= MODAL: JOIN ROOM ================= */}
       {activeModal === 'join' && (
-        <div className="fixed inset-0 bg-[#0A0F19]/75 z-50 flex items-center justify-center p-4">
-          <div className="w-full max-w-md bg-[#FFFDF5] text-ink border-3 border-ink p-6 sm:p-7 shadow-pixel-lg relative text-left">
+        <div className="fixed inset-0 bg-[#0A0F19]/75 z-50 flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
+          <div className="w-full max-w-md bg-[#FFFDF5] text-ink border-3 border-ink p-5 sm:p-7 shadow-pixel-lg relative text-left max-h-[90dvh] overflow-y-auto my-auto">
             <div className="flex items-center justify-between border-b-2 border-ink pb-3 mb-5">
               <span className="font-pixel text-sm text-darkNavy tracking-wider">JOIN ROOM</span>
               <button

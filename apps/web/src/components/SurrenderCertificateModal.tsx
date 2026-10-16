@@ -154,10 +154,10 @@ export const SurrenderCertificateModal: React.FC<SurrenderCertificateModalProps>
           {/* THE CLEAN, MINIMAL CERTIFICATE */}
           <div
             id="surrender-decree-print"
-            className="w-full max-w-2xl p-6 sm:p-8 border-4 border-[#111827] shadow-xl relative select-none bg-[#FFFDF7] text-[#111827]"
+            className="w-full max-w-2xl p-3 xs:p-5 sm:p-8 border-3 sm:border-4 border-[#111827] shadow-xl relative select-none bg-[#FFFDF7] text-[#111827]"
           >
             {/* Inner Gold Border */}
-            <div className="border border-[#F59E0B] p-5 sm:p-6 relative">
+            <div className="border border-[#F59E0B] p-3 xs:p-4 sm:p-6 relative">
               {/* Corner Pixel Dots */}
               <div className="absolute top-1 left-1 w-1.5 h-1.5 bg-[#111827]" />
               <div className="absolute top-1 right-1 w-1.5 h-1.5 bg-[#111827]" />
@@ -165,25 +165,25 @@ export const SurrenderCertificateModal: React.FC<SurrenderCertificateModalProps>
               <div className="absolute bottom-1 right-1 w-1.5 h-1.5 bg-[#111827]" />
 
               {/* Logo Header: BRO [v] BRO */}
-              <div className="flex flex-col items-center text-center mb-4">
-                <div className="flex items-center font-mono font-black text-2xl tracking-wider text-[#111827]">
+              <div className="flex flex-col items-center text-center mb-3 sm:mb-4">
+                <div className="flex items-center font-mono font-black text-xl sm:text-2xl tracking-wider text-[#111827]">
                   <span>BRO</span>
-                  <div className="mx-2 px-2 py-0.5 bg-[#EF4444] text-white text-xs border border-[#111827] font-bold">
+                  <div className="mx-2 px-1.5 sm:px-2 py-0.5 bg-[#EF4444] text-white text-[10px] sm:text-xs border border-[#111827] font-bold">
                     v
                   </div>
                   <span>BRO</span>
                 </div>
-                <span className="text-[10px] font-mono text-gray-500 font-bold uppercase tracking-widest mt-1">
+                <span className="text-[9px] sm:text-[10px] font-mono text-gray-500 font-bold uppercase tracking-widest mt-1">
                   OFFICIAL MATCH SURRENDER DECLARATION
                 </span>
               </div>
 
               {/* Title & Meta */}
-              <div className="text-center mb-5">
-                <h2 className="font-mono text-lg sm:text-xl font-black text-[#DC2626] uppercase tracking-wide">
+              <div className="text-center mb-4 sm:mb-5">
+                <h2 className="font-mono text-base sm:text-xl font-black text-[#DC2626] uppercase tracking-wide">
                   DECLARATION OF SUPERIOR GAMER
                 </h2>
-                <div className="flex flex-wrap items-center justify-center gap-2 text-[11px] font-mono text-gray-600 mt-1">
+                <div className="flex flex-wrap items-center justify-center gap-1.5 sm:gap-2 text-[10px] sm:text-[11px] font-mono text-gray-600 mt-1">
                   <span>FINAL SCORE: {documentData.scoreWinner} - {documentData.scoreLoser}</span>
                   <span>•</span>
                   <span>DATE: {dateStr}</span>
@@ -197,11 +197,11 @@ export const SurrenderCertificateModal: React.FC<SurrenderCertificateModalProps>
               </div>
 
               {/* Divider */}
-              <div className="w-full h-0.5 bg-gray-200 mb-6" />
+              <div className="w-full h-0.5 bg-gray-200 mb-4 sm:mb-6" />
 
               {/* THE SINGLE CLEAN PARAGRAPH (1 PARA WITH DETAIL) */}
-              <div className="text-center my-6 px-2 sm:px-4">
-                <p className="font-serif text-base sm:text-lg leading-relaxed text-gray-800">
+              <div className="text-center my-4 sm:my-6 px-1 sm:px-4">
+                <p className="font-serif text-sm sm:text-lg leading-relaxed text-gray-800">
                   &ldquo;I,{' '}
                   <strong className="font-mono text-[#DC2626] font-black uppercase">
                     {documentData.loserName}
@@ -216,18 +216,18 @@ export const SurrenderCertificateModal: React.FC<SurrenderCertificateModalProps>
               </div>
 
               {/* Signatures Row */}
-              <div className="mt-8 pt-4 border-t border-gray-200 flex items-end justify-between gap-4">
+              <div className="mt-5 sm:mt-8 pt-3 sm:pt-4 border-t border-gray-200 flex flex-col xs:flex-row items-center xs:items-end justify-between gap-3 sm:gap-4">
                 {/* Left: Loser Signature */}
-                <div className="flex-1 text-left">
-                  <span className="font-mono text-[10px] font-bold text-gray-500 uppercase block mb-1">
+                <div className="w-full xs:flex-1 text-center xs:text-left">
+                  <span className="font-mono text-[9px] sm:text-[10px] font-bold text-gray-500 uppercase block mb-1">
                     LOSER'S SIGNATURE:
                   </span>
-                  <div className="h-12 border-b border-gray-800 flex items-end pb-1">
+                  <div className="h-10 sm:h-12 border-b border-gray-800 flex items-end justify-center xs:justify-start pb-1">
                     {documentData.signatureDataUrl || signatureDataUrl ? (
                       <img
                         src={documentData.signatureDataUrl || signatureDataUrl!}
                         alt="Signature"
-                        className="max-h-11 max-w-full object-contain"
+                        className="max-h-9 sm:max-h-11 max-w-full object-contain"
                       />
                     ) : (
                       <span className="font-mono text-xs text-[#DC2626] italic">
@@ -235,15 +235,15 @@ export const SurrenderCertificateModal: React.FC<SurrenderCertificateModalProps>
                       </span>
                     )}
                   </div>
-                  <span className="font-mono text-xs font-bold text-gray-900 block mt-1 uppercase">
+                  <span className="font-mono text-[11px] sm:text-xs font-bold text-gray-900 block mt-1 uppercase">
                     {documentData.loserName}
                   </span>
                 </div>
 
                 {/* Center: Small Verified Badge */}
-                <div className="flex flex-col items-center px-2">
+                <div className="flex flex-col items-center px-2 py-1 xs:py-0">
                   <div
-                    className={`w-14 h-14 rounded-full border-2 flex flex-col items-center justify-center text-center p-1 ${
+                    className={`w-12 h-12 sm:w-14 sm:h-14 rounded-full border-2 flex flex-col items-center justify-center text-center p-1 ${
                       isSigned
                         ? 'border-emerald-600 text-emerald-600 bg-emerald-50'
                         : 'border-gray-300 text-gray-400'
@@ -257,16 +257,16 @@ export const SurrenderCertificateModal: React.FC<SurrenderCertificateModalProps>
                 </div>
 
                 {/* Right: Winner Confirmation */}
-                <div className="flex-1 text-right">
-                  <span className="font-mono text-[10px] font-bold text-gray-500 uppercase block mb-1">
+                <div className="w-full xs:flex-1 text-center xs:text-right">
+                  <span className="font-mono text-[9px] sm:text-[10px] font-bold text-gray-500 uppercase block mb-1">
                     SUPERIOR GAMER:
                   </span>
-                  <div className="h-12 border-b border-gray-800 flex items-end justify-end pb-1">
-                    <span className="font-mono text-base font-bold text-[#D97706] uppercase">
+                  <div className="h-10 sm:h-12 border-b border-gray-800 flex items-end justify-center xs:justify-end pb-1">
+                    <span className="font-mono text-sm sm:text-base font-bold text-[#D97706] uppercase">
                       👑 {documentData.winnerName}
                     </span>
                   </div>
-                  <span className="font-mono text-xs font-bold text-gray-900 block mt-1 uppercase">
+                  <span className="font-mono text-[11px] sm:text-xs font-bold text-gray-900 block mt-1 uppercase">
                     {documentData.winnerName}
                   </span>
                 </div>

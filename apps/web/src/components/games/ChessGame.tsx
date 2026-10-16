@@ -335,27 +335,27 @@ export const ChessGame: React.FC<ChessGameProps> = ({
         <div className="flex flex-col items-center">
           {/* Opponent Player Card & Digital Clock */}
           <div
-            className={`w-full max-w-[460px] mb-2 px-3 py-2 border-2 border-ink flex items-center justify-between shadow-pixel-sm ${
+            className={`w-full max-w-[280px] xs:max-w-[320px] sm:max-w-[460px] mb-1.5 sm:mb-2 px-2 sm:px-3 py-1.5 sm:py-2 border-2 border-ink flex items-center justify-between shadow-pixel-sm ${
               isNight ? 'bg-[#121E38] text-white' : 'bg-paper text-ink'
             }`}
           >
-            <div className="flex items-center gap-2 min-w-0">
-              <span className="text-base sm:text-lg">
+            <div className="flex items-center gap-1.5 sm:gap-2 min-w-0">
+              <span className="text-sm xs:text-base sm:text-lg">
                 {opponentColor === 'w' ? '♔' : '♚'}
               </span>
               <div className="flex flex-col min-w-0">
-                <span className="font-arcade text-xs uppercase truncate max-w-[150px] font-bold">
+                <span className="font-arcade text-[10px] xs:text-xs uppercase truncate max-w-[85px] xs:max-w-[120px] sm:max-w-[150px] font-bold">
                   {opponentSlot?.name || 'OPPONENT'}
                 </span>
                 {/* Captured pieces */}
-                <div className="flex items-center gap-0.5 text-xs text-muted-foreground flex-wrap">
+                <div className="flex items-center gap-0.5 text-[10px] sm:text-xs text-muted-foreground flex-wrap">
                   {(opponentColor === 'w' ? whiteCaptured : blackCaptured).map((type, i) => (
-                    <span key={i} className="text-xs">
+                    <span key={i} className="text-[10px] sm:text-xs">
                       {type === 'q' ? '♛' : type === 'r' ? '♜' : type === 'b' ? '♝' : type === 'n' ? '♞' : '♟'}
                     </span>
                   ))}
                   {(opponentColor === 'w' ? whiteAdvantage : blackAdvantage) > 0 && (
-                    <span className={`font-pixel text-[10px] font-bold ml-1 ${isNight ? 'text-cartridgeYellow' : 'text-amber-800'}`}>
+                    <span className={`font-pixel text-[9px] sm:text-[10px] font-bold ml-1 ${isNight ? 'text-cartridgeYellow' : 'text-amber-800'}`}>
                       +{(opponentColor === 'w' ? whiteAdvantage : blackAdvantage)}
                     </span>
                   )}
@@ -365,7 +365,7 @@ export const ChessGame: React.FC<ChessGameProps> = ({
 
             {/* Opponent Digital Retro Clock */}
             <div
-              className={`px-3 py-1 border-2 border-ink font-mono text-sm sm:text-base font-bold flex items-center gap-1.5 shadow-pixel-sm transition-all ${
+              className={`px-2 sm:px-3 py-0.5 sm:py-1 border-2 border-ink font-mono text-xs sm:text-base font-bold flex items-center gap-1 sm:gap-1.5 shadow-pixel-sm transition-all ${
                 !isMyTurn && gameState.status === 'IN_PROGRESS'
                   ? isOppClockLow
                     ? 'bg-arcadeRed text-white animate-pulse'
@@ -373,14 +373,14 @@ export const ChessGame: React.FC<ChessGameProps> = ({
                   : 'bg-mutedNavy text-white/70'
               }`}
             >
-              <Clock className="w-3.5 h-3.5" />
+              <Clock className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
               <span>{formatTime(oppClockMs)}</span>
             </div>
           </div>
 
           {/* Chess Board Container */}
-          <div className="relative p-2 sm:p-3 bg-[#2D3748] border-4 border-ink shadow-pixel-lg rounded-none">
-            <div className="grid grid-cols-8 grid-rows-8 w-[320px] h-[320px] sm:w-[440px] sm:h-[440px] border-2 border-ink">
+          <div className="relative p-1.5 xs:p-2 sm:p-3 bg-[#2D3748] border-2 sm:border-4 border-ink shadow-pixel-lg rounded-none">
+            <div className="grid grid-cols-8 grid-rows-8 w-[280px] h-[280px] xs:w-[320px] xs:h-[320px] sm:w-[440px] sm:h-[440px] border-2 border-ink">
               {ranks.map((rank, rIdx) =>
                 files.map((file, fIdx) => {
                   const square = `${file}${rank}`;
@@ -416,7 +416,7 @@ export const ChessGame: React.FC<ChessGameProps> = ({
                       {/* Rank & File coordinate markers on borders */}
                       {fIdx === 0 && (
                         <span
-                          className={`absolute top-0.5 left-1 text-[9px] font-pixel pointer-events-none select-none ${
+                          className={`absolute top-0.5 left-0.5 sm:left-1 text-[8px] sm:text-[9px] font-pixel pointer-events-none select-none ${
                             isDarkSquare ? 'text-[#EEEED2]' : 'text-[#769656]'
                           }`}
                         >
@@ -425,7 +425,7 @@ export const ChessGame: React.FC<ChessGameProps> = ({
                       )}
                       {rIdx === 7 && (
                         <span
-                          className={`absolute bottom-0.5 right-1 text-[9px] font-pixel pointer-events-none select-none ${
+                          className={`absolute bottom-0.5 right-0.5 sm:right-1 text-[8px] sm:text-[9px] font-pixel pointer-events-none select-none ${
                             isDarkSquare ? 'text-[#EEEED2]' : 'text-[#769656]'
                           }`}
                         >
@@ -446,7 +446,7 @@ export const ChessGame: React.FC<ChessGameProps> = ({
                           className={`absolute pointer-events-none ${
                             piece
                               ? 'w-[90%] h-[90%] border-4 border-amber-400 rounded-full animate-pulse'
-                              : 'w-3.5 h-3.5 bg-ink/35 rounded-full ring-2 ring-ink/20'
+                              : 'w-2.5 h-2.5 sm:w-3.5 sm:h-3.5 bg-ink/35 rounded-full ring-2 ring-ink/20'
                           }`}
                         />
                       )}
@@ -480,27 +480,27 @@ export const ChessGame: React.FC<ChessGameProps> = ({
 
           {/* My Player Card & Digital Clock */}
           <div
-            className={`w-full max-w-[460px] mt-2 px-3 py-2 border-2 border-ink flex items-center justify-between shadow-pixel-sm ${
+            className={`w-full max-w-[280px] xs:max-w-[320px] sm:max-w-[460px] mt-1.5 sm:mt-2 px-2 sm:px-3 py-1.5 sm:py-2 border-2 border-ink flex items-center justify-between shadow-pixel-sm ${
               isNight ? 'bg-[#121E38] text-white' : 'bg-paper text-ink'
             }`}
           >
-            <div className="flex items-center gap-2 min-w-0">
-              <span className="text-base sm:text-lg">
+            <div className="flex items-center gap-1.5 sm:gap-2 min-w-0">
+              <span className="text-sm xs:text-base sm:text-lg">
                 {myColor === 'w' ? '♔' : '♚'}
               </span>
               <div className="flex flex-col min-w-0">
-                <span className="font-arcade text-xs uppercase truncate max-w-[150px] font-bold">
+                <span className="font-arcade text-[10px] xs:text-xs uppercase truncate max-w-[85px] xs:max-w-[120px] sm:max-w-[150px] font-bold">
                   {mySlot?.name || 'YOU'} (YOU)
                 </span>
                 {/* Captured pieces */}
-                <div className="flex items-center gap-0.5 text-xs text-muted-foreground flex-wrap">
+                <div className="flex items-center gap-0.5 text-[10px] sm:text-xs text-muted-foreground flex-wrap">
                   {(myColor === 'w' ? whiteCaptured : blackCaptured).map((type, i) => (
-                    <span key={i} className="text-xs">
+                    <span key={i} className="text-[10px] sm:text-xs">
                       {type === 'q' ? '♛' : type === 'r' ? '♜' : type === 'b' ? '♝' : type === 'n' ? '♞' : '♟'}
                     </span>
                   ))}
                   {(myColor === 'w' ? whiteAdvantage : blackAdvantage) > 0 && (
-                    <span className={`font-pixel text-[10px] font-bold ml-1 ${isNight ? 'text-cartridgeYellow' : 'text-amber-800'}`}>
+                    <span className={`font-pixel text-[9px] sm:text-[10px] font-bold ml-1 ${isNight ? 'text-cartridgeYellow' : 'text-amber-800'}`}>
                       +{(myColor === 'w' ? whiteAdvantage : blackAdvantage)}
                     </span>
                   )}
@@ -510,7 +510,7 @@ export const ChessGame: React.FC<ChessGameProps> = ({
 
             {/* My Digital Retro Clock */}
             <div
-              className={`px-3 py-1 border-2 border-ink font-mono text-sm sm:text-base font-bold flex items-center gap-1.5 shadow-pixel-sm transition-all ${
+              className={`px-2 sm:px-3 py-0.5 sm:py-1 border-2 border-ink font-mono text-xs sm:text-base font-bold flex items-center gap-1 sm:gap-1.5 shadow-pixel-sm transition-all ${
                 isMyTurn && gameState.status === 'IN_PROGRESS'
                   ? isMyClockLow
                     ? 'bg-arcadeRed text-white animate-pulse'

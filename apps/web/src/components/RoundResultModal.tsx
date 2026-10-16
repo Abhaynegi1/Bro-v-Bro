@@ -196,14 +196,14 @@ export const RoundResultModal: React.FC<RoundResultModalProps> = ({
   const nextRoundNumber = currentRound + 1;
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 select-none animate-fadeIn">
+    <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-2.5 sm:p-4 select-none animate-fadeIn">
       <div
-        className={`w-full max-w-lg p-6 sm:p-8 border-4 border-ink shadow-pixel text-center transition-colors ${
+        className={`w-full max-w-lg max-h-[92dvh] overflow-y-auto p-4 sm:p-8 border-3 sm:border-4 border-ink shadow-pixel text-center transition-colors ${
           isNight ? 'bg-[#18243A] text-paper' : 'bg-[#FFFDF5] text-ink'
         }`}
       >
         {/* Round Badge */}
-        <div className="inline-block px-3 py-1 bg-ink text-cartridgeYellow font-arcade text-xs tracking-wider border-2 border-ink mb-4 font-bold">
+        <div className="inline-block px-2.5 sm:px-3 py-1 bg-ink text-cartridgeYellow font-arcade text-[10px] sm:text-xs tracking-wider border-2 border-ink mb-3 sm:mb-4 font-bold">
           ★ ROUND {currentRound} CONCLUDED ★
         </div>
 

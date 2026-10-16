@@ -228,7 +228,7 @@ export const App: React.FC = () => {
       className={`w-full text-ink font-mono relative selection:bg-arcadeRed selection:text-white transition-colors duration-700 ${
         isScrollableView
           ? 'min-h-screen min-h-[100dvh] overflow-y-auto flex flex-col'
-          : 'h-screen h-[100dvh] overflow-hidden flex flex-col'
+          : 'min-h-screen min-h-[100dvh] sm:h-screen sm:h-[100dvh] overflow-y-auto sm:overflow-hidden flex flex-col'
       }`}
       style={{
         backgroundColor: theme === 'night' ? '#0D193A' : '#72B6F4',
@@ -260,14 +260,14 @@ export const App: React.FC = () => {
 
       {/* Floating Retro Notification Banner */}
       {notification && (
-        <div className="fixed top-14 left-1/2 -translate-x-1/2 z-50 px-5 py-2.5 bg-darkNavy text-paper border-2 border-ink shadow-pixel font-arcade text-xs tracking-wider animate-pixel-idle">
+        <div className="fixed top-14 left-1/2 -translate-x-1/2 z-50 px-4 sm:px-5 py-2 sm:py-2.5 bg-darkNavy text-paper border-2 border-ink shadow-pixel font-arcade text-[10px] sm:text-xs tracking-wider animate-pixel-idle max-w-[90vw] text-center">
           {notification}
         </div>
       )}
 
       {/* Connection Lost Banner */}
       {roomCode && !isConnected && (
-        <div className="fixed top-14 left-1/2 -translate-x-1/2 z-50 px-4 py-2 bg-arcadeRed text-white border-2 border-ink shadow-pixel font-arcade text-xs tracking-wider animate-pulse flex items-center gap-2">
+        <div className="fixed top-14 left-1/2 -translate-x-1/2 z-50 px-3 sm:px-4 py-1.5 sm:py-2 bg-arcadeRed text-white border-2 border-ink shadow-pixel font-arcade text-[10px] sm:text-xs tracking-wider animate-pulse flex items-center gap-2 max-w-[90vw] text-center">
           <span>⚠️</span>
           <span>CONNECTING TO ARENA SERVER...</span>
         </div>
@@ -286,7 +286,7 @@ export const App: React.FC = () => {
         className={`w-full relative z-10 flex-1 flex flex-col min-h-0 ${
           isScrollableView
             ? 'overflow-y-auto'
-            : 'overflow-hidden justify-center'
+            : 'overflow-y-auto sm:overflow-hidden justify-start sm:justify-center'
         }`}
       >
         {!roomCode || !roomState ? (
@@ -334,7 +334,7 @@ export const App: React.FC = () => {
             theme={theme}
           />
         ) : (roomState.status === 'IN_GAME' || roomState.status === 'ROUND_COMPLETE') && activeGame ? (
-          <div className="flex-1 flex flex-col w-full relative h-full min-h-0 overflow-hidden justify-center items-center">
+          <div className="flex-1 flex flex-col w-full relative h-full min-h-0 overflow-y-auto sm:overflow-hidden justify-start sm:justify-center items-center py-1.5 sm:py-0">
             {activeGame.gameId === 'reaction-test' ? (
               <ReactionTestGame
                 roomState={roomState}
