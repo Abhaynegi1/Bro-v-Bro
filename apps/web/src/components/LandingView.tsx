@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { PixelRetroWorld } from './pixel/PixelRetroWorld';
 import { PixelButton } from './pixel/PixelButton';
+import { AvatarPicker } from './pixel/AvatarPicker';
+import { CharacterType } from './pixel/PixelCharacter';
 
 interface LandingViewProps {
-  onCreateRoom: (hostName: string, targetWins: number) => Promise<void>;
-  onJoinRoom: (code: string, guestName: string) => Promise<void>;
+  onCreateRoom: (hostName: string, targetWins: number, avatar?: string) => Promise<void>;
+  onJoinRoom: (code: string, guestName: string, avatar?: string) => Promise<void>;
   isLoading: boolean;
   errorMessage: string | null;
   onOpenHowToPlay?: () => void;
@@ -29,6 +31,24 @@ export const LandingView: React.FC<LandingViewProps> = ({
   const [joinCode, setJoinCode] = useState('');
   const [guestName, setGuestName] = useState('');
   const [slowLoading, setSlowLoading] = useState(false);
+
+  const [hostAvatar, setHostAvatar] = useState<CharacterType>(() => {
+    return (localStorage.getItem('bvb_player_avatar') as CharacterType) || 'bro1';
+  });
+
+  const [guestAvatar, setGuestAvatar] = useState<CharacterType>(() => {
+    return (localStorage.getItem('bvb_player_avatar') as CharacterType) || 'bro2';
+  });
+
+  const handleSelectHostAvatar = (avatar: CharacterType) => {
+    setHostAvatar(avatar);
+    localStorage.setItem('bvb_player_avatar', avatar);
+  };
+
+  const handleSelectGuestAvatar = (avatar: CharacterType) => {
+    setGuestAvatar(avatar);
+    localStorage.setItem('bvb_player_avatar', avatar);
+  };
 
   const isNight = theme === 'night';
 
@@ -62,13 +82,13 @@ export const LandingView: React.FC<LandingViewProps> = ({
   const handleCreateSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!hostName.trim() || isLoading) return;
-    await onCreateRoom(hostName.trim(), targetWins);
+    await onCreateRoom(hostName.trim(), targetWins, hostAvatar);
   };
 
   const handleJoinSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!joinCode.trim() || !guestName.trim() || isLoading) return;
-    await onJoinRoom(joinCode.trim().toUpperCase(), guestName.trim());
+    await onJoinRoom(joinCode.trim().toUpperCase(), guestName.trim(), guestAvatar);
   };
 
   const handleQuickJoinClick = () => {
@@ -339,7 +359,7 @@ export const LandingView: React.FC<LandingViewProps> = ({
               </button>
             </div>
 
-            <form onSubmit={handleCreateSubmit} className="space-y-5">
+            <form onSubmit={handleCreateSubmit} className="space-y-4">
               <div>
                 <label className="block font-mono text-xs font-bold uppercase mb-1.5 text-ink">
                   YOUR BRO NAME:
@@ -352,15 +372,22 @@ export const LandingView: React.FC<LandingViewProps> = ({
                   placeholder="LUDWIG"
                   value={hostName}
                   onChange={(e) => setHostName(e.target.value)}
-                  className="w-full bg-white border-2 border-ink px-4 py-2.5 text-ink font-mono font-bold text-base focus:outline-none focus:border-arcadeRed shadow-pixel-sm"
+                  className="w-full bg-white border-2 border-ink px-4 py-2 text-ink font-mono font-bold text-base focus:outline-none focus:border-arcadeRed shadow-pixel-sm"
                 />
               </div>
 
+              {/* Avatar Selector */}
+              <AvatarPicker
+                selectedAvatar={hostAvatar}
+                onSelectAvatar={handleSelectHostAvatar}
+                theme={theme}
+              />
+
               <div>
-                <label className="block font-mono text-xs font-bold uppercase mb-2 text-ink">
+                <label className="block font-mono text-xs font-bold uppercase mb-1.5 text-ink">
                   HOW MANY ROUNDS?
                 </label>
-                <div className="grid grid-cols-3 gap-2.5">
+                <div className="grid grid-cols-3 gap-2">
                   {[
                     { wins: 1, label: '1 WIN' },
                     { wins: 3, label: 'FIRST TO 3' },
@@ -370,7 +397,7 @@ export const LandingView: React.FC<LandingViewProps> = ({
                       key={opt.wins}
                       type="button"
                       onClick={() => setTargetWins(opt.wins)}
-                      className={`py-3 px-2 border-2 font-mono font-bold text-xs sm:text-sm transition-all select-none ${
+                      className={`py-2.5 px-2 border-2 font-mono font-bold text-xs sm:text-sm transition-all select-none ${
                         targetWins === opt.wins
                           ? 'bg-darkNavy text-paper border-arcadeRed shadow-pixel-sm -translate-y-0.5'
                           : 'bg-white text-ink border-ink hover:bg-cream'
@@ -382,7 +409,7 @@ export const LandingView: React.FC<LandingViewProps> = ({
                 </div>
               </div>
 
-              <div className="pt-2">
+              <div className="pt-1">
                 <PixelButton
                   type="submit"
                   variant="navy"
@@ -407,7 +434,7 @@ export const LandingView: React.FC<LandingViewProps> = ({
       {activeModal === 'join' && (
         <div className="fixed inset-0 bg-[#0A0F19]/75 z-50 flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
           <div className="w-full max-w-md bg-[#FFFDF5] text-ink border-3 border-ink p-5 sm:p-7 shadow-pixel-lg relative text-left max-h-[90dvh] overflow-y-auto my-auto">
-            <div className="flex items-center justify-between border-b-2 border-ink pb-3 mb-5">
+            <div className="flex items-center justify-between border-b-2 border-ink pb-3 mb-4">
               <span className="font-pixel text-sm text-darkNavy tracking-wider">JOIN ROOM</span>
               <button
                 type="button"
@@ -419,7 +446,7 @@ export const LandingView: React.FC<LandingViewProps> = ({
               </button>
             </div>
 
-            <form onSubmit={handleJoinSubmit} className="space-y-5">
+            <form onSubmit={handleJoinSubmit} className="space-y-4">
               <div>
                 <label className="block font-mono text-xs font-bold uppercase mb-1.5 text-ink">
                   ENTER BRO CODE:
@@ -432,7 +459,7 @@ export const LandingView: React.FC<LandingViewProps> = ({
                   placeholder="K7X9P"
                   value={joinCode}
                   onChange={(e) => setJoinCode(e.target.value.toUpperCase())}
-                  className="w-full bg-white border-2 border-ink px-4 py-2.5 text-ink font-pixel tracking-widest text-center text-xl uppercase focus:outline-none focus:border-arcadeRed shadow-pixel-sm"
+                  className="w-full bg-white border-2 border-ink px-4 py-2 text-ink font-pixel tracking-widest text-center text-xl uppercase focus:outline-none focus:border-arcadeRed shadow-pixel-sm"
                 />
               </div>
 
@@ -447,11 +474,18 @@ export const LandingView: React.FC<LandingViewProps> = ({
                   placeholder="CONNOR"
                   value={guestName}
                   onChange={(e) => setGuestName(e.target.value)}
-                  className="w-full bg-white border-2 border-ink px-4 py-2.5 text-ink font-mono font-bold text-base focus:outline-none focus:border-arcadeRed shadow-pixel-sm"
+                  className="w-full bg-white border-2 border-ink px-4 py-2 text-ink font-mono font-bold text-base focus:outline-none focus:border-arcadeRed shadow-pixel-sm"
                 />
               </div>
 
-              <div className="pt-2">
+              {/* Avatar Selector */}
+              <AvatarPicker
+                selectedAvatar={guestAvatar}
+                onSelectAvatar={handleSelectGuestAvatar}
+                theme={theme}
+              />
+
+              <div className="pt-1">
                 <PixelButton
                   type="submit"
                   variant="navy"

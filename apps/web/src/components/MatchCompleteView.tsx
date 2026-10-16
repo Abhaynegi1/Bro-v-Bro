@@ -164,7 +164,7 @@ export const MatchCompleteView: React.FC<MatchCompleteViewProps> = ({
           <div className="flex flex-col items-center">
             <span className="text-lg sm:text-xl mb-1">👑</span>
             <PixelCharacter
-              type={winner?.id === playerA?.id ? 'bro1' : 'bro2'}
+              type={winner?.avatar || (winner?.id === playerA?.id ? 'bro1' : 'bro2')}
               pose="celebrating"
               size={52}
               className="sm:w-16 sm:h-16 drop-shadow-pixel"
@@ -182,7 +182,7 @@ export const MatchCompleteView: React.FC<MatchCompleteViewProps> = ({
           <div className="flex flex-col items-center opacity-70">
             <span className="text-lg sm:text-xl mb-1 invisible">💀</span>
             <PixelCharacter
-              type={loser?.id === playerA?.id ? 'bro1' : 'bro2'}
+              type={loser?.avatar || (loser?.id === playerA?.id ? 'bro1' : 'bro2')}
               pose="defeated"
               size={46}
               className="sm:w-14 sm:h-14 drop-shadow-pixel grayscale"

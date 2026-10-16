@@ -94,8 +94,8 @@ export const TicTacToeGame: React.FC<TicTacToeGameProps> = ({
         <div className="flex items-center justify-between px-1 sm:px-6 py-0.5 sm:py-1">
           {/* Host Side */}
           <div className="flex items-center gap-1.5 sm:gap-3">
-            <PixelCharacter type="bro1" size={28} pose={isMyTurn && isPlayerX ? 'ready' : 'idle'} className="sm:hidden" />
-            <PixelCharacter type="bro1" size={36} pose={isMyTurn && isPlayerX ? 'ready' : 'idle'} className="hidden sm:block" />
+            <PixelCharacter type={playerA?.avatar || 'bro1'} size={28} pose={isMyTurn && isPlayerX ? 'ready' : 'idle'} className="sm:hidden" />
+            <PixelCharacter type={playerA?.avatar || 'bro1'} size={36} pose={isMyTurn && isPlayerX ? 'ready' : 'idle'} className="hidden sm:block" />
             <div className="text-left">
               <div className="font-pixel text-[10px] sm:text-xs text-white flex items-center gap-1 sm:gap-1.5">
                 <span className="truncate max-w-[70px] sm:max-w-none">{playerA?.name || 'HOST'}</span>
@@ -124,8 +124,8 @@ export const TicTacToeGame: React.FC<TicTacToeGameProps> = ({
 
           {/* Guest Side */}
           <div className="flex items-center gap-1.5 sm:gap-3 flex-row-reverse text-right">
-            <PixelCharacter type="bro2" size={28} pose={isMyTurn && !isPlayerX ? 'ready' : 'idle'} className="sm:hidden" />
-            <PixelCharacter type="bro2" size={36} pose={isMyTurn && !isPlayerX ? 'ready' : 'idle'} className="hidden sm:block" />
+            <PixelCharacter type={playerB?.avatar || 'bro2'} size={28} pose={isMyTurn && !isPlayerX ? 'ready' : 'idle'} className="sm:hidden" />
+            <PixelCharacter type={playerB?.avatar || 'bro2'} size={36} pose={isMyTurn && !isPlayerX ? 'ready' : 'idle'} className="hidden sm:block" />
             <div className="text-right">
               <div className="font-pixel text-[10px] sm:text-xs text-white flex items-center justify-end gap-1 sm:gap-1.5">
                 <span className="px-1 py-0.2 bg-crtCyan text-darkNavy font-pixel text-[8px] sm:text-[9px] font-bold">O</span>

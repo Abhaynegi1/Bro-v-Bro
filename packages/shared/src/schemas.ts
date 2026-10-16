@@ -7,6 +7,7 @@ export const CreateRoomSchema = z.object({
     .min(1, 'Name must be at least 1 character')
     .max(20, 'Name must be 20 characters or fewer'),
   targetWins: z.number().int().min(1).max(10).default(3),
+  avatar: z.string().optional(),
 });
 
 export type CreateRoomInput = z.infer<typeof CreateRoomSchema>;
@@ -17,6 +18,7 @@ export const JoinRoomSchema = z.object({
     .trim()
     .min(1, 'Name must be at least 1 character')
     .max(20, 'Name must be 20 characters or fewer'),
+  avatar: z.string().optional(),
 });
 
 export type JoinRoomInput = z.infer<typeof JoinRoomSchema>;

@@ -118,7 +118,7 @@ export const App: React.FC = () => {
     else sessionStorage.removeItem(STORAGE_KEYS.SESSION_TOKEN);
   }, [roomCode, playerId, sessionToken]);
 
-  const handleCreateRoom = async (hostName: string, targetWins: number) => {
+  const handleCreateRoom = async (hostName: string, targetWins: number, avatar?: string) => {
     setIsLoading(true);
     setErrorMessage(null);
 
@@ -126,7 +126,7 @@ export const App: React.FC = () => {
       const res = await fetch(`${API_BASE_URL}/api/rooms`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ hostName, targetWins }),
+        body: JSON.stringify({ hostName, targetWins, avatar }),
       });
 
       const data = await res.json();
@@ -146,7 +146,7 @@ export const App: React.FC = () => {
     }
   };
 
-  const handleJoinRoom = async (code: string, guestName: string) => {
+  const handleJoinRoom = async (code: string, guestName: string, avatar?: string) => {
     setIsLoading(true);
     setErrorMessage(null);
 
@@ -154,7 +154,7 @@ export const App: React.FC = () => {
       const res = await fetch(`${API_BASE_URL}/api/rooms/${code}/join`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ guestName }),
+        body: JSON.stringify({ guestName, avatar }),
       });
 
       const data = await res.json();

@@ -20,8 +20,8 @@ export function registerRoutes(app: FastifyInstance, io: SocketIOServer) {
       });
     }
 
-    const { hostName, targetWins } = parseResult.data;
-    const result = roomManager.createRoom(hostName, targetWins);
+    const { hostName, targetWins, avatar } = parseResult.data;
+    const result = roomManager.createRoom(hostName, targetWins, avatar);
 
     return reply.status(201).send({
       roomId: result.room.id,
@@ -68,10 +68,10 @@ export function registerRoutes(app: FastifyInstance, io: SocketIOServer) {
     }
 
     const code = paramResult.data.code;
-    const { guestName } = bodyResult.data;
+    const { guestName, avatar } = bodyResult.data;
 
     try {
-      const result = roomManager.joinRoom(code, guestName);
+      const result = roomManager.joinRoom(code, guestName, avatar);
 
       // Broadcast updated room state to all connected sockets in that room
       io.to(`room:${code}`).emit(SOCKET_EVENTS.ROOM_STATE, result.room);

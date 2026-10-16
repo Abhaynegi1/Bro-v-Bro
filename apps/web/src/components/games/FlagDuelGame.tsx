@@ -123,7 +123,7 @@ export const FlagDuelGame: React.FC<FlagDuelGameProps> = ({
         {/* Player 1 (Left) */}
         <div className="flex items-center gap-1.5 sm:gap-3 min-w-0">
           <PixelCharacter
-            type="bro1"
+            type={playerA?.avatar || 'bro1'}
             pose={myState.isEliminated ? 'defeated' : myState.score >= 3 ? 'celebrating' : 'idle'}
             size={28}
             className="drop-shadow-pixel hidden xs:block flex-shrink-0"
@@ -233,7 +233,7 @@ export const FlagDuelGame: React.FC<FlagDuelGameProps> = ({
           </div>
 
           <PixelCharacter
-            type="bro2"
+            type={playerB?.avatar || 'bro2'}
             pose={opponentState.isEliminated ? 'defeated' : opponentState.score >= 3 ? 'celebrating' : 'idle'}
             size={28}
             className="drop-shadow-pixel hidden xs:block flex-shrink-0"

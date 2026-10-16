@@ -187,14 +187,14 @@ export const WaitingRoomView: React.FC<WaitingRoomViewProps> = ({
           <div className="my-2 flex flex-col items-center">
             <div className="block sm:hidden">
               <PixelCharacter
-                type="bro1"
+                type={playerA?.avatar || 'bro1'}
                 size={65}
                 pose={playerA?.isReady ? 'ready' : 'idle'}
               />
             </div>
             <div className="hidden sm:block">
               <PixelCharacter
-                type="bro1"
+                type={playerA?.avatar || 'bro1'}
                 size={85}
                 pose={playerA?.isReady ? 'ready' : 'idle'}
               />
@@ -233,14 +233,14 @@ export const WaitingRoomView: React.FC<WaitingRoomViewProps> = ({
             <div className="my-2 flex flex-col items-center">
               <div className="block sm:hidden">
                 <PixelCharacter
-                  type="bro2"
+                  type={playerB.avatar || 'bro2'}
                   size={65}
                   pose={playerB.isReady ? 'ready' : 'idle'}
                 />
               </div>
               <div className="hidden sm:block">
                 <PixelCharacter
-                  type="bro2"
+                  type={playerB.avatar || 'bro2'}
                   size={85}
                   pose={playerB.isReady ? 'ready' : 'idle'}
                 />

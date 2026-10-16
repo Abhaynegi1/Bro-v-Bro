@@ -476,7 +476,7 @@ export const TypingRaceGame: React.FC<TypingRaceGameProps> = ({
         <div className="relative h-11 sm:h-12 flex items-center border-b border-dashed border-slate-700/80 mb-1">
           {/* Lane Label */}
           <div className="absolute left-1.5 top-0.5 flex items-center gap-1.5 z-10">
-            <PixelCharacter type="bro1" size={13} />
+            <PixelCharacter type={playerA?.avatar || 'bro1'} size={13} />
             <span className="text-[10px] font-pixel text-cyan-300 tracking-wider truncate max-w-[90px] sm:max-w-[130px]">
               {lane1Name}
             </span>
@@ -535,7 +535,7 @@ export const TypingRaceGame: React.FC<TypingRaceGameProps> = ({
         <div className="relative h-11 sm:h-12 flex items-center">
           {/* Lane Label */}
           <div className="absolute left-1.5 top-0.5 flex items-center gap-1.5 z-10">
-            <PixelCharacter type="bro2" size={13} />
+            <PixelCharacter type={playerB?.avatar || 'bro2'} size={13} />
             <span className="text-[10px] font-pixel text-pink-300 tracking-wider truncate max-w-[90px] sm:max-w-[130px]">
               {lane2Name}
             </span>

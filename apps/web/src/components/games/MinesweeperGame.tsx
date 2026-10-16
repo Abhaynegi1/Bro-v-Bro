@@ -220,7 +220,7 @@ export const MinesweeperGame: React.FC<MinesweeperGameProps> = ({
         <div className="flex flex-col items-center">
           <div className="flex items-center justify-between w-full max-w-[280px] xs:max-w-[320px] sm:max-w-[350px] px-1 mb-1.5">
             <div className="flex items-center gap-1.5">
-              <PixelCharacter type={myPlayer?.isHost ? 'bro1' : 'bro2'} size={20} />
+              <PixelCharacter type={myPlayer?.avatar || (myPlayer?.isHost ? 'bro1' : 'bro2')} size={20} />
               <span className="font-arcade text-[10px] xs:text-xs font-bold tracking-wide truncate max-w-[120px]">
                 {myPlayer?.name || 'YOU'} (YOU)
               </span>
@@ -279,7 +279,7 @@ export const MinesweeperGame: React.FC<MinesweeperGameProps> = ({
         <div className="flex flex-col items-center">
           <div className="flex items-center justify-between w-full max-w-[190px] px-1 mb-1.5">
             <div className="flex items-center gap-1.5">
-              <PixelCharacter type={opponentPlayer?.isHost ? 'bro1' : 'bro2'} size={18} />
+              <PixelCharacter type={opponentPlayer?.avatar || (opponentPlayer?.isHost ? 'bro1' : 'bro2')} size={18} />
               <span className="font-arcade text-[10px] xs:text-xs font-bold tracking-wide text-stone-500 truncate max-w-[90px]">
                 {opponentPlayer?.name || 'OPPONENT'}
               </span>

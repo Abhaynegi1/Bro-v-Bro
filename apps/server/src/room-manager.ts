@@ -47,7 +47,7 @@ export class RoomManager {
     this.onRoomUpdatedCallback = cb;
   }
 
-  public createRoom(hostName: string, targetWins: number = 3): {
+  public createRoom(hostName: string, targetWins: number = 3, avatar?: string): {
     room: RoomState;
     playerId: string;
     sessionToken: string;
@@ -71,6 +71,7 @@ export class RoomManager {
       lastSeenAt: now,
       sessionToken,
       socketId: null,
+      avatar: avatar || 'bro1',
     };
 
     const totalGamesNeeded = Math.min(6, 2 * targetWins - 1);
@@ -120,7 +121,7 @@ export class RoomManager {
     return this.roomsByCode.get(code.toUpperCase()) || null;
   }
 
-  public joinRoom(code: string, guestName: string): {
+  public joinRoom(code: string, guestName: string, avatar?: string): {
     room: RoomState;
     playerId: string;
     sessionToken: string;
@@ -153,6 +154,7 @@ export class RoomManager {
       lastSeenAt: now,
       sessionToken,
       socketId: null,
+      avatar: avatar || 'bro2',
     };
 
     room.players.playerB = guestSlot;

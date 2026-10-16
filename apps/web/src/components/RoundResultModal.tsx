@@ -211,7 +211,7 @@ export const RoundResultModal: React.FC<RoundResultModalProps> = ({
         <div className="flex flex-col items-center justify-center my-2">
           <div className="relative mb-2">
             <PixelCharacter
-              type={winner?.id === playerA?.id ? 'bro1' : 'bro2'}
+              type={winner?.avatar || (winner?.id === playerA?.id ? playerA?.avatar || 'bro1' : playerB?.avatar || 'bro2')}
               pose={isDraw ? 'idle' : 'celebrating'}
               size={64}
               className="drop-shadow-pixel"

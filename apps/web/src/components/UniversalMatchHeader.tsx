@@ -72,13 +72,13 @@ export const UniversalMatchHeader: React.FC<UniversalMatchHeaderProps> = ({
         <div className="flex items-center gap-1.5 sm:gap-3 min-w-0 flex-shrink">
           <div className="relative hidden xs:block flex-shrink-0">
             <PixelCharacter
-              type="bro1"
+              type={playerA?.avatar || 'bro1'}
               pose="idle"
               size={28}
               className="drop-shadow-pixel sm:hidden"
             />
             <PixelCharacter
-              type="bro1"
+              type={playerA?.avatar || 'bro1'}
               pose="idle"
               size={36}
               className="drop-shadow-pixel hidden sm:block"
@@ -178,13 +178,13 @@ export const UniversalMatchHeader: React.FC<UniversalMatchHeaderProps> = ({
 
           <div className="relative hidden xs:block flex-shrink-0">
             <PixelCharacter
-              type="bro2"
+              type={playerB?.avatar || 'bro2'}
               pose="idle"
               size={28}
               className="drop-shadow-pixel sm:hidden"
             />
             <PixelCharacter
-              type="bro2"
+              type={playerB?.avatar || 'bro2'}
               pose="idle"
               size={36}
               className="drop-shadow-pixel hidden sm:block"

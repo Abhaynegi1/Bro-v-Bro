@@ -14,6 +14,7 @@ export interface PlayerSlot {
   isReady: boolean;        // Ready toggle
   isConnected: boolean;    // Current realtime connection flag
   lastSeenAt: number;      // Epoch timestamp for heartbeat
+  avatar?: string;         // Character avatar ID
 }
 
 export type SeriesCondition =

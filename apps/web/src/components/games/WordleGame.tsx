@@ -287,7 +287,7 @@ export const WordleGame: React.FC<WordleGameProps> = ({
         {/* PLAYER'S BOARD (Primary Focus) */}
         <div className="flex flex-col items-center">
           <div className="flex items-center gap-1.5 sm:gap-2 mb-1 sm:mb-1.5">
-            <PixelCharacter type={myPlayer?.isHost ? 'bro1' : 'bro2'} size={20} className="sm:w-6 sm:h-6" />
+            <PixelCharacter type={myPlayer?.avatar || (myPlayer?.isHost ? 'bro1' : 'bro2')} size={20} className="sm:w-6 sm:h-6" />
             <span className={`font-arcade text-[10px] xs:text-xs sm:text-sm font-bold tracking-wide truncate max-w-[90px] xs:max-w-[120px] sm:max-w-none ${isNight ? 'text-white' : 'text-ink'}`}>
               {myPlayer?.name || 'YOU'} (YOU)
             </span>
@@ -349,7 +349,7 @@ export const WordleGame: React.FC<WordleGameProps> = ({
         {/* OPPONENT'S LIVE GHOST BOARD (Live progress spectator) */}
         <div className="flex flex-col items-center">
           <div className="flex items-center gap-1 sm:gap-2 mb-1 sm:mb-1.5">
-            <PixelCharacter type={opponentPlayer?.isHost ? 'bro1' : 'bro2'} size={18} className="sm:w-6 sm:h-6" />
+            <PixelCharacter type={opponentPlayer?.avatar || (opponentPlayer?.isHost ? 'bro1' : 'bro2')} size={18} className="sm:w-6 sm:h-6" />
             <span className="font-arcade text-[10px] xs:text-xs sm:text-sm font-bold tracking-wide opacity-80 truncate max-w-[70px] xs:max-w-[100px] sm:max-w-none">
               {opponentPlayer?.name || 'RIVAL'}
             </span>
