@@ -397,20 +397,6 @@ export const MatchCompleteView: React.FC<MatchCompleteViewProps> = ({
       {/* Action Buttons */}
       <div className="w-full flex flex-col sm:flex-row gap-4 justify-center">
         <button
-          onClick={() => setShowSurrenderModal(true)}
-          className="flex-1 sm:flex-initial sm:px-7 py-3.5 bg-paper text-ink font-arcade text-xs sm:text-sm tracking-wider border-2 border-ink shadow-pixel hover:bg-stone-100 hover:translate-x-[-1px] hover:translate-y-[-1px] active:translate-x-[1px] active:translate-y-[1px] transition-all font-bold flex items-center justify-center gap-2"
-        >
-          <span>📜</span>
-          <span>
-            {surrenderDoc.isSigned
-              ? 'SURRENDER DECREE (PDF/PNG)'
-              : iAmLoser
-              ? 'SIGN SURRENDER DECREE'
-              : 'SURRENDER DECREE (PENDING)'}
-          </span>
-        </button>
-
-        <button
           onClick={handleCopyShareLink}
           className="flex-1 sm:flex-initial sm:px-7 py-3.5 bg-cartridgeYellow text-ink font-arcade text-xs sm:text-sm tracking-wider border-2 border-ink shadow-pixel hover:bg-yellow-300 hover:translate-x-[-1px] hover:translate-y-[-1px] active:translate-x-[1px] active:translate-y-[1px] transition-all font-bold"
         >
