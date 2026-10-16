@@ -304,9 +304,9 @@ export const RoundResultModal: React.FC<RoundResultModalProps> = ({
 
         {/* 🟩 High-Visibility Secret Word Reveal HUD (Wordle Battle) 🟩 */}
         {isWordle && secretWord && (
-          <div className="my-4 p-4 bg-slate-950 border-3 border-ink shadow-pixel text-center relative overflow-hidden rounded">
+          <div className="my-4 p-4 bg-slate-950 border-3 border-emerald-500/80 shadow-pixel text-center relative overflow-hidden rounded">
             {/* Top Badge */}
-            <div className="text-[10px] font-arcade uppercase tracking-widest text-gameBoyGreen mb-2 flex items-center justify-center gap-2 font-bold">
+            <div className="text-[10px] font-arcade uppercase tracking-widest text-emerald-400 mb-2 flex items-center justify-center gap-2 font-bold">
               <GamePixelIcon gameId="wordle" size={18} className="flex-shrink-0" />
               <span>THE SECRET WORD WAS</span>
               <GamePixelIcon gameId="wordle" size={18} className="flex-shrink-0" />
@@ -317,7 +317,7 @@ export const RoundResultModal: React.FC<RoundResultModalProps> = ({
               {secretWord.split('').map((char: string, idx: number) => (
                 <div
                   key={idx}
-                  className="w-11 h-11 sm:w-14 sm:h-14 bg-gameBoyGreen text-ink font-arcade text-xl sm:text-2xl font-black border-3 border-ink shadow-pixel flex items-center justify-center animate-bounce select-none"
+                  className="w-11 h-11 sm:w-14 sm:h-14 bg-emerald-500 text-slate-950 font-arcade text-xl sm:text-2xl font-black border-3 border-emerald-300 shadow-pixel flex items-center justify-center animate-bounce select-none"
                   style={{ animationDelay: `${idx * 80}ms` }}
                 >
                   {char}
@@ -325,11 +325,11 @@ export const RoundResultModal: React.FC<RoundResultModalProps> = ({
               ))}
             </div>
 
-            <p className="mt-2 text-xs font-mono font-bold text-white/90">
+            <p className="mt-2 text-xs font-mono font-bold text-white">
               {isDraw ? (
                 <span className="text-cartridgeYellow">Neither bro cracked the cipher • It was &ldquo;{secretWord}&rdquo;!</span>
               ) : winner ? (
-                <span>Cracked by <strong className="text-gameBoyGreen">{winner.name}</strong>!</span>
+                <span>Cracked by <strong className="text-emerald-400 font-bold">{winner.name}</strong>!</span>
               ) : (
                 <span>Round cipher concluded!</span>
               )}

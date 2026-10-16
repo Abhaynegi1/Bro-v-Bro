@@ -14,6 +14,7 @@ export default {
         cartridgeYellow: '#EAB308',
         crtCyan: '#42B8C7',
         gameboyGreen: '#69B85A',
+        gameBoyGreen: '#69B85A',
         pixelPink: '#E95A8A',
       },
       fontFamily: {
