@@ -186,7 +186,7 @@ export const RoundResultModal: React.FC<RoundResultModalProps> = ({
     if (isFalseStart && !isThisWinner) {
       return <span className="text-emerald-400 font-bold">DISQUALIFIED (EARLY)</span>;
     }
-    return <span className="opacity-60 text-xs">OUTDRAWN</span>;
+    return <span className="text-slate-300 font-bold opacity-80 text-xs">OUTDRAWN</span>;
   };
 
   // Next game determination from pre-drafted series lineup
@@ -276,10 +276,10 @@ export const RoundResultModal: React.FC<RoundResultModalProps> = ({
                     : 'bg-slate-900/60 border-white/10'
                 }`}
               >
-                <div className="text-[10px] opacity-75 truncate font-bold text-cartridgeYellow">
+                <div className="text-[10px] truncate font-bold text-amber-300">
                   {playerA?.name || 'PLAYER 1'} {playerA?.id === myPlayerId ? '(YOU)' : ''}
                 </div>
-                <div className="font-arcade text-xs sm:text-sm mt-1 font-bold">
+                <div className="font-arcade text-xs sm:text-sm mt-1 font-bold text-white">
                   {formatPlayerReaction(playerA?.id, playerAResult, playerA?.id === winnerPlayerId)}
                 </div>
               </div>
@@ -291,10 +291,10 @@ export const RoundResultModal: React.FC<RoundResultModalProps> = ({
                     : 'bg-slate-900/60 border-white/10'
                 }`}
               >
-                <div className="text-[10px] opacity-75 truncate font-bold text-crtCyan">
+                <div className="text-[10px] truncate font-bold text-cyan-300">
                   {playerB?.name || 'PLAYER 2'} {playerB?.id === myPlayerId ? '(YOU)' : ''}
                 </div>
-                <div className="font-arcade text-xs sm:text-sm mt-1 font-bold">
+                <div className="font-arcade text-xs sm:text-sm mt-1 font-bold text-white">
                   {formatPlayerReaction(playerB?.id, playerBResult, playerB?.id === winnerPlayerId)}
                 </div>
               </div>
@@ -347,23 +347,23 @@ export const RoundResultModal: React.FC<RoundResultModalProps> = ({
             <span className={`font-arcade text-xs font-bold truncate max-w-[120px] ${isNight ? 'text-cartridgeYellow' : 'text-amber-800'}`}>
               {playerA?.name || 'PLAYER 1'}
             </span>
-            <span className="font-arcade text-2xl sm:text-3xl text-ink dark:text-paper font-bold mt-1">
+            <span className={`font-arcade text-2xl sm:text-3xl font-bold mt-1 ${isNight ? 'text-paper' : 'text-ink'}`}>
               {scoreA}
             </span>
           </div>
 
           <div className="flex flex-col items-center">
             <span className="font-arcade text-xs text-arcadeRed font-bold">VS</span>
-            <span className="font-mono text-[9px] uppercase font-bold tracking-wider opacity-60">
+            <span className={`font-mono text-[9px] uppercase font-bold tracking-wider ${isNight ? 'text-slate-400' : 'text-stone-600'}`}>
               FIRST TO {targetWins}
             </span>
           </div>
 
           <div className="flex flex-col items-center">
-            <span className="font-arcade text-xs text-crtCyan font-bold truncate max-w-[120px]">
+            <span className={`font-arcade text-xs font-bold truncate max-w-[120px] ${isNight ? 'text-crtCyan' : 'text-teal-800'}`}>
               {playerB?.name || 'PLAYER 2'}
             </span>
-            <span className="font-arcade text-2xl sm:text-3xl text-ink dark:text-paper font-bold mt-1">
+            <span className={`font-arcade text-2xl sm:text-3xl font-bold mt-1 ${isNight ? 'text-paper' : 'text-ink'}`}>
               {scoreB}
             </span>
           </div>
@@ -378,27 +378,27 @@ export const RoundResultModal: React.FC<RoundResultModalProps> = ({
           {nextGameId && nextGameName ? (
             <div>
               <div className="flex items-center justify-between text-[11px] mb-1">
-                <span className={`font-bold uppercase font-arcade ${isNight ? 'text-cartridgeYellow' : 'text-amber-800'}`}>UPCOMING BATTLE:</span>
-                <span className="font-mono text-[10px] opacity-75">
+                <span className={`font-bold uppercase font-arcade ${isNight ? 'text-cartridgeYellow' : 'text-amber-900'}`}>UPCOMING BATTLE:</span>
+                <span className={`font-mono text-[10px] ${isNight ? 'text-slate-400' : 'text-stone-600'}`}>
                   Round {nextRoundNumber} of {match?.gamePlaylist?.length || 5}
                 </span>
               </div>
-              <div className="flex items-center gap-2 font-arcade text-sm text-ink dark:text-paper font-bold">
+              <div className={`flex items-center gap-2 font-arcade text-sm font-bold ${isNight ? 'text-paper' : 'text-ink'}`}>
                 <GamePixelIcon gameId={nextGameId} size={22} className="flex-shrink-0" />
-                <span className="text-arcadeRed dark:text-cartridgeYellow">{nextGameName}</span>
+                <span className={isNight ? 'text-cartridgeYellow' : 'text-arcadeRed'}>{nextGameName}</span>
               </div>
             </div>
           ) : (
             <div>
-              <span className={`font-bold ${isNight ? 'text-cartridgeYellow' : 'text-amber-800'}`}>NEXT GAME SELECTION: </span>
+              <span className={`font-bold ${isNight ? 'text-cartridgeYellow' : 'text-amber-900'}`}>NEXT GAME SELECTION: </span>
               {nextPicker ? (
                 nextPicker.id === myPlayerId ? (
                   <span className="font-bold text-arcadeRed">YOU get to pick the next battle!</span>
                 ) : (
-                  <span>{nextPicker.name} will choose the next battle.</span>
+                  <span className={isNight ? 'text-slate-200' : 'text-stone-800'}>{nextPicker.name} will choose the next battle.</span>
                 )
               ) : (
-                <span>Players will select the next battle.</span>
+                <span className={isNight ? 'text-slate-200' : 'text-stone-800'}>Players will select the next battle.</span>
               )}
             </div>
           )}

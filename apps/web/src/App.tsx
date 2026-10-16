@@ -62,6 +62,15 @@ export const App: React.FC = () => {
     return () => window.removeEventListener('popstate', onPopState);
   }, []);
 
+  // Sync dark class on html root element with active theme
+  useEffect(() => {
+    if (theme === 'night') {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }, [theme]);
+
   // Pre-warm backend server container as soon as the page loads
   useEffect(() => {
     fetch(`${API_BASE_URL}/api/health`, { method: 'GET' }).catch(() => {});

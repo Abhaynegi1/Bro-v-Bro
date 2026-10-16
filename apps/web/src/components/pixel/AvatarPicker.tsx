@@ -59,7 +59,9 @@ export const AvatarPicker: React.FC<AvatarPickerProps> = ({
         <button
           type="button"
           onClick={handlePrev}
-          className="w-7 h-7 sm:w-8 sm:h-8 flex items-center justify-center bg-white dark:bg-slate-800 text-ink dark:text-paper border-2 border-ink shadow-pixel-sm active:translate-y-0.5 hover:bg-cream transition-all flex-shrink-0 font-arcade text-xs font-bold"
+          className={`w-7 h-7 sm:w-8 sm:h-8 flex items-center justify-center border-2 border-ink shadow-pixel-sm active:translate-y-0.5 transition-all flex-shrink-0 font-arcade text-xs font-bold ${
+            isNight ? 'bg-slate-800 text-paper hover:bg-slate-700' : 'bg-white text-ink hover:bg-cream'
+          }`}
           title="Previous Avatar"
         >
           ◀
@@ -67,7 +69,7 @@ export const AvatarPicker: React.FC<AvatarPickerProps> = ({
 
         {/* Center: Character sprite + Info */}
         <div className="flex items-center gap-3 min-w-0">
-          <div className="flex-shrink-0 p-1 bg-ink/5 dark:bg-white/5 border border-ink/20">
+          <div className={`flex-shrink-0 p-1 border border-ink/20 ${isNight ? 'bg-white/5' : 'bg-ink/5'}`}>
             <PixelCharacter type={selectedAvatar} size={44} pose="ready" />
           </div>
 
@@ -93,7 +95,9 @@ export const AvatarPicker: React.FC<AvatarPickerProps> = ({
         <button
           type="button"
           onClick={handleNext}
-          className="w-7 h-7 sm:w-8 sm:h-8 flex items-center justify-center bg-white dark:bg-slate-800 text-ink dark:text-paper border-2 border-ink shadow-pixel-sm active:translate-y-0.5 hover:bg-cream transition-all flex-shrink-0 font-arcade text-xs font-bold"
+          className={`w-7 h-7 sm:w-8 sm:h-8 flex items-center justify-center border-2 border-ink shadow-pixel-sm active:translate-y-0.5 transition-all flex-shrink-0 font-arcade text-xs font-bold ${
+            isNight ? 'bg-slate-800 text-paper hover:bg-slate-700' : 'bg-white text-ink hover:bg-cream'
+          }`}
           title="Next Avatar"
         >
           ▶
@@ -111,8 +115,12 @@ export const AvatarPicker: React.FC<AvatarPickerProps> = ({
               onClick={() => handlePick(opt.id)}
               className={`p-1 flex flex-col items-center justify-center border-2 transition-all cursor-pointer relative ${
                 isSelected
-                  ? 'bg-amber-100 dark:bg-slate-800 border-arcadeRed shadow-pixel-sm -translate-y-0.5 ring-1 ring-arcadeRed'
-                  : 'bg-white dark:bg-slate-900 border-ink hover:bg-cream dark:hover:bg-slate-800 opacity-80 hover:opacity-100'
+                  ? isNight
+                    ? 'bg-slate-800 border-arcadeRed shadow-pixel-sm -translate-y-0.5 ring-1 ring-arcadeRed text-paper'
+                    : 'bg-amber-100 border-arcadeRed shadow-pixel-sm -translate-y-0.5 ring-1 ring-arcadeRed text-ink'
+                  : isNight
+                  ? 'bg-slate-900 border-ink hover:bg-slate-800 text-paper/80 hover:text-paper'
+                  : 'bg-white border-ink hover:bg-cream text-ink/80 hover:text-ink'
               }`}
               title={opt.name}
             >
