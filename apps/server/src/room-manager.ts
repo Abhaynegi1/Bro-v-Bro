@@ -8,7 +8,7 @@ import type {
   GameResult,
   DisconnectPauseState,
 } from '@bvb/shared';
-import { getGameEngine } from './games/index.js';
+import { getGameEngine, gameRegistry } from './games/index.js';
 import { saveMatchResult } from './db/index.js';
 
 // 5-character readable code excluding 0, O, 1, I, L
@@ -395,7 +395,7 @@ export class RoomManager {
       room.currentMatch?.seriesCondition.type === 'FIRST_TO_N'
         ? room.currentMatch.seriesCondition.targetPoints
         : 3;
-    const totalGamesNeeded = Math.min(6, 2 * targetWins - 1);
+    const totalGamesNeeded = 2 * targetWins - 1;
 
     // Enter Match Lineup Draft! Host begins drafting Round 1
     room.status = 'SELECTING_GAME';
@@ -435,16 +435,43 @@ export class RoomManager {
       room.currentMatch.seriesCondition.type === 'FIRST_TO_N'
         ? room.currentMatch.seriesCondition.targetPoints
         : 3;
-    const totalGamesNeeded = room.currentMatch.totalGamesNeeded || Math.min(6, 2 * targetWins - 1);
+    const totalGamesNeeded = room.currentMatch.totalGamesNeeded || (2 * targetWins - 1);
     room.currentMatch.totalGamesNeeded = totalGamesNeeded;
 
     if (!room.currentMatch.gamePlaylist) {
       room.currentMatch.gamePlaylist = [];
     }
 
-    // Uniqueness rule: A game can only be drafted once across the playlist until all games are used
-    if (room.currentMatch.gamePlaylist.includes(gameId)) {
+    // Check if match is already in progress (e.g. extra round needed because match is in progress)
+    const isMidMatch =
+      (room.currentMatch.rounds && room.currentMatch.rounds.length > 0) ||
+      room.currentMatch.currentRoundNumber > 1;
+
+    // Uniqueness rule: A game can only be drafted once across the playlist until all games in current cycle are used
+    const totalCatalogSize = Object.keys(gameRegistry).length || 8;
+    const cycleStartIndex = Math.floor(room.currentMatch.gamePlaylist.length / totalCatalogSize) * totalCatalogSize;
+    const currentCyclePicks = room.currentMatch.gamePlaylist.slice(cycleStartIndex);
+    if (currentCyclePicks.includes(gameId)) {
       return null;
+    }
+
+    if (isMidMatch) {
+      // MID-MATCH SELECTION: The player just selected a game for the CURRENT active round!
+      room.currentMatch.gamePlaylist.push(gameId);
+      const initialState = engine.createInitialState([room.players.playerA.id, room.players.playerB.id]);
+      room.status = 'IN_GAME';
+      room.selectingPlayerId = null;
+      room.activeGame = {
+        gameId,
+        state: initialState,
+      };
+      room.currentMatch.activeGameId = gameId;
+      room.updatedAt = Date.now();
+
+      return {
+        room: this.sanitizeRoom(room),
+        activeGame: room.activeGame,
+      };
     }
 
     // Add selected game to the series playlist

@@ -117,9 +117,10 @@ export const GameSelectionView: React.FC<GameSelectionViewProps> = ({
       ? match.seriesCondition.targetPoints
       : 3;
   const totalGamesNeeded =
-    match?.totalGamesNeeded || Math.min(6, 2 * targetWins - 1);
+    match?.totalGamesNeeded || (2 * targetWins - 1);
   const playlist = match?.gamePlaylist || [];
   const currentDraftSlot = playlist.length + 1;
+  const totalSlotsToDisplay = Math.max(totalGamesNeeded, currentDraftSlot);
 
   const getGameById = (id: string) => GAMES_CATALOG.find((g) => g.id === id);
 
@@ -143,7 +144,7 @@ export const GameSelectionView: React.FC<GameSelectionViewProps> = ({
         >
           <div className="flex items-center justify-center gap-2 mb-1">
             <span className="px-2.5 py-0.5 bg-ink text-cartridgeYellow font-arcade text-[10px] sm:text-xs tracking-wider border border-ink font-bold shadow-pixel-sm">
-              ★ MATCH LINEUP DRAFT ({playlist.length}/{totalGamesNeeded} PICKED) ★
+              ★ MATCH LINEUP DRAFT ({playlist.length}/{totalSlotsToDisplay} PICKED) ★
             </span>
             <span className="px-2 py-0.5 bg-darkNavy text-white font-mono text-[10px] sm:text-[11px] border border-ink/40 shadow-pixel-sm">
               FIRST TO {targetWins} WINS
@@ -179,8 +180,8 @@ export const GameSelectionView: React.FC<GameSelectionViewProps> = ({
               PLANNED BATTLE SEQUENCE:
             </h4>
 
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-1.5 sm:gap-2 w-full">
-              {Array.from({ length: totalGamesNeeded }).map((_, idx) => {
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 lg:grid-cols-9 gap-1.5 sm:gap-2 w-full">
+              {Array.from({ length: totalSlotsToDisplay }).map((_, idx) => {
                 const draftedGameId = playlist[idx];
                 const draftedGame = draftedGameId ? getGameById(draftedGameId) : null;
                 const isCurrent = idx === playlist.length;
@@ -243,8 +244,13 @@ export const GameSelectionView: React.FC<GameSelectionViewProps> = ({
         {/* ================= GAME SELECTION CATALOG ================= */}
         <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-2.5 flex-1 min-h-0">
           {GAMES_CATALOG.map((game) => {
-            const isAlreadyDrafted = playlist.includes(game.id);
-            const draftedRoundIndex = isAlreadyDrafted ? playlist.indexOf(game.id) + 1 : null;
+            const totalCatalogSize = GAMES_CATALOG.length || 8;
+            const cycleStartIndex = Math.floor(playlist.length / totalCatalogSize) * totalCatalogSize;
+            const currentCyclePicks = playlist.slice(cycleStartIndex);
+            const isAlreadyDrafted = currentCyclePicks.includes(game.id);
+            const draftedRoundIndex = isAlreadyDrafted
+              ? cycleStartIndex + currentCyclePicks.indexOf(game.id) + 1
+              : null;
             const canPick = isMyTurn && !isAlreadyDrafted && game.isAvailable;
 
             return (
